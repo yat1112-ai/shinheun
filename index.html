@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v2.8)</title>
+<title>신흔 DIVINE TRACE (v2.9)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -780,7 +780,7 @@ document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 /* ===== 신흔 DIVINE TRACE v0.1 — 게임 로직/화면 (새 코드베이스) =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
-   저장: localStorage 'shinheun-v1' (기기 저장만)                                                */
+   저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
 'use strict';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const A=window.SH_ASSETS||{};
@@ -928,26 +928,69 @@ const defaultState=()=>({gold:0,xp:0,cleared:{},party:['jin','eir','aren','riana
 let state=defaultState();
 function load(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(s)state={...defaultState(),...s};}catch(e){}}
 function save(){state.ts=Date.now();try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}cloudPush();}
-/* ---------- 클라우드 저장 (아티팩트 db, 사용자별 비공개 경로) ---------- */
-const cloud={status:'local',ref:null,timer:null,busy:false,dirty:false};
-function cloudLabel(){return {local:'로컬 저장',sync:'동기화 중',cloud:'클라우드 저장됨',off:'클라우드 없음(로컬)'}[cloud.status]||'';}
+/* ---------- 클라우드 저장 어댑터 ----------
+   kind 'claude' : claude.ai 아티팩트 안 → 아티팩트 db (claude 계정별)
+   kind 'fb'     : 자체 호스팅(GitHub Pages 등) → Firebase Google 로그인 + Realtime DB users/$uid/save
+   kind 'none'   : 그 외(file:// 오프라인 등) → 이 기기 로컬만
+   cloud.ref 는 두 경우 모두 {get()→{exists,data()}, set(obj)} 인터페이스로 맞춤. 최신 ts 가 이김 */
+const FB_CFG={apiKey:"AIzaSyCu-zBA7vxCk0xvtxFy9ldVwEKkJjoHfxI",authDomain:"shinheun.firebaseapp.com",databaseURL:"https://shinheun-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"shinheun",storageBucket:"shinheun.firebasestorage.app",messagingSenderId:"322092382965",appId:"1:322092382965:web:87fbf47524ba1f3d19e3bc"};
+const FB_VER='10.14.1';
+const cloud={status:'local',kind:'none',ref:null,timer:null,busy:false,dirty:false,name:'',email:null};
+const inArtifact=()=>!!(window.claude&&claude.use);
+const canFirebase=()=>!inArtifact()&&/^https?:/.test(location.protocol);
+function cloudLabel(){return {local:'로컬 저장',sync:'동기화 중',cloud:'클라우드 저장됨',off:cloud.kind==='fb'?'Google 미연동(로컬)':'클라우드 없음(로컬)'}[cloud.status]||'';}
 function paintCloud(){const n=document.getElementById('cloud');if(n){n.textContent=cloudLabel();n.dataset.s=cloud.status;}}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+function fbReady(){
+ if(window.firebase&&firebase.apps&&firebase.apps.length)return Promise.resolve(true);
+ if(cloud.fbLoading)return cloud.fbLoading;
+ cloud.fbLoading=(async()=>{const b=`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-`;await loadScript(b+'app-compat.js');await Promise.all([loadScript(b+'auth-compat.js'),loadScript(b+'database-compat.js')]);if(!firebase.apps.length)firebase.initializeApp(FB_CFG);return true;})().catch(e=>{cloud.fbLoading=null;return false;});
+ return cloud.fbLoading;
+}
+function fbRef(uid){const r=firebase.database().ref('users/'+uid+'/save');return {get:async()=>{const s=await r.get();return {exists:s.exists(),data:()=>s.val()};},set:o=>r.set(o)};}
+const fbUser=()=>new Promise(res=>{const un=firebase.auth().onAuthStateChanged(u=>{un();res(u);});});
+async function cloudMerge(){
+ cloud.status='sync';paintCloud();
+ const snap=await cloud.ref.get();
+ const remote=snap.exists?snap.data():null;
+ if(remote&&(remote.ts||0)>(state.ts||0)){state={...defaultState(),...remote};try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}if(page!=='battle')render();cloud.status='cloud';paintCloud();toast('클라우드 진행도 불러옴');}
+ else if(!remote||(state.ts||0)>(remote.ts||0)){await cloud.ref.set(JSON.parse(JSON.stringify(state)));cloud.status='cloud';paintCloud();}
+ else{cloud.status='cloud';paintCloud();}
+}
 async function cloudInit(){
  try{
-  if(!window.claude||!claude.use)throw 0;
-  const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
-  const uid=user?await user.id():null;
-  cloud.user=user;try{cloud.name=user&&user.name?await user.name():'';cloud.email=user&&user.email?await user.email():null;}catch(e){}
-  if(!db||!uid){cloud.status='off';paintCloud();return;}
-  cloud.ref=db.doc('data/users/'+uid+'/save');
-  cloud.status='sync';paintCloud();
-  const snap=await cloud.ref.get();
-  const remote=snap.exists?snap.data():null;
-  if(remote&&(remote.ts||0)>(state.ts||0)){state={...defaultState(),...remote};try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));}catch(e){}if(page!=='battle')render();cloud.status='cloud';paintCloud();toast('클라우드 진행도 불러옴');}
-  else if(!remote||(state.ts||0)>(remote.ts||0)){await cloud.ref.set(JSON.parse(JSON.stringify(state)));cloud.status='cloud';paintCloud();}
-  else{cloud.status='cloud';paintCloud();}
+  cloud.ref=null;
+  if(inArtifact()){
+   cloud.kind='claude';
+   const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+   const uid=user?await user.id():null;
+   cloud.user=user;try{cloud.name=user&&user.name?await user.name():'';cloud.email=user&&user.email?await user.email():null;}catch(e){}
+   if(!db||!uid){cloud.status='off';paintCloud();return;}
+   cloud.ref=db.doc('data/users/'+uid+'/save');
+   await cloudMerge();return;
+  }
+  if(canFirebase()){
+   cloud.kind='fb';
+   if(!await fbReady())throw 0;
+   const u=await fbUser();
+   if(!u){cloud.status='off';cloud.email=null;cloud.name='';paintCloud();return;}
+   cloud.name=u.displayName||'';cloud.email=u.email||null;
+   cloud.ref=fbRef(u.uid);
+   await cloudMerge();return;
+  }
+  cloud.kind='none';cloud.status='off';paintCloud();
  }catch(e){cloud.status='off';paintCloud();}
 }
+async function googleLogin(){
+ if(!canFirebase())return;
+ toast('Google 로그인 창 여는 중…');
+ if(!await fbReady()){toast('Firebase 연결 실패 (네트워크)');return;}
+ try{const p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
+  try{await firebase.auth().signInWithPopup(p);}catch(e){if(/popup|operation-not-supported/i.test(e.code||''))await firebase.auth().signInWithRedirect(p);else throw e;}
+  await cloudInit();render();toast(cloud.status==='cloud'?'Google 계정 연결됨':'연결 실패');
+ }catch(e){toast('로그인 취소 또는 실패');}
+}
+async function googleLogout(){try{if(window.firebase)await firebase.auth().signOut();}catch(e){}cloud.ref=null;cloud.status='off';cloud.email=null;cloud.name='';render();toast('로그아웃 · 이 기기에만 저장');}
 /* ---------- 저장 코드 (웹 ↔ 앱 이어하기) ---------- */
 function exportCode(){try{return 'SH1.'+btoa(unescape(encodeURIComponent(JSON.stringify(state))));}catch(e){return '';}}
 function importCode(code){try{code=(code||'').trim();if(!code.startsWith('SH1.'))return false;const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));if(!o||typeof o!=='object'||!o.party)return false;state={...defaultState(),...o};save();render();return true;}catch(e){return false;}}
@@ -993,14 +1036,14 @@ function viewLobby(){
  const s=el(`<section class="screen lobby">
   <img class="bgimg" src="${A.bg_lobby}" alt="">
   <div class="veil"></div>
-  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v2.8</span></div>
+  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v2.9</span></div>
   <div class="lobby-wallet"><span>GOLD <b>${fmt(state.gold)}</b></span><span>CLEAR <b>${cleared}/${STAGES.length}</b></span></div>
   <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button>
   <div class="lobby-hero">${A[lead.id+'_l_body']?`<div class="rig lobby-rig"><img class="rl body" src="${A[lead.id+'_l_body']}" alt="${lead.name}">${rigLayers(lead.id,lead.id)}<div class="wglow" style="left:${RIG[lead.id].watch.x*100}%;top:${RIG[lead.id].watch.y*100}%"></div></div>${dustHtml(12)}`:`<img class="art" src="${A[lead.id]}" alt="${lead.name}" style="animation:breathe calc(4s / var(--rate)) ease-in-out infinite;transform-origin:50% 100%">`}<div class="name"><span class="r">${lead.en} · LV.${heroLv(lead.id)}</span><span class="n">${lead.name}</span></div></div>
   <div class="lobby-progress"><span>다음 모험 <b>${nextStage().no} ${nextStage().name}</b></span><span>편성 <b>${state.party.length}명</b></span></div>
   <div class="lobby-actions"><button class="btn primary cut-r" data-go="adventure">모험 <small>ADVENTURE</small></button><button class="btn cut-l" data-go="party">편성 <small>PARTY</small></button><button class="btn ghost cut-r" data-go="heroes" style="height:40px;font-size:16px">도감 <small>CODEX · ${HEROES.length}/${HEROES.length+LOCKED_HEROES.length}</small></button><button class="btn ghost cut-l" data-go="settings" style="height:40px;font-size:16px">설정 <small>SETTINGS</small></button></div>
  </section>`);
- s.addEventListener('click',e=>{if(e.target.closest('#cloud')){saveCodeDialog();return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
+ s.addEventListener('click',e=>{if(e.target.closest('#cloud')){if(cloud.kind==='fb'&&cloud.status!=='cloud')go('settings');else saveCodeDialog();return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
  return s;
 }
 /* ---------- 설정 (사운드 · 계정) ---------- */
@@ -1013,11 +1056,22 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
    <div class="setrow"><span><b>음량</b><small>${Math.round(c.vol*100)}%</small></span><input type="range" id="vol" min="0" max="100" value="${Math.round(c.vol*100)}"></div></div>
   <div class="setsec">계정 · 저장</div>
   <div class="setbox">
+   ${cloud.kind==='fb'?`
+   <div class="setrow acct"><span><b>${acct?'Google 계정 연결됨':'Google 계정 미연동'}</b><small>${acct?(cloud.email||cloud.name||'Google 계정')+' · 이 계정으로 로그인한 모든 기기(웹·앱)가 같은 진행도를 씀':'연동하면 웹·앱 어디서든 같은 진행도 (지금은 이 기기에만 저장)'}</small></span><i class="dot ${acct?'on':''}"></i></div>
+   ${acct?`<button class="setrow" id="s-sync"><span><b>지금 동기화</b><small>클라우드와 이 기기 중 최신 진행도로 맞춤</small></span><em>↻</em></button>
+   <button class="setrow" id="s-google"><span><b>Google 계정 변경</b><small>다른 Google 계정으로 다시 로그인</small></span><em>›</em></button>
+   <button class="setrow" id="s-logout"><span><b>로그아웃</b><small>이 기기에만 저장하는 상태로 돌아감</small></span><em>›</em></button>`
+   :`<button class="setrow" id="s-google"><span><b>Google 계정 연동</b><small>Google 로그인 창이 열림 · 기존 클라우드 진행도가 있으면 최신 쪽으로 맞춤</small></span><em>G</em></button>`}
+   <button class="setrow" id="s-code"><span><b>저장 코드</b><small>기기 간 수동 이동 (복사 / 붙여넣기)</small></span><em>›</em></button>`
+   :cloud.kind==='claude'?`
    <div class="setrow acct"><span><b>${acct?'클라우드 연결됨':'클라우드 미연결'}</b><small>${acct?(cloud.email||cloud.name||'claude 계정')+' · 이 계정으로 로그인한 모든 기기가 같은 진행도를 씀':'claude.ai에 로그인하면 자동 연결 (지금은 이 기기에만 저장)'}</small></span><i class="dot ${acct?'on':''}"></i></div>
    <button class="setrow" id="s-sync"><span><b>지금 동기화</b><small>클라우드와 이 기기 중 최신 진행도로 맞춤</small></span><em>↻</em></button>
    <button class="setrow" id="s-switch"><span><b>계정 변경</b><small>다른 claude 계정으로 바꾸려면 claude.ai에서 로그아웃 후 다시 로그인 → 이 화면에서 '지금 동기화'</small></span><em>›</em></button>
    <button class="setrow" id="s-code"><span><b>저장 코드</b><small>기기 간 수동 이동 (복사 / 붙여넣기)</small></span><em>›</em></button>
-   <button class="setrow dis" id="s-google" disabled><span><b>Google 계정 연동</b><small>자체 호스팅 후 활성화 예정 (준비 중)</small></span><em>준비 중</em></button>
+   <div class="setrow dis"><span><b>Google 계정 연동</b><small>웹 주소(자체 호스팅)로 열었을 때만 가능</small></span><em>—</em></div>`
+   :`
+   <div class="setrow acct"><span><b>이 기기에만 저장</b><small>오프라인 모드 · 온라인으로 열면 Google 계정 연동 가능</small></span><i class="dot"></i></div>
+   <button class="setrow" id="s-code"><span><b>저장 코드</b><small>기기 간 수동 이동 (복사 / 붙여넣기)</small></span><em>›</em></button>`}
   </div>
   <div class="setsec">기타</div>
   <div class="setbox">${tog('motion','모션',state.motion,'끄면 카드·컷인 움직임 최소화')}${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
@@ -1031,6 +1085,8 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
    render();SND.play('toggle');return;}
   if(e.target.closest('#s-sync')){toast('동기화 중…');await cloudInit();render();toast(cloud.status==='cloud'?'동기화 완료':'클라우드에 연결되지 않음');return;}
   if(e.target.closest('#s-switch')){toast('claude.ai에서 계정을 바꾼 뒤 이 화면으로 돌아와 동기화');return;}
+  if(e.target.closest('#s-google')){if(cloud.ref){try{await firebase.auth().signOut();}catch(x){}cloud.ref=null;}await googleLogin();return;}
+  if(e.target.closest('#s-logout')){await googleLogout();return;}
   if(e.target.closest('#s-code')){saveCodeDialog();return;}
   if(e.target.closest('#s-reset')){if(!confirm('진행도를 모두 지울까요? 되돌릴 수 없어요.'))return;state=defaultState();state.ts=Date.now();try{localStorage.removeItem(RESUME_KEY);}catch(x){}save();try{if(cloud.ref)await cloud.ref.set(JSON.parse(JSON.stringify(state)));}catch(x){}render();toast('초기화 완료');return;}
   const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
