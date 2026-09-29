@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v3.4)</title>
+<title>신흔 DIVINE TRACE (v3.5)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -670,6 +670,29 @@ body.fx-off .mini .band i{display:none}
 .hero-detail .skrow .sk.ps{box-shadow:inset 0 0 0 1px #B48CFF,0 0 8px rgba(180,140,255,.4)}
 .hero-detail .nm .own{color:var(--ally1);margin-left:6px}
 .hero-detail .syns{display:flex;flex-direction:column;gap:6px;padding:6px 12px 4px}
+/* v3.5 도감 개편: 도감 번호 · 수집률 · 컷 갤러리 */
+.codex-rate{flex:none;margin-bottom:6px;padding:7px 10px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.codex-rate .t{display:flex;align-items:baseline;gap:8px;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.codex-rate .t b{font-family:var(--bb);font-size:16px;font-weight:400;color:#fff}
+.codex-rate .t em{margin-left:auto;font-style:normal;font-family:var(--bb);font-size:18px;color:#F2C96F}
+.codex-rate .bar{height:5px;margin-top:5px;background:rgba(255,255,255,.1)}
+.codex-rate .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),#F2C96F)}
+.codex-grid .hero-card .cno{position:absolute;left:6px;top:6px;z-index:1;font-family:var(--bb);font-size:13px;letter-spacing:.06em;padding:0 5px;height:17px;line-height:18px;color:#F2C96F;background:rgba(12,11,15,.72);box-shadow:inset 0 0 0 1px rgba(242,201,111,.45)}
+.codex-grid .hero-card.locked .cno{color:var(--muted);box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.hero-detail .hd.gal{height:190px;background:radial-gradient(ellipse at 50% 40%,rgba(120,100,160,.16),#0d0c11 70%)}
+.hero-detail .hd .gv{position:absolute;inset:0}
+.hero-detail .hd.alt .gv img{object-fit:contain;object-position:center}
+.hero-detail .hd.alt .shade{background:linear-gradient(180deg,rgba(18,16,22,0) 55%,rgba(18,16,22,.95))}
+.hero-detail .hd .hd-rig{position:relative;height:100%;aspect-ratio:3/4;margin:0 auto}
+.hero-detail .hd .hd-rig img{position:absolute;inset:auto;object-fit:contain}
+.hero-detail .hd .hd-rig .rl.body{left:0;top:0;width:100%;height:100%}
+.hero-detail .gnav{position:absolute;top:50%;z-index:2;width:28px;height:40px;margin-top:-28px;font-size:24px;line-height:1;color:#fff;background:rgba(12,11,15,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.hero-detail .gnav.p{left:6px}.hero-detail .gnav.n{right:6px}
+.hero-detail .gcnt{position:absolute;right:10px;top:8px;z-index:2;font-family:var(--bb);font-size:12px;color:var(--silver);letter-spacing:.08em}
+.hero-detail .gtabs{display:flex;gap:4px;padding:6px 12px 0;overflow-x:auto;scrollbar-width:none}
+.hero-detail .gtabs::-webkit-scrollbar{display:none}
+.hero-detail .gtabs button{flex:none;padding:3px 8px;font-size:10.5px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.hero-detail .gtabs button.on{color:#fff;box-shadow:inset 0 0 0 1px #F2C96F;background:rgba(242,201,111,.1)}
 .synrow{padding:7px 9px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);border-left:3px solid var(--muted)}
 .synrow.on{border-left-color:#F2C96F;background:rgba(242,201,111,.07)}
 .synrow.lock{opacity:.6}
@@ -901,7 +924,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v3.4 — 게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v3.5 — 게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1272,7 +1295,7 @@ function viewLobby(){
  const s=el(`<section class="screen lobby">
   <img class="bgimg" src="${A.bg_lobby}" alt="">
   <div class="veil"></div>
-  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.4</span></div>
+  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.5</span></div>
   <div class="lobby-wallet"><span>GOLD <b>${fmt(state.gold)}</b></span><span>CLEAR <b>${cleared}/${STAGES.length}</b></span></div>
   <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button>
   <div class="lobby-hero">${A[lead.id+'_l_body']?`<div class="rig lobby-rig"><img class="rl body" src="${A[lead.id+'_l_body']}" alt="${lead.name}">${rigLayers(lead.id,lead.id)}<div class="wglow w-${lead.id}" style="left:${RIG[lead.id].watch.x*100}%;top:${RIG[lead.id].watch.y*100}%"></div></div>${dustHtml(12)}`:`<img class="art" src="${A[lead.id]}" alt="${lead.name}" style="animation:breathe calc(4s / var(--rate)) ease-in-out infinite;transform-origin:50% 100%">`}<div class="name"><span class="r">${lead.en} · LV.${heroLv(lead.id)}</span><span class="n">${lead.name}</span></div></div>
@@ -1336,10 +1359,13 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
 function heroStats(h){const lv=heroLv(h.id),m=lvMult(lv);return {lv,atk:Math.round(h.atk*m),hp:Math.round(h.hp*m),def:h.def,spd:h.spd,crit:CRIT.chance,critM:CRIT.mult,weak:WEAK.chance,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
 const owned=id=>!!HEROES.find(h=>h.id===id); // 현재는 5명 전원 보유. 소환 시스템이 생기면 state.owned 기준으로 변경
 function viewHeroes(){
+ const all=HEROES.length+LOCKED_HEROES.length,got=HEROES.filter(h=>owned(h.id)).length,pct=Math.round(got/all*100);
+ const no=i=>'No.'+String(i+1).padStart(2,'0');
  const s=el(`<section class="screen">
-  <div class="topbar"><div class="left"><span class="stage-no">CODEX</span><span class="stage-name">캐릭터 도감</span></div><div class="right"><span class="turn">보유 <b>${HEROES.length}</b> / ${HEROES.length+LOCKED_HEROES.length}</span></div></div>
-  <div class="party-grid">${HEROES.map(h=>{const st=heroStats(h);const i=state.party.indexOf(h.id);return `<button class="hero-card cut-r" data-id="${h.id}"><img src="${A[h.id]}" alt=""><div class="shade"></div>${i>=0?`<span class="slot">${i+1}</span>`:''}<div class="meta"><span class="n">${h.name}</span><span class="lv">LV.${st.lv}</span><span class="role">${h.role}</span></div></button>`;}).join('')}${LOCKED_HEROES.map(h=>`<button class="hero-card cut-r locked" data-id="${h.id}"><div class="sil">?</div><div class="shade"></div><div class="meta"><span class="n">???</span><span class="lv">미해금</span><span class="role">${h.hint}</span></div></button>`).join('')}</div>
-  <p class="party-note">카드를 누르면 설정·스킬·고유 패시브·파티 시너지를 볼 수 있어요. ???는 스토리 진행 시 공개.</p>
+  <div class="topbar"><div class="left"><span class="stage-no">CODEX</span><span class="stage-name">캐릭터 도감</span></div><div class="right"><span class="turn">보유 <b>${got}</b> / ${all}</span></div></div>
+  <div class="codex-rate cut-r"><div class="t"><span>수집률</span><b>${got} / ${all}</b><em>${pct}%</em></div><div class="bar"><i style="width:${pct}%"></i></div></div>
+  <div class="party-grid codex-grid">${HEROES.map((h,i)=>{const st=heroStats(h);return `<button class="hero-card cut-r" data-id="${h.id}"><img src="${A[h.id]}" alt=""><div class="shade"></div><span class="cno">${no(i)}</span><div class="meta"><span class="n">${h.name}</span><span class="lv">LV.${st.lv}</span><span class="role">${h.role}</span></div></button>`;}).join('')}${LOCKED_HEROES.map((h,i)=>`<button class="hero-card cut-r locked" data-id="${h.id}"><div class="sil">?</div><div class="shade"></div><span class="cno">${no(HEROES.length+i)}</span><div class="meta"><span class="n">???</span><span class="lv">미해금</span><span class="role">${h.hint}</span></div></button>`).join('')}</div>
+  <p class="party-note">카드를 누르면 설정·스킬·고유 패시브·파티 시너지와 보유한 컷을 볼 수 있어요. ???는 스토리 진행 시 공개.</p>
   <div class="party-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn primary cut-r" data-go="party">편성으로</button></div>
  </section>`);
  s.addEventListener('click',e=>{const c=e.target.closest('.hero-card');if(c){if(c.classList.contains('locked')){toast('아직 만나지 못한 인물이에요');return;}heroDetail(c.dataset.id);return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
@@ -1354,7 +1380,10 @@ function heroDetail(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);
   const on=sy.ids.every(i=>state.party.includes(i));
   return `<div class="synrow ${on?'on':''}"><div class="nm">◆ ${sy.name}<em>${on?'활성 · 현재 편성':'비활성 · 함께 편성하면 활성'}</em></div><div class="who">${members}<small>${sy.tag}</small></div><div class="ln"><span class="k">발동 조건</span>${sy.ids.length===2?'두':'모든'} 캐릭터가 같은 전투 파티에 편성되어 있을 때 활성화</div><div class="ln"><span class="k">효과</span>${sy.desc(sy.v)}</div><div class="ln"><span class="k">전투불능 시</span>${sy.death(sy.v)}</div></div>`;}).join('')||'<div class="synrow lock"><div class="ln">파티 시너지 없음</div></div>';
  const critT=CRIT.chance+(ps&&ps.v.crit||0),weakT=WEAK.chance+(ps&&ps.v.weak||0);
- const d=el(`<div class="pause"><div class="box wide hero-detail codex"><div class="hd"><img src="${A[id]}" alt=""><div class="shade"></div><div class="nm"><span class="r">${h.en} · ${h.role}</span><span class="n">${h.name}</span><span class="lv">LV.${st.lv} <small>XP ${st.xp}/${st.need}</small> <small class="own">보유 · ${state.party.includes(id)?'편성 중':'대기'}</small></span></div></div>
+ const ar=h.art||{};const cuts=[[id,'기본'],[ar.hit,'피격'],[ar.hurt,'부상'],[ar.down,'전투불능'],[ar.skill,'스킬 컷인'],[RIG[id]&&A[id+'_l_body']?'rig':null,'일러스트']].filter(([k])=>k&&(k==='rig'||A[k])); // 게임에 이미 있는 이미지만
+ const cutHtml=k=>k==='rig'?`<div class="rig hd-rig"><img class="rl body" src="${A[id+'_l_body']}" alt="">${rigLayers(id,id)}</div>`:`<img src="${A[k]}" alt="">`;
+ const d=el(`<div class="pause"><div class="box wide hero-detail codex"><div class="hd gal"><div class="gv">${cutHtml(id)}</div><div class="shade"></div>${cuts.length>1?`<button class="gnav p" data-g="-1">‹</button><button class="gnav n" data-g="1">›</button><span class="gcnt">1 / ${cuts.length}</span>`:''}<div class="nm"><span class="r">${h.en} · ${h.role}</span><span class="n">${h.name}</span><span class="lv">LV.${st.lv} <small>XP ${st.xp}/${st.need}</small> <small class="own">보유 · ${state.party.includes(id)?'편성 중':'대기'}</small></span></div></div>
+  ${cuts.length>1?`<div class="gtabs">${cuts.map(([,l],i)=>`<button class="${i?'':'on'}" data-gi="${i}">${l}</button>`).join('')}</div>`:''}
   <div class="scroll">
   <div class="lore"><div><span class="k">출신</span>${lore.origin||'-'}</div><div><span class="k">성격</span>${lore.trait||'-'}</div><div><span class="k">무기</span>${lore.weapon||'-'}</div><p>${lore.intro||''}</p></div>
   <div class="stats"><div><span class="k">공격</span><b>${st.atk}</b></div><div><span class="k">방어</span><b>${st.def}</b></div><div><span class="k">체력</span><b>${fmt(st.hp)}</b></div><div><span class="k">속도</span><b>${st.spd}</b></div><div><span class="k">치명 확률</span><b>${P(critT)}</b><small>×${CRIT.mult}</small></div><div><span class="k">약점 확률</span><b>${P(weakT)}</b><small>×${WEAK.mult}</small></div></div>
@@ -1364,7 +1393,8 @@ function heroDetail(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);
   <div class="calc">계산 기준 · 1타 피해 = (공격력×계수 + 방어력×계수) − 적 방어력×0.8, 무작위 ±8% → 약점 ×${WEAK.mult} · 치명 ×${CRIT.mult} → 받는 피해 증가·감소 → 보호막이 HP보다 먼저 흡수<br>[현재] = 현재 레벨 능력치 × 계수 (다른 버프·적 방어력 적용 전) · 적 1명 = 전장에서 누른 적이 있으면 그 적 · 턴 = 효과를 받은 캐릭터 자신의 행동 횟수 · 스킬은 전투 시작부터 사용 가능</div>
   </div>
   <div class="row"><button class="btn ghost" id="hd-close">닫기</button></div></div></div>`);
- $('#app').appendChild(d);d.addEventListener('click',e=>{if(e.target.closest('#hd-close')||e.target===d)d.remove();});}
+ let gi=0;const show=i=>{gi=(i+cuts.length)%cuts.length;const[k]=cuts[gi];$('.gv',d).innerHTML=cutHtml(k);$('.hd',d).classList.toggle('alt',gi>0);$('.gcnt',d).textContent=`${gi+1} / ${cuts.length}`;d.querySelectorAll('.gtabs button').forEach((b,j)=>b.classList.toggle('on',j===gi));};
+ $('#app').appendChild(d);d.addEventListener('click',e=>{if(e.target.closest('#hd-close')||e.target===d){d.remove();return;}const g=e.target.closest('[data-g]');if(g){show(gi+Number(g.dataset.g));return;}const t=e.target.closest('[data-gi]');if(t)show(Number(t.dataset.gi));});}
 function nextStage(){return STAGES.find(s=>!state.cleared[s.no])||STAGES[STAGES.length-1];}
 
 /* ---------- 편성 ---------- */
