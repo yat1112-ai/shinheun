@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v3.7)</title>
+<title>신흔 DIVINE TRACE (v3.8)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -913,6 +913,25 @@ body.fx-off .mini .band i{display:none}
 .chv .hd .nm{right:12px;text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 8px rgba(0,0,0,.8)}
 .chv .hd .gcnt{text-shadow:0 1px 2px rgba(0,0,0,.9)}
 
+/* ===== v3.8 전투력 표시 (편성·모험·전투) — 초록 유리 / 노랑 비슷 / 빨강 불리 ===== */
+:root{--pw-up:#7FCDB0;--pw-even:#F2C96F;--pw-down:#F04A63}
+.topbar .turn.pw b{color:#F2C96F}
+.pw-cmp{flex:none;display:flex;align-items:baseline;gap:6px;padding:6px 10px;background:var(--panel);border:1px solid var(--line);font-family:var(--bb);font-size:13px;line-height:1;color:var(--silver);white-space:nowrap;min-width:0}
+.pw-cmp .k{font-size:11px;color:var(--muted);margin-right:auto;overflow:hidden;text-overflow:ellipsis}
+.pw-cmp b{font-weight:400;font-size:16px;color:#fff}
+.pw-cmp .vs{color:var(--muted)}
+.pw-cmp.up .me b,.stage-row .pw.up b,.pw-bt.up .a b{color:var(--pw-up)}
+.pw-cmp.even .me b,.stage-row .pw.even b,.pw-bt.even .a b{color:var(--pw-even)}
+.pw-cmp.down .me b,.stage-row .pw.down b,.pw-bt.down .a b{color:var(--pw-down)}
+.pw-cmp.up{border-left:2px solid var(--pw-up)}.pw-cmp.even{border-left:2px solid var(--pw-even)}.pw-cmp.down{border-left:2px solid var(--pw-down)}
+.stage-row .pw{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--bb);letter-spacing:.02em}
+.stage-row .pw b{font-weight:400;font-size:12px}
+.pw-bt{position:absolute;left:4px;top:4px;z-index:400;pointer-events:none;padding:3px 6px;background:rgba(12,11,15,.72);border-left:2px solid var(--muted);font-family:var(--bb);font-size:10px;line-height:1.25;color:var(--silver);white-space:nowrap}
+.pw-bt span{display:block;font-size:9px;color:var(--muted)}
+.pw-bt b{font-weight:400;font-size:12px;color:#fff}
+.pw-bt.up{border-left-color:var(--pw-up)}.pw-bt.even{border-left-color:var(--pw-even)}.pw-bt.down{border-left-color:var(--pw-down)}
+.pw-bt .e b{color:#F04A63}
+
 </style>
 </head>
 <body>
@@ -986,7 +1005,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v3.7 — 게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v3.8 — 게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1357,7 +1376,7 @@ function viewLobby(){
  const s=el(`<section class="screen lobby">
   <img class="bgimg" src="${A.bg_lobby}" alt="">
   <div class="veil"></div>
-  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.7</span></div>
+  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.8</span></div>
   <div class="lobby-wallet"><span>GOLD <b>${fmt(state.gold)}</b></span><span>CLEAR <b>${cleared}/${STAGES.length}</b></span></div>
   <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button>
   <div class="lobby-hero">${A[lead.id+'_l_body']?`<div class="rig lobby-rig"><img class="rl body" src="${A[lead.id+'_l_body']}" alt="${lead.name}">${rigLayers(lead.id,lead.id)}<div class="wglow w-${lead.id}" style="left:${RIG[lead.id].watch.x*100}%;top:${RIG[lead.id].watch.y*100}%"></div></div>${dustHtml(12)}`:`<img class="art" src="${A[lead.id]}" alt="${lead.name}" style="animation:breathe calc(4s / var(--rate)) ease-in-out infinite;transform-origin:50% 100%">`}<div class="name"><span class="r">${lead.en} · LV.${heroLv(lead.id)}</span><span class="n">${lead.name}</span></div></div>
@@ -1512,7 +1531,7 @@ function viewParty(){
  const nameOf=i=>(HEROES.find(x=>x.id===i)||{}).name||'???';
  const act=synergiesFor(state.party),rest=SYNERGY.filter(sy=>!sy.locked&&sy.ids.every(owned)&&!act.includes(sy));
  const s=el(`<section class="screen">
-  <div class="topbar"><div class="left"><span class="stage-no">PARTY</span><span class="stage-name">편성</span></div><div class="right"><span class="turn">${state.party.length} / 5</span></div></div>
+  <div class="topbar"><div class="left"><span class="stage-no">PARTY</span><span class="stage-name">편성</span></div><div class="right"><span class="turn pw">전투력 <b>${fmt(partyPower(state.party))}</b></span><span class="turn">${state.party.length} / 5</span></div></div>
   <div class="party-grid">${HEROES.map(h=>{const i=state.party.indexOf(h.id);return `<button class="hero-card cut-r ${i>=0?'picked':''}" data-id="${h.id}"><img src="${A[h.id]}" alt=""><div class="shade"></div>${i>=0?`<span class="slot">${i+1}</span>`:''}<div class="meta"><span class="n">${h.name}</span><span class="lv">LV.${heroLv(h.id)} · SPD ${h.spd}</span><span class="role">${h.role}</span></div></button>`;}).join('')}</div>
   <div class="syn-now cut-r"><div class="h">[활성 파티 시너지]</div>${act.length?act.map(sy=>`<div class="on">◆ ${sy.name} <small>${sy.ids.map(nameOf).join(' + ')}</small></div>`).join(''):'<div class="none">없음</div>'}${rest.map(sy=>`<div class="off">◇ ${sy.name} <small>${sy.ids.filter(i=>!state.party.includes(i)).map(nameOf).join('·')} 편성 시 활성</small></div>`).join('')}</div>
   <p class="party-note">카드를 눌러 넣고 빼요. 3~5명, 순서는 누른 순서. 파티 시너지는 이 편성으로 들어간 전투에서만 적용돼요.</p>
@@ -1528,11 +1547,13 @@ function viewAdventure(){
  const chUnlocked=c=>c.no===1||STAGES.filter(s=>s.ch===c.no-1).every(s=>state.cleared[s.no]);
  const list=STAGES.map((st,i)=>({st,i})).filter(x=>x.st.ch===cur.no);
  const done=list.filter(x=>state.cleared[x.st.no]).length;
+ const myPw=partyPower(state.party),tgt=(list.find(x=>!state.cleared[x.st.no])||list[list.length-1]).st,tgPw=stagePower(tgt); // 비교 대상 = 이 챕터의 다음 도전 스테이지
  const s=el(`<section class="screen adv">
   <div class="topbar"><div class="left"><span class="stage-no">ADV</span><span class="stage-name">모험</span></div><div class="right"><span class="dps">GOLD</span><span class="total">${fmt(state.gold)}</span></div></div>
   <div class="ch-tabs">${CHAPTERS.map(c=>`<button class="ch-tab ${c.no===cur.no?'on':''} ${chUnlocked(c)?'':'locked'}" data-ch="${c.no}" ${chUnlocked(c)?'':'disabled'}>CH.${c.no}</button>`).join('')}</div>
   <div class="ch-banner cut-r"><img src="${A[cur.bg]}" alt=""><div class="shade"></div><div class="txt"><span class="c">CHAPTER ${cur.no} · ${cur.en}</span><span class="t">${cur.name}</span><span class="d">${cur.desc}</span></div><span class="prog">${done}/${list.length}</span></div>
-  <div class="stage-list">${list.map(({st,i})=>{const locked=i>0&&!state.cleared[STAGES[i-1].no];const cleared=!!state.cleared[st.no];return `<button class="stage-row cut-r ${locked?'locked':''} ${cleared?'cleared':''} ${st.boss?'boss':''}" data-i="${i}" ${locked?'disabled':''}><span class="no">${st.no}</span><span><div class="nm">${st.boss?'BOSS · ':''}${st.name}</div><div class="en">${st.en} · 적 ${st.foes.length} · 권장 LV.${st.lv}</div></span><span class="st">${locked?'LOCKED':cleared?'CLEAR':'READY'}</span></button>`;}).join('')}</div>
+  <div class="pw-cmp cut-r ${pwCls(myPw,tgPw)}"><span class="k">전투력 · ${tgt.no}</span><span class="me">내 파티 <b>${fmt(myPw)}</b></span><span class="vs">/</span><span class="fo">적 <b>${fmt(tgPw)}</b></span></div>
+  <div class="stage-list">${list.map(({st,i})=>{const locked=i>0&&!state.cleared[STAGES[i-1].no];const cleared=!!state.cleared[st.no];const fp=stagePower(st);return `<button class="stage-row cut-r ${locked?'locked':''} ${cleared?'cleared':''} ${st.boss?'boss':''}" data-i="${i}" ${locked?'disabled':''}><span class="no">${st.no}</span><span><div class="nm">${st.boss?'BOSS · ':''}${st.name}</div><div class="en">${st.en} · 적 ${st.foes.length} · 권장 LV.${st.lv}</div><div class="pw ${pwCls(myPw,fp)}">적 전투력 <b>${fmt(fp)}</b></div></span><span class="st">${locked?'LOCKED':cleared?'CLEAR':'READY'}</span></button>`;}).join('')}</div>
   <div class="adv-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn ghost" data-go="party">편성 (${state.party.length}명)</button></div>
  </section>`);
  s.addEventListener('click',e=>{const t=e.target.closest('.ch-tab');if(t&&!t.disabled){state.chapter=Number(t.dataset.ch);save();render();return;}const r=e.target.closest('.stage-row');if(r&&!r.disabled){startBattle(Number(r.dataset.i));return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
@@ -1542,6 +1563,19 @@ function viewAdventure(){
 /* ---------- 전투 준비 ---------- */
 function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id));return {side:'ally',i,id,name:h.name,en:h.en,atk:Math.round(h.atk*m),max:Math.round(h.hp*m),hp:Math.round(h.hp*m),spd:h.spd,def:h.def,s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:h.s2.cd,cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
 function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
+/* v3.8 전투력 (표시 전용 · 전투 계산에는 안 씀) — 아군·적 같은 식
+   전투력 = √(공격 기대치 × 생존 기대치) × 10, 파티/적 편성 = 합계 (란체스터식: 합계 비율로 우열 비교)
+   공격 기대치 = 공격력 × (1 + 치명·약점 기대 가산) × (1 + 스킬 가산) × 속도/100 · 생존 기대치 = 체력 × (1 + 방어/100)
+   스킬 가산 = 스킬마다 (가치 − 1) ÷ 쿨다운, 가치 = 피해 계수×타수(전체 공격 ×2) + 보조 효과 1개당 0.75 · 고유 패시브 보유 ×1.15 (실제 전투 시뮬레이션으로 맞춤, tests/power_check.js) */
+function powerOf(u){const hp=u.max||u.hp,crit=u.crit!=null?u.crit:CRIT.chance,weak=u.weak!=null?u.weak:WEAK.chance;
+ const skv=sk=>{if(!sk)return 0;let v=0;for(const e of sk.fx)v+=e.t==='dmg'?(e.mult*(e.hits||1)+(e.defMult?e.defMult*u.def/u.atk:0))*(e.to==='all'||e.to==='foes'?2:1):.75;return Math.max(0,v-1)/sk.cd;};
+ const off=u.atk*(1+crit*(CRIT.mult-1)+weak*(WEAK.mult-1))*(1+skv(u.s1)+skv(u.s2))*u.spd/100,dur=hp*(1+u.def/100);
+ return Math.round(Math.sqrt(off*dur)*10*(u.ps?1.15:1));}
+function heroPower(id){const h=HEROES.find(x=>x.id===id);if(!h)return 0;const st=heroStats(h),ps=PASSIVE[id];
+ return powerOf({atk:st.atk,max:st.hp,def:st.def,spd:st.spd,s1:h.s1,s2:h.s2,crit:CRIT.chance+(ps&&ps.v.crit||0),weak:WEAK.chance+(ps&&ps.v.weak||0),ps:!!ps});}
+const partyPower=ids=>ids.reduce((n,id)=>n+heroPower(id),0);
+const stagePower=st=>st.foes.reduce((n,k,i)=>n+powerOf(mkFoe(k,i,st.lv)),0);
+const pwCls=(me,foe)=>me>=foe*1.1?'up':me<=foe*.9?'down':'even'; // 10% 이상 차이: 초록(유리)/빨강(불리), 그 사이 노랑
 const RESUME_KEY='shinheun-resume';
 function saveResume(){if(!battle)return;try{localStorage.setItem(RESUME_KEY,JSON.stringify({i:battle.stageIndex,after:state.after,repeat:battle.repeat,t:Date.now()}));}catch(e){}}
 function clearResume(){try{localStorage.removeItem(RESUME_KEY);}catch(e){}}
@@ -1563,11 +1597,12 @@ function startBattle(stageIndex,keepRepeat=false){
 /* ---------- 전투 화면 ---------- */
 function viewBattle(){
  const b=battle,st=b.stage;
+ const aPw=partyPower(b.allies.map(h=>h.id)),ePw=stagePower(st); // 전투 시작 시 값 (표시 전용)
  const s=el(`<section class="screen battle"><img class="bgimg deep" src="${chBg(st)}" alt=""><div class="veil deep"></div>
   <div class="topbar"><div class="left"><span class="stage-no">${st.no}</span><span class="stage-name">${st.name}</span><span class="sep"></span><span class="turn">Round <b id="turn">01</b></span><span class="turn act">Act <b id="act">00</b></span></div><div class="right"><span class="dps" id="dps">DPS 0</span><span class="total" id="total">0</span></div></div>
   <div class="hud panel cut-r"><div class="side"><div class="lab"><span class="k">ALLY</span><span class="v" id="ally-num"></span></div><div class="bar ally hp"><div class="clip"><i class="ghost" id="ally-g"></i><i class="fill" id="ally-f"></i></div></div></div><div class="vs">VS</div><div class="side"><div class="lab"><span class="v" id="foe-num"></span><span class="k ${b.foes.some(f=>f.boss)?'boss':''}">${b.foes.some(f=>f.boss)?'BOSS':'ENEMY'}</span></div><div class="bar enemy hp"><div class="clip"><i class="ghost" id="foe-g"></i><i class="fill" id="foe-f"></i></div></div></div></div>
   <div class="order"><div class="cap"><span>ACTION</span><span>ORDER</span></div><div class="track" id="order"></div></div>
-  <div class="arena cut-l" id="arena"><img class="bg" src="${chBg(st)}" alt=""><div class="fog"></div><div class="floor"></div>${b.foes.map(foeHtml).join('')}</div>
+  <div class="arena cut-l" id="arena"><img class="bg" src="${chBg(st)}" alt=""><div class="fog"></div><div class="floor"></div>${b.foes.map(foeHtml).join('')}<div class="pw-bt ${pwCls(aPw,ePw)}"><span>전투력</span><div class="a">아군 <b>${fmt(aPw)}</b></div><div class="e">적 <b>${fmt(ePw)}</b></div></div></div>
   <div class="repeat-line" id="repeat-line"></div>
   <div class="party-row" id="party">${b.allies.map(cardHtml).join('')}</div>
   <div class="dock panel cut-l"><button class="btn ico" id="pause" aria-label="일시정지"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2.5 1.5v7M7.5 1.5v7" stroke="#fff" stroke-width="2"/></svg></button><button class="btn auto ${state.fx?'':'off'}" id="fxtg" title="스킬 이펙트">FX · ${state.fx?'ON':'OFF'}</button><button class="btn auto ${state.after==='repeat'?'':'off'}" id="rep">반복</button><button class="btn auto ${state.after==='next'?'':'off'}" id="nxt">다음</button><div class="spd">${[1,2,4].map(v=>{const lock=v===4&&!state.cleared[st.no];return `<button data-spd="${v}" class="${state.speed===v?'on':''} ${lock?'lock':''}" ${lock?'disabled title="첫 클리어 후 해금"':''}>×${v}</button>`;}).join('')}</div></div>
