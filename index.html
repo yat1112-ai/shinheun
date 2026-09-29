@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v3.8)</title>
+<title>신흔 DIVINE TRACE (v3.9)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -932,6 +932,18 @@ body.fx-off .mini .band i{display:none}
 .pw-bt.up{border-left-color:var(--pw-up)}.pw-bt.even{border-left-color:var(--pw-even)}.pw-bt.down{border-left-color:var(--pw-down)}
 .pw-bt .e b{color:#F04A63}
 
+/* ===== v3.9 전투 HP바 이름 옆 유닛 전투력 (시작 시 값 고정) — 카드 폭 좁아 LV 는 이름 줄 위 오른쪽으로, 이름은 말줄임·전투력 우선 ===== */
+.card .meta .n{position:relative;gap:3px;min-width:0}
+.card .meta .n .nt{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .meta .n .upw{flex:none;margin-left:auto;font-style:normal;font-family:var(--bb);font-size:10px;letter-spacing:.02em;color:#F2C96F;white-space:nowrap}
+.card .meta .n .lvtag{position:absolute;right:0;bottom:100%;margin-bottom:3px;font-size:8.5px;text-shadow:0 1px 2px #000}
+.card.dead .meta .n .upw{opacity:.35}
+.foe .tag{display:flex;align-items:baseline;gap:2px;max-width:calc(100% + 4px)}
+.foe .tag .nm{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.foe .tag .boss,.foe .tag .lv,.foe .tag .upw{flex:none}
+.foe .tag .upw{font-family:var(--bb);font-size:9px;letter-spacing:.02em;color:#F2C96F}
+.foe.dead .tag .upw{opacity:.35}
+
 </style>
 </head>
 <body>
@@ -1005,7 +1017,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v3.8 — 게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v3.9 — 게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1376,7 +1388,7 @@ function viewLobby(){
  const s=el(`<section class="screen lobby">
   <img class="bgimg" src="${A.bg_lobby}" alt="">
   <div class="veil"></div>
-  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.8</span></div>
+  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.9</span></div>
   <div class="lobby-wallet"><span>GOLD <b>${fmt(state.gold)}</b></span><span>CLEAR <b>${cleared}/${STAGES.length}</b></span></div>
   <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button>
   <div class="lobby-hero">${A[lead.id+'_l_body']?`<div class="rig lobby-rig"><img class="rl body" src="${A[lead.id+'_l_body']}" alt="${lead.name}">${rigLayers(lead.id,lead.id)}<div class="wglow w-${lead.id}" style="left:${RIG[lead.id].watch.x*100}%;top:${RIG[lead.id].watch.y*100}%"></div></div>${dustHtml(12)}`:`<img class="art" src="${A[lead.id]}" alt="${lead.name}" style="animation:breathe calc(4s / var(--rate)) ease-in-out infinite;transform-origin:50% 100%">`}<div class="name"><span class="r">${lead.en} · LV.${heroLv(lead.id)}</span><span class="n">${lead.name}</span></div></div>
@@ -1629,7 +1641,7 @@ function foeLayout(){const b=battle;if(!b)return;const W=374,H=242,HEAD=26;const
  if(boss){place(boss,.5,212,1.0);const m=others.length;const cs=m===1?[[.15,150]]:m===2?[[.14,150],[.86,150]]:m===3?[[.13,140],[.87,140],[.5,120]]:[[.12,140],[.88,140],[.2,225],[.8,225]];others.forEach((f,i)=>{const c=cs[i]||[.5,150];place(f,c[0],c[1],.78);});return;}
  const m=b.foes.length;const form=FORM[Math.min(5,Math.max(1,m))],sc=FORM_S[Math.min(5,Math.max(1,m))];b.foes.forEach((f,i)=>{const c=form[i]||[.5,200];place(f,c[0],c[1],sc);});}
 function foePos(n,i,f){if(f.left==null)foeLayout();return {left:f.left,top:f.top};}
-function foeHtml(f){const p=foePos(battle.foes.length,f.i,f);return `<div class="foe ${f.boss?'boss':''}" data-i="${f.i}" style="left:${p.left}px;top:${p.top}px;width:${f.sw||f.w}px;z-index:${f.z||1}"><div class="tag">${f.boss?'<span class="boss">BOSS</span>':''}<span class="nm">${f.name}</span><span class="lv">LV.${battle.stage.lv}</span></div><div class="bar"><i class="ghost"></i><i class="fill"></i></div><div class="buffs bstrip foe-strip"></div><div class="shadow"></div><img class="sprite" src="${A[f.key]}" alt="${f.name}" style="width:${f.sw||f.w}px;height:${f.sh||f.h}px"><svg class="marker" viewBox="0 0 76 76"><path d="M2 18V2h16M58 2h16v16M74 58v16H58M18 74H2V58" fill="none" stroke="#F4F2F6" stroke-width="2"/><path d="M38 30v16M30 38h16" stroke="#D6203F" stroke-width="2"/></svg></div>`;}
+function foeHtml(f){const p=foePos(battle.foes.length,f.i,f);return `<div class="foe ${f.boss?'boss':''}" data-i="${f.i}" style="left:${p.left}px;top:${p.top}px;width:${f.sw||f.w}px;z-index:${f.z||1}"><div class="tag">${f.boss?'<span class="boss">BOSS</span>':''}<span class="nm">${f.name}</span><span class="lv">LV.${battle.stage.lv}</span><span class="upw">⚔${fmt(powerOf(mkFoe(f.key,f.i,battle.stage.lv)))}</span></div><div class="bar"><i class="ghost"></i><i class="fill"></i></div><div class="buffs bstrip foe-strip"></div><div class="shadow"></div><img class="sprite" src="${A[f.key]}" alt="${f.name}" style="width:${f.sw||f.w}px;height:${f.sh||f.h}px"><svg class="marker" viewBox="0 0 76 76"><path d="M2 18V2h16M58 2h16v16M74 58v16H58M18 74H2V58" fill="none" stroke="#F4F2F6" stroke-width="2"/><path d="M38 30v16M30 38h16" stroke="#D6203F" stroke-width="2"/></svg></div>`;}
 const ICON={single:'<path d="M5 1 9 5 5 9 1 5Z" fill="none" stroke="#fff" stroke-width="1.3"/>',aoe:'<path d="M1 5h8M5 1v8M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="1.1"/>',heal:'<path d="M5 1.5v7M1.5 5h7" stroke="#fff" stroke-width="1.5"/>',selfheal:'<path d="M5 1.5v7M1.5 5h7" stroke="#fff" stroke-width="1.5"/>',atkup:'<path d="M5 8V2M2 5l3-3 3 3" fill="none" stroke="#fff" stroke-width="1.3"/>',selfatk:'<path d="M5 8V2M2 5l3-3 3 3" fill="none" stroke="#fff" stroke-width="1.3"/>',defup:'<path d="M5 1 8.5 2.5V5c0 2-1.5 3.3-3.5 4C3 8.3 1.5 7 1.5 5V2.5Z" fill="none" stroke="#fff" stroke-width="1.2"/>',defdown:'<path d="M5 2v6M2 5l3 3 3-3" fill="none" stroke="#fff" stroke-width="1.3"/>'};
 /* 스킬 컨셉 아이콘 (16x16 SVG) — 스킬명으로 매칭, 없으면 타입 아이콘 */
 const SKICON={
@@ -1648,7 +1660,7 @@ const SKICON={
 const skIcon=(sk,h,k)=>{const key=h&&k?'sk_'+(h.id||h)+'_'+k:null;if(key&&A[key])return `<img class="ci img" src="${A[key]}" alt="">`;return SKICON[sk.name]?`<svg viewBox="0 0 16 16" class="ci">${SKICON[sk.name]}</svg>`:`<svg viewBox="0 0 10 10">${ICON[skIconType(sk)]}</svg>`;};
 const skIconType=sk=>{const k=skillKind(sk);return k==='atk'?(skAoe(sk)?'aoe':'single'):k==='heal'?'heal':k==='debuff'?'defdown':'atkup';};
 const skTip=(h,sk)=>sk.name+' · '+descSkill(sk,{name:h.name,atk:h.atk,def:h.def,hp:h.max}).join(' / ').replace(/<[^>]+>/g,'');
-function cardHtml(h){return `<div class="card cut-r" data-i="${h.i}"><img class="art" src="${A[h.id]}" alt="${h.name}"><div class="shade"></div><div class="aura"></div><div class="vign"></div><div class="flash"></div><div class="buffs bstrip"></div><div class="meta"><span class="n">${h.name}<em class="lvtag">LV.${heroLv(h.id)}</em></span><div class="bar"><i class="ghost"></i><i class="fill"></i><i class="shd"></i><span class="hpv"></span></div><div class="skills"><span class="sk s1 ${isSpecial(h,h.s1)?'sp':''}" title="${skTip(h,h.s1)}">${skIcon(h.s1,h,'s1')}<b></b></span><span class="sk s2 ${isSpecial(h,h.s2)?'sp':''}" title="${skTip(h,h.s2)}">${skIcon(h.s2,h,'s2')}<b></b></span></div></div></div>`;}
+function cardHtml(h){return `<div class="card cut-r" data-i="${h.i}"><img class="art" src="${A[h.id]}" alt="${h.name}"><div class="shade"></div><div class="aura"></div><div class="vign"></div><div class="flash"></div><div class="buffs bstrip"></div><div class="meta"><span class="n"><span class="nt">${h.name}</span><em class="upw">⚔${fmt(heroPower(h.id))}</em><em class="lvtag">LV.${heroLv(h.id)}</em></span><div class="bar"><i class="ghost"></i><i class="fill"></i><i class="shd"></i><span class="hpv"></span></div><div class="skills"><span class="sk s1 ${isSpecial(h,h.s1)?'sp':''}" title="${skTip(h,h.s1)}">${skIcon(h.s1,h,'s1')}<b></b></span><span class="sk s2 ${isSpecial(h,h.s2)?'sp':''}" title="${skTip(h,h.s2)}">${skIcon(h.s2,h,'s2')}<b></b></span></div></div></div>`;}
 
 /* 조각 위치: 사선 바(.hp)는 앞뒤 끝이 채움의 사선과 맞도록 컷 폭만큼 넓혀 같은 기울기로 자름 */
 const barPos=(rev,slant,x,w)=>slant?`${rev?'right':'left'}:calc(${x}% - var(--cut));width:calc(${w}% + var(--cut))`:`${rev?'right':'left'}:${x}%;width:${w}%`;
