@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v3.5)</title>
+<title>신흔 DIVINE TRACE (v3.6)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -851,6 +851,61 @@ body.fx-off .mini .band i{display:none}
 /* ===== v3.4 저장 경고 ===== */
 .cloud[data-s="off"]{color:#ff8f8f;font-size:11px;font-weight:600;animation:breathe 1.6s ease-in-out infinite}
 
+/* ===== v3.6 도감 아이콘 그리드 ===== */
+.cx-tabs{flex:none;display:flex;gap:4px}
+.cx-tabs button{flex:1 1 0;min-width:0;height:30px;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;font-family:var(--sm);font-size:13px;color:var(--silver);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.cx-tabs button.on{color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 0 -2px 0 var(--red),inset 0 0 0 1px rgba(255,255,255,.2)}
+.cx-tabs button.off{color:var(--muted);opacity:.6}
+.cx-tabs small{font-family:var(--body);font-size:9px}
+.cx-list{flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:6px}
+.cx-list::-webkit-scrollbar{display:none}
+.cx-sec{padding:6px 8px;border-left:3px solid var(--red);background:rgba(255,255,255,.04)}
+.cx-sec .t{display:flex;align-items:baseline;gap:5px;font-family:var(--sm);font-size:13px;color:#fff}
+.cx-sec .t b{margin-left:4px;font-family:var(--bb);font-weight:400;font-size:16px}
+.cx-sec .t i{font-style:normal;font-family:var(--bb);font-size:12px;color:var(--muted)}
+.cx-sec .t em{margin-left:auto;font-style:normal;font-family:var(--bb);font-size:16px;color:#F2C96F}
+.cx-sec .bar{height:4px;margin-top:4px;background:rgba(255,255,255,.1)}
+.cx-sec .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),#F2C96F)}
+.cx-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.cx-ic{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cx-ic .fc{position:relative;width:100%;aspect-ratio:1;overflow:hidden;display:grid;place-items:center;background:#121016}
+.cx-ic .fc:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.cx-ic .fc img{position:absolute;left:50%;top:-2%;width:190%;max-width:none;transform:translateX(-50%)}
+.cx-ic .no{position:absolute;left:2px;top:2px;z-index:1;padding:2px 3px;font-family:var(--bb);font-size:9px;line-height:1;color:#F2C96F;background:rgba(12,11,15,.75)}
+.cx-ic .n{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;color:var(--silver)}
+.cx-ic.locked .fc{background:radial-gradient(ellipse at 50% 40%,rgba(120,100,160,.18),#0d0c11 70%)}
+.cx-ic.locked .fc b{font-family:var(--bb);font-weight:400;font-size:28px;color:rgba(255,255,255,.18)}
+.cx-ic.locked .no,.cx-ic.locked .n{color:var(--muted)}
+
+/* ===== v3.6 캐릭터 창 ===== */
+.chv .chd{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;background:rgba(18,16,22,.6);box-shadow:inset 0 0 0 1px var(--line)}
+.chv .hd.gal{flex:none;height:270px;touch-action:pan-y}
+.chv .hd .gv img{object-fit:contain;object-position:center}
+.chv .hd .shade{background:linear-gradient(180deg,rgba(18,16,22,0) 60%,rgba(18,16,22,.95))}
+.chv .hd .nm{z-index:1}
+.chv .ch-back{position:absolute;left:6px;top:6px;z-index:2;height:24px;padding:0 9px;font-family:var(--sm);font-size:12px;color:#fff;background:rgba(12,11,15,.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.chv .ch-tabs{flex:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.chv .ch-tabs button{height:30px;white-space:nowrap;font-size:11.5px;color:var(--muted)}
+.chv .ch-tabs button.on{color:#fff;background:rgba(255,255,255,.05);box-shadow:inset 0 -2px 0 var(--red)}
+.chv .ch-body{flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:none;padding-bottom:6px}
+.chv .ch-body::-webkit-scrollbar{display:none}
+.chv .ch-cuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px 12px}
+.chv .ch-cuts button{display:flex;flex-direction:column;align-items:center;gap:3px}
+.chv .ch-cuts .ct{position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:#0d0c11}
+.chv .ch-cuts .ct:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.chv .ch-cuts button.on .ct:after{box-shadow:inset 0 0 0 2px #F2C96F}
+.chv .ch-cuts .ct img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 15%}
+.chv .ch-cuts .l{font-size:10.5px;color:var(--silver)}
+.chv .ch-cuts button.on .l{color:#fff}
+.chv .ch-thumbs{flex:none;position:relative;display:flex;gap:6px;padding:2px;overflow-x:auto;scrollbar-width:none}
+.chv .ch-thumbs::-webkit-scrollbar{display:none}
+.chv .ch-thumbs button{flex:none;position:relative;width:52px;height:52px;overflow:hidden;background:#121016;opacity:.55}
+.chv .ch-thumbs button:first-child{margin-left:auto}.chv .ch-thumbs button:last-child{margin-right:auto}
+.chv .ch-thumbs button img{position:absolute;left:50%;top:-2%;width:190%;max-width:none;transform:translateX(-50%)}
+.chv .ch-thumbs button:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.chv .ch-thumbs button.on{opacity:1}
+.chv .ch-thumbs button.on:after{box-shadow:inset 0 0 0 2px #F2C96F}
+
 </style>
 </head>
 <body>
@@ -924,7 +979,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v3.5 — 게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v3.6 — 게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1284,7 +1339,7 @@ let page='lobby', battle=null;
 function go(p){page=p;if(p!=='battle')clearResume();render();}
 const CH_MOOD={1:'warm',2:'calm',3:'heavy',4:'bright',5:'open'};
 function bgmFor(){if(page==='battle'&&battle)return battle.stage.boss?'boss':(CH_MOOD[battle.stage.ch]||'calm');if(page==='result')return null;return 'lobby';}
-function render(){const app=$('#app');app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,settings:viewSettings,adventure:viewAdventure,battle:viewBattle,result:viewResult}[page];app.appendChild(v());document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
+function render(){const app=$('#app');app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,settings:viewSettings,adventure:viewAdventure,battle:viewBattle,result:viewResult}[page];app.appendChild(v());document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild;}
 function toast(msg){const t=el(`<div class="toast">${msg}</div>`);$('#app').appendChild(t);setTimeout(()=>t.remove(),1500);}
 
@@ -1295,7 +1350,7 @@ function viewLobby(){
  const s=el(`<section class="screen lobby">
   <img class="bgimg" src="${A.bg_lobby}" alt="">
   <div class="veil"></div>
-  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.5</span></div>
+  <div class="lobby-title"><span class="kr">신흔</span><span class="en">DIVINE TRACE</span><span class="sub">열두 신의 잔향 · v3.6</span></div>
   <div class="lobby-wallet"><span>GOLD <b>${fmt(state.gold)}</b></span><span>CLEAR <b>${cleared}/${STAGES.length}</b></span></div>
   <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button>
   <div class="lobby-hero">${A[lead.id+'_l_body']?`<div class="rig lobby-rig"><img class="rl body" src="${A[lead.id+'_l_body']}" alt="${lead.name}">${rigLayers(lead.id,lead.id)}<div class="wglow w-${lead.id}" style="left:${RIG[lead.id].watch.x*100}%;top:${RIG[lead.id].watch.y*100}%"></div></div>${dustHtml(12)}`:`<img class="art" src="${A[lead.id]}" alt="${lead.name}" style="animation:breathe calc(4s / var(--rate)) ease-in-out infinite;transform-origin:50% 100%">`}<div class="name"><span class="r">${lead.en} · LV.${heroLv(lead.id)}</span><span class="n">${lead.name}</span></div></div>
@@ -1358,20 +1413,26 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
 /* ---------- 캐릭터 도감 ---------- */
 function heroStats(h){const lv=heroLv(h.id),m=lvMult(lv);return {lv,atk:Math.round(h.atk*m),hp:Math.round(h.hp*m),def:h.def,spd:h.spd,crit:CRIT.chance,critM:CRIT.mult,weak:WEAK.chance,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
 const owned=id=>!!HEROES.find(h=>h.id===id); // 현재는 5명 전원 보유. 소환 시스템이 생기면 state.owned 기준으로 변경
+/* v3.6 도감 = 아이콘 그리드(탭: 영웅만 활성) → 아이콘을 누르면 캐릭터 창(viewCharacter) */
 function viewHeroes(){
  const all=HEROES.length+LOCKED_HEROES.length,got=HEROES.filter(h=>owned(h.id)).length,pct=Math.round(got/all*100);
  const no=i=>'No.'+String(i+1).padStart(2,'0');
- const s=el(`<section class="screen">
-  <div class="topbar"><div class="left"><span class="stage-no">CODEX</span><span class="stage-name">캐릭터 도감</span></div><div class="right"><span class="turn">보유 <b>${got}</b> / ${all}</span></div></div>
-  <div class="codex-rate cut-r"><div class="t"><span>수집률</span><b>${got} / ${all}</b><em>${pct}%</em></div><div class="bar"><i style="width:${pct}%"></i></div></div>
-  <div class="party-grid codex-grid">${HEROES.map((h,i)=>{const st=heroStats(h);return `<button class="hero-card cut-r" data-id="${h.id}"><img src="${A[h.id]}" alt=""><div class="shade"></div><span class="cno">${no(i)}</span><div class="meta"><span class="n">${h.name}</span><span class="lv">LV.${st.lv}</span><span class="role">${h.role}</span></div></button>`;}).join('')}${LOCKED_HEROES.map((h,i)=>`<button class="hero-card cut-r locked" data-id="${h.id}"><div class="sil">?</div><div class="shade"></div><span class="cno">${no(HEROES.length+i)}</span><div class="meta"><span class="n">???</span><span class="lv">미해금</span><span class="role">${h.hint}</span></div></button>`).join('')}</div>
-  <p class="party-note">카드를 누르면 설정·스킬·고유 패시브·파티 시너지와 보유한 컷을 볼 수 있어요. ???는 스토리 진행 시 공개.</p>
+ const s=el(`<section class="screen codex2">
+  <div class="topbar"><div class="left"><span class="stage-no">CODEX</span><span class="stage-name">도감</span></div><div class="right"><span class="turn">보유 <b>${got}</b> / ${all}</span></div></div>
+  <div class="cx-tabs"><button class="on">영웅</button><button class="off" data-soon>클래스스킬<small>준비중</small></button><button class="off" data-soon>컬렉션<small>준비중</small></button></div>
+  <div class="cx-list">
+   <div class="cx-sec"><div class="t"><span>영웅</span><b>${got}</b><i>/ ${all}</i><em>${pct}%</em></div><div class="bar"><i style="width:${pct}%"></i></div></div>
+   <div class="cx-grid">${HEROES.map((h,i)=>`<button class="cx-ic" data-id="${h.id}"><span class="fc"><img src="${A[h.id]}" alt=""></span><span class="no">${no(i)}</span><span class="n">${h.name}</span></button>`).join('')}${LOCKED_HEROES.map((h,i)=>`<button class="cx-ic locked" data-id="${h.id}" data-hint="${h.hint}"><span class="fc"><b>?</b></span><span class="no">${no(HEROES.length+i)}</span><span class="n">???</span></button>`).join('')}</div>
+  </div>
+  <p class="party-note">아이콘을 누르면 캐릭터 창에서 능력치·스킬·설정·시너지와 보유한 컷을 볼 수 있어요. ?는 스토리 진행 시 공개.</p>
   <div class="party-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn primary cut-r" data-go="party">편성으로</button></div>
  </section>`);
- s.addEventListener('click',e=>{const c=e.target.closest('.hero-card');if(c){if(c.classList.contains('locked')){toast('아직 만나지 못한 인물이에요');return;}heroDetail(c.dataset.id);return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
+ s.addEventListener('click',e=>{const c=e.target.closest('.cx-ic');if(c){if(c.classList.contains('locked')){const t=c.dataset.hint;toast(t&&t!=='???'?t:'아직 만나지 못한 인물이에요');return;}charId=c.dataset.id;go('character');return;}
+  if(e.target.closest('[data-soon]')){toast('준비중이에요');return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
  return s;
 }
-function heroDetail(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);const lore=LORE[id]||{};const ps=PASSIVE[id];
+/* 상세 내용 조각(팝업 heroDetail · 캐릭터 창 공용) */
+function heroInfo(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);const lore=LORE[id]||{};const ps=PASSIVE[id];
  const cur={name:h.name,atk:st.atk,def:st.def,hp:st.hp};const li=arr=>arr.map(t=>`<li>${t}</li>`).join('');
  const skRow=(sk,sp)=>`<div class="skrow"><span class="sk ${sp?'sp':''}">${skIcon(sk,h,sp?'s2':'s1')}</span><div><div class="skn">${sk.name} <small>${sp?'★ 특수':'일반'} · 쿨다운 ${sk.cd}턴</small></div><ul class="skd">${li(descSkill(sk,cur))}</ul></div></div>`;
  const nameOf=i=>(HEROES.find(x=>x.id===i)||{}).name||'???';
@@ -1382,19 +1443,61 @@ function heroDetail(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);
  const critT=CRIT.chance+(ps&&ps.v.crit||0),weakT=WEAK.chance+(ps&&ps.v.weak||0);
  const ar=h.art||{};const cuts=[[id,'기본'],[ar.hit,'피격'],[ar.hurt,'부상'],[ar.down,'전투불능'],[ar.skill,'스킬 컷인'],[RIG[id]&&A[id+'_l_body']?'rig':null,'일러스트']].filter(([k])=>k&&(k==='rig'||A[k])); // 게임에 이미 있는 이미지만
  const cutHtml=k=>k==='rig'?`<div class="rig hd-rig"><img class="rl body" src="${A[id+'_l_body']}" alt="">${rigLayers(id,id)}</div>`:`<img src="${A[k]}" alt="">`;
- const d=el(`<div class="pause"><div class="box wide hero-detail codex"><div class="hd gal"><div class="gv">${cutHtml(id)}</div><div class="shade"></div>${cuts.length>1?`<button class="gnav p" data-g="-1">‹</button><button class="gnav n" data-g="1">›</button><span class="gcnt">1 / ${cuts.length}</span>`:''}<div class="nm"><span class="r">${h.en} · ${h.role}</span><span class="n">${h.name}</span><span class="lv">LV.${st.lv} <small>XP ${st.xp}/${st.need}</small> <small class="own">보유 · ${state.party.includes(id)?'편성 중':'대기'}</small></span></div></div>
+ return {h,st,cuts,cutHtml,
+  nm:`<div class="nm"><span class="r">${h.en} · ${h.role}</span><span class="n">${h.name}</span><span class="lv">LV.${st.lv} <small>XP ${st.xp}/${st.need}</small> <small class="own">보유 · ${state.party.includes(id)?'편성 중':'대기'}</small></span></div>`,
+  lore:`<div class="lore"><div><span class="k">출신</span>${lore.origin||'-'}</div><div><span class="k">성격</span>${lore.trait||'-'}</div><div><span class="k">무기</span>${lore.weapon||'-'}</div><p>${lore.intro||''}</p></div>`,
+  stats:`<div class="stats"><div><span class="k">공격</span><b>${st.atk}</b></div><div><span class="k">방어</span><b>${st.def}</b></div><div><span class="k">체력</span><b>${fmt(st.hp)}</b></div><div><span class="k">속도</span><b>${st.spd}</b></div><div><span class="k">치명 확률</span><b>${P(critT)}</b><small>×${CRIT.mult}</small></div><div><span class="k">약점 확률</span><b>${P(weakT)}</b><small>×${WEAK.mult}</small></div></div>`,
+  skills:`<div class="sec">스킬</div><div class="sks">${skRow(h.s1,false)}${skRow(h.s2,true)}<div class="sknote">두 스킬이 모두 쿨다운 중이면 기본 공격: 적 1명에게 공격력의 100% 피해 1회 <b>[현재 ${fmt(st.atk)}]</b></div></div>`,
+  passive:`<div class="sec">고유 패시브</div><div class="sks"><div class="skrow"><span class="sk ps"><svg viewBox="0 0 16 16"><path d="M8 1.5 9.8 6l4.7.4-3.6 3 1.1 4.6L8 11.6 4 14l1.1-4.6-3.6-3L6.2 6Z" fill="#B48CFF"/></svg></span><div><div class="skn">${ps?ps.name:'-'} <small>PASSIVE</small></div><ul class="skd">${ps?li(ps.desc(ps.v)):'<li>설정 대기</li>'}</ul></div></div></div>`,
+  syn:`<div class="sec">[파티 시너지]</div><div class="syns">${syn}</div>`,
+  calc:`<div class="calc">계산 기준 · 1타 피해 = (공격력×계수 + 방어력×계수) − 적 방어력×0.8, 무작위 ±8% → 약점 ×${WEAK.mult} · 치명 ×${CRIT.mult} → 받는 피해 증가·감소 → 보호막이 HP보다 먼저 흡수<br>[현재] = 현재 레벨 능력치 × 계수 (다른 버프·적 방어력 적용 전) · 적 1명 = 전장에서 누른 적이 있으면 그 적 · 턴 = 효과를 받은 캐릭터 자신의 행동 횟수 · 스킬은 전투 시작부터 사용 가능</div>`};}
+function heroDetail(id){const I=heroInfo(id),{cuts,cutHtml}=I;
+ const d=el(`<div class="pause"><div class="box wide hero-detail codex"><div class="hd gal"><div class="gv">${cutHtml(id)}</div><div class="shade"></div>${cuts.length>1?`<button class="gnav p" data-g="-1">‹</button><button class="gnav n" data-g="1">›</button><span class="gcnt">1 / ${cuts.length}</span>`:''}${I.nm}</div>
   ${cuts.length>1?`<div class="gtabs">${cuts.map(([,l],i)=>`<button class="${i?'':'on'}" data-gi="${i}">${l}</button>`).join('')}</div>`:''}
   <div class="scroll">
-  <div class="lore"><div><span class="k">출신</span>${lore.origin||'-'}</div><div><span class="k">성격</span>${lore.trait||'-'}</div><div><span class="k">무기</span>${lore.weapon||'-'}</div><p>${lore.intro||''}</p></div>
-  <div class="stats"><div><span class="k">공격</span><b>${st.atk}</b></div><div><span class="k">방어</span><b>${st.def}</b></div><div><span class="k">체력</span><b>${fmt(st.hp)}</b></div><div><span class="k">속도</span><b>${st.spd}</b></div><div><span class="k">치명 확률</span><b>${P(critT)}</b><small>×${CRIT.mult}</small></div><div><span class="k">약점 확률</span><b>${P(weakT)}</b><small>×${WEAK.mult}</small></div></div>
-  <div class="sec">스킬</div><div class="sks">${skRow(h.s1,false)}${skRow(h.s2,true)}<div class="sknote">두 스킬이 모두 쿨다운 중이면 기본 공격: 적 1명에게 공격력의 100% 피해 1회 <b>[현재 ${fmt(st.atk)}]</b></div></div>
-  <div class="sec">고유 패시브</div><div class="sks"><div class="skrow"><span class="sk ps"><svg viewBox="0 0 16 16"><path d="M8 1.5 9.8 6l4.7.4-3.6 3 1.1 4.6L8 11.6 4 14l1.1-4.6-3.6-3L6.2 6Z" fill="#B48CFF"/></svg></span><div><div class="skn">${ps?ps.name:'-'} <small>PASSIVE</small></div><ul class="skd">${ps?li(ps.desc(ps.v)):'<li>설정 대기</li>'}</ul></div></div></div>
-  <div class="sec">[파티 시너지]</div><div class="syns">${syn}</div>
-  <div class="calc">계산 기준 · 1타 피해 = (공격력×계수 + 방어력×계수) − 적 방어력×0.8, 무작위 ±8% → 약점 ×${WEAK.mult} · 치명 ×${CRIT.mult} → 받는 피해 증가·감소 → 보호막이 HP보다 먼저 흡수<br>[현재] = 현재 레벨 능력치 × 계수 (다른 버프·적 방어력 적용 전) · 적 1명 = 전장에서 누른 적이 있으면 그 적 · 턴 = 효과를 받은 캐릭터 자신의 행동 횟수 · 스킬은 전투 시작부터 사용 가능</div>
+  ${I.lore}
+  ${I.stats}
+  ${I.skills}
+  ${I.passive}
+  ${I.syn}
+  ${I.calc}
   </div>
   <div class="row"><button class="btn ghost" id="hd-close">닫기</button></div></div></div>`);
  let gi=0;const show=i=>{gi=(i+cuts.length)%cuts.length;const[k]=cuts[gi];$('.gv',d).innerHTML=cutHtml(k);$('.hd',d).classList.toggle('alt',gi>0);$('.gcnt',d).textContent=`${gi+1} / ${cuts.length}`;d.querySelectorAll('.gtabs button').forEach((b,j)=>b.classList.toggle('on',j===gi));};
  $('#app').appendChild(d);d.addEventListener('click',e=>{if(e.target.closest('#hd-close')||e.target===d){d.remove();return;}const g=e.target.closest('[data-g]');if(g){show(gi+Number(g.dataset.g));return;}const t=e.target.closest('[data-gi]');if(t)show(Number(t.dataset.gi));});}
+/* ---------- 캐릭터 창 (v3.6) : 큰 일러스트 + 탭 + 하단 썸네일 ---------- */
+let charId=null,charTab='stat';
+const CH_TABS=[['stat','능력치'],['skill','스킬'],['lore','설정'],['syn','시너지'],['cut','컷 보기']];
+function viewCharacter(){
+ const ids=HEROES.filter(h=>owned(h.id)).map(h=>h.id);if(!ids.includes(charId))charId=ids[0];
+ const n=ids.length,idx=ids.indexOf(charId),I=heroInfo(charId),{cuts,cutHtml}=I;
+ const no='No.'+String(HEROES.findIndex(x=>x.id===charId)+1).padStart(2,'0');
+ let gi=0;const cutSrc=k=>k==='rig'?A[charId+'_l_body']:A[k];
+ const body=t=>({stat:I.stats,skill:I.skills+I.passive+I.calc,lore:I.lore,syn:I.syn,
+  cut:`<div class="ch-cuts">${cuts.map(([k,l],i)=>`<button class="${i===gi?'on':''}" data-ci="${i}"><span class="ct"><img src="${cutSrc(k)}" alt=""></span><span class="l">${l}</span></button>`).join('')}</div>`})[t];
+ const s=el(`<section class="screen chv">
+  <div class="hero-detail chd">
+   <div class="hd gal"><div class="gv">${cutHtml(cuts[0][0])}</div><div class="shade"></div>
+    <button class="ch-back" data-go="heroes">‹ 도감</button><span class="gcnt">${no} · ${idx+1} / ${n}</span>
+    ${n>1?`<button class="gnav p" data-d="-1">‹</button><button class="gnav n" data-d="1">›</button>`:''}${I.nm}</div>
+   <div class="ch-tabs">${CH_TABS.map(([k,l])=>`<button class="${k===charTab?'on':''}" data-tab="${k}">${l}</button>`).join('')}</div>
+   <div class="ch-body">${body(charTab)}</div>
+  </div>
+  <div class="ch-thumbs">${ids.map(i=>`<button class="${i===charId?'on':''}" data-cid="${i}"><img src="${A[i]}" alt=""></button>`).join('')}</div>
+ </section>`);
+ const move=d=>{charId=ids[(idx+d+n)%n];render();};
+ const showCut=i=>{gi=i;$('.gv',s).innerHTML=cutHtml(cuts[i][0]);$('.hd',s).classList.toggle('alt',i>0);$$('[data-ci]',s).forEach((b,j)=>b.classList.toggle('on',j===i));};
+ let sx=null;const hd=$('.hd',s); // 좌우 스와이프로 이전·다음 캐릭터
+ hd.addEventListener('pointerdown',e=>{sx=e.clientX;});
+ hd.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>40&&n>1)move(dx<0?1:-1);});
+ s.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){charTab=t.dataset.tab;$('.ch-body',s).innerHTML=body(charTab);$('.ch-body',s).scrollTop=0;$$('[data-tab]',s).forEach(b=>b.classList.toggle('on',b===t));return;}
+  const d=e.target.closest('[data-d]');if(d){move(Number(d.dataset.d));return;}
+  const c=e.target.closest('[data-cid]');if(c){if(c.dataset.cid!==charId){charId=c.dataset.cid;render();}return;}
+  const ci=e.target.closest('[data-ci]');if(ci){showCut(Number(ci.dataset.ci));return;}
+  const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
+ requestAnimationFrame(()=>{const st=$('.ch-thumbs',s),o=$('.ch-thumbs .on',s);if(st&&o)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2;});
+ return s;
+}
 function nextStage(){return STAGES.find(s=>!state.cleared[s.no])||STAGES[STAGES.length-1];}
 
 /* ---------- 편성 ---------- */
