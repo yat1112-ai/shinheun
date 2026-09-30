@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v4.8)</title>
+<title>신흔 DIVINE TRACE (v4.11)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1140,6 +1140,30 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .sk-info .nr .btn{height:34px;min-width:110px;font-size:14px}
 .sk-info .nr em{font-style:normal;color:var(--muted)}
 
+/* ===== v4.9 스킬 맵 가독성 · 로비 시차 강화 · 터치 이펙트(룬 글자 제거) ===== */
+.sk-sum{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;font-size:13px;color:#ffd77a;font-weight:700;flex:0 0 auto}
+.sk-sum #sk-next{color:var(--silver);font-weight:400;font-size:12px}
+.sk-map .skn.own circle:first-child{filter:drop-shadow(0 0 4px rgba(255,255,255,.55))}
+.sk-map .skn.open circle:first-child{filter:drop-shadow(0 0 7px rgba(255,215,122,1))}
+.sk-map .skn.dim{opacity:.4}
+.sk-map .skn.lock{opacity:.7}
+/* 시차: 진 일러스트는 배경 컷에 포함(bgj) → 배경 컷이 ±22px(세로 60%). 프레임·UI 는 고정. 진 외 대표는 배경 ±10, 캐릭터 ±22 */
+.screen.lb>.lb-bg{inset:-30px;transform:translate(calc(var(--tx)*-10px),calc(var(--ty)*-6px));transition:transform .3s ease-out}
+.screen.lb>.lb-hero{transform:translate(calc(var(--tx)*22px),calc(var(--ty)*13px));transition:transform .3s ease-out}
+.screen.lb.bgj>.lb-bg{transform:translate(calc(var(--tx)*-22px),calc(var(--ty)*-13px))}
+.screen.lb.bgj>.lb-hero{transform:translate(calc(var(--tx)*-22px),calc(var(--ty)*-13px))}
+/* 터치 이펙트: 룬 글자(ᚱ 등)는 안드로이드 기본 폰트에 없어 빈칸/네모로 보임 → 글자 대신 도형(회전 마름모)으로 대체 */
+.lb-fx .r2{width:30px;height:30px;border:1.5px solid rgba(255,231,168,.95);box-shadow:0 0 8px rgba(255,210,120,.8);animation:lbdia .7s ease-out both}
+@keyframes lbdia{0%{transform:translate(-50%,-50%) rotate(45deg) scale(.4);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-50%) rotate(-45deg) scale(1.4);opacity:0}}
+/* ===== v4.10 챕터 보스: 재사용 이미지에 CSS 색조(--tint). 상태 필터(부상·전투불능)와 겹치지 않게 합성 ===== */
+.foe.tinted .sprite{filter:var(--tint) drop-shadow(0 0 14px rgba(214,32,63,.3))}
+.foe.tinted.wounded .sprite{filter:var(--tint) saturate(.7) brightness(.9) drop-shadow(0 0 12px rgba(214,32,63,.6))}
+.foe.tinted.dead .sprite{filter:grayscale(1)}
+/* ===== v4.11 스킬 맵 하단 정보 패널 높이 고정 (선택·찍기 시 맵 영역이 흔들리지 않게) ===== */
+.sk-info{flex:0 0 auto;box-sizing:border-box;height:124px;min-height:124px;max-height:124px;overflow-y:auto}
+.sk-sum{min-height:32px;box-sizing:border-box;white-space:nowrap}
+.sk-map{flex:1 1 0;min-height:0}
+
 </style>
 </head>
 <body>
@@ -1213,7 +1237,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.8—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.11—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1260,6 +1284,14 @@ const FOES={
  wraith:{name:'폐허의 망령 기사',atk:104,hp:520,spd:84, def:22, w:96, h:118},
  vareon:{name:'바레온',boss:true,atk:142,hp:2200,spd:92,def:30,w:170,h:190,
    s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ /* v4.10 챕터 보스(이름 있는 보스) — 새 이미지 전까지 기존 이미지 재사용: img=이미지 키(나중에 키만 교체), tint=CSS filter 색조. 스탯은 vareon 과 동일 계열 */
+ sootmane:  {name:'검댕갈기 우두머리',img:'wolf',  tint:'hue-rotate(200deg) brightness(.7) saturate(1.2)',boss:true,atk:142,hp:2200,spd:92,def:30,w:150,h:144,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ nightclaw: {name:'밤갈퀴',          img:'wolf',  tint:'hue-rotate(260deg) brightness(.55) saturate(1.5)',boss:true,atk:142,hp:2200,spd:92,def:30,w:200,h:191,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ deepcrusher:{name:'심층 파쇄수',    img:'wraith',tint:'hue-rotate(150deg) brightness(.85) saturate(1.3)',boss:true,atk:142,hp:2200,spd:92,def:30,w:150,h:185,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ goldsting: {name:'황금침 무리장',   img:'wolf',  tint:'sepia(1) saturate(3.5) brightness(1.1)',boss:true,atk:142,hp:2200,spd:92,def:30,w:160,h:153,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ redwing:   {name:'붉은날개 대상매', img:'wraith',tint:'saturate(2.6) hue-rotate(-40deg) brightness(.95)',boss:true,atk:142,hp:2200,spd:92,def:30,w:170,h:210,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ crownhorn: {name:'왕관뿔',          img:'vareon',tint:'hue-rotate(60deg) saturate(1.2)',boss:true,atk:142,hp:2200,spd:92,def:30,w:170,h:190,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ snowbison: {name:'설벽 들소왕',     img:'vareon',tint:'hue-rotate(170deg) brightness(1.25) saturate(.7)',boss:true,atk:142,hp:2200,spd:92,def:30,w:190,h:212,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
  /* v4.8 2챕터 몬스터 (키 = art 파일명) — 일반 3종은 wolf/wraith 스탯대, 보스 2종은 vareon 급 */
  ch2_boar:  {name:'돌껍질 멧돼지',atk:90,hp:560,spd:90, def:24,w:150,h:84},
  ch2_spider:{name:'흙실 거미',    atk:88,hp:440,spd:105,def:12,w:130,h:73},
@@ -1281,12 +1313,12 @@ const STAGES=[
  {ch:1,no:"1-2",name:"세르엘 교회 앞",en:"SEREL CHAPEL",foes:["wolf", "wraith", "wolf"],lv:2,gold:164,xp:82},
  {ch:1,no:"1-3",name:"강가의 다리",en:"RIVER BRIDGE",foes:["wolf", "wolf", "wraith", "wolf"],lv:3,gold:196,xp:98},
  {ch:1,no:"1-4",name:"마을 외곽 언덕",en:"OUTSKIRT HILL",foes:["wraith", "wolf", "wraith", "wolf", "wolf"],lv:4,gold:228,xp:114},
- {ch:1,no:"1-5",name:"등불의 골목",en:"LANTERN ALLEY",foes:["vareon", "wolf", "wolf"],lv:6,gold:584,xp:292,boss:true},
+ {ch:1,no:"1-5",name:"등불의 골목",en:"LANTERN ALLEY",foes:["sootmane", "wolf", "wolf"],lv:6,gold:584,xp:292,boss:true},
  {ch:1,no:"1-6",name:"포도밭 오솔길",en:"VINEYARD PATH",foes:["wraith", "wraith", "wolf"],lv:6,gold:292,xp:146},
  {ch:1,no:"1-7",name:"오래된 물레방아",en:"OLD WATERMILL",foes:["wolf", "wraith", "wolf", "wraith"],lv:7,gold:324,xp:162},
  {ch:1,no:"1-8",name:"종탑 아래",en:"UNDER THE BELL",foes:["wraith", "wraith", "wolf", "wolf", "wolf"],lv:8,gold:356,xp:178},
  {ch:1,no:"1-9",name:"저녁 안개 들판",en:"MISTY FIELD",foes:["wraith", "wraith", "wraith", "wolf", "wolf"],lv:9,gold:388,xp:194},
- {ch:1,no:"1-10",name:"밤의 끝",en:"END OF NIGHT",foes:["vareon"],lv:12,gold:1452,xp:726,boss:true},
+ {ch:1,no:"1-10",name:"밤의 끝",en:"END OF NIGHT",foes:["nightclaw"],lv:12,gold:1452,xp:726,boss:true},
  {ch:2,no:"2-1",name:"안개 낀 오솔길",en:"MISTY PATH",foes:["ch2_boar", "ch2_boar", "ch2_boar"],bg:"bg_2_1",lv:13,gold:516,xp:258},
  {ch:2,no:"2-2",name:"돌 이정표",en:"OLD WAYSTONE",foes:["ch2_boar", "ch2_lizard", "ch2_boar"],bg:"bg_2_2",lv:14,gold:548,xp:274},
  {ch:2,no:"2-3",name:"가도의 숲",en:"ROADSIDE WOODS",foes:["ch2_lizard", "ch2_spider", "ch2_lizard", "ch2_spider"],bg:"bg_2_3",lv:15,gold:580,xp:290},
@@ -1301,7 +1333,7 @@ const STAGES=[
  {ch:3,no:"3-2",name:"빛나는 광맥",en:"GLOWING VEIN",foes:["wolf", "wraith", "wolf"],lv:26,gold:932,xp:466},
  {ch:3,no:"3-3",name:"무너진 갱도",en:"COLLAPSED SHAFT",foes:["wolf", "wolf", "wraith", "wolf"],lv:27,gold:964,xp:482},
  {ch:3,no:"3-4",name:"광차 정거장",en:"CART STATION",foes:["wraith", "wolf", "wraith", "wolf", "wolf"],lv:28,gold:996,xp:498},
- {ch:3,no:"3-5",name:"수정 동굴",en:"CRYSTAL CAVE",foes:["vareon", "wolf", "wolf"],lv:30,gold:2120,xp:1060,boss:true},
+ {ch:3,no:"3-5",name:"수정 동굴",en:"CRYSTAL CAVE",foes:["deepcrusher", "wolf", "wolf"],lv:30,gold:2120,xp:1060,boss:true},
  {ch:3,no:"3-6",name:"지하 수로",en:"UNDERGROUND CANAL",foes:["wraith", "wraith", "wolf"],lv:30,gold:1060,xp:530},
  {ch:3,no:"3-7",name:"광부들의 쉼터",en:"MINERS REST",foes:["wolf", "wraith", "wolf", "wraith"],lv:31,gold:1092,xp:546},
  {ch:3,no:"3-8",name:"깊은 갱도",en:"DEEP SHAFT",foes:["wraith", "wraith", "wolf", "wolf", "wolf"],lv:32,gold:1124,xp:562},
@@ -1311,22 +1343,22 @@ const STAGES=[
  {ch:4,no:"4-2",name:"외곽 창고",en:"OUTER WAREHOUSE",foes:["wolf", "wraith", "wolf"],lv:38,gold:1316,xp:658},
  {ch:4,no:"4-3",name:"축제의 광장",en:"FESTIVAL SQUARE",foes:["wolf", "wolf", "wraith", "wolf"],lv:39,gold:1348,xp:674},
  {ch:4,no:"4-4",name:"대성당 앞",en:"CATHEDRAL GATE",foes:["wraith", "wolf", "wraith", "wolf", "wolf"],lv:40,gold:1380,xp:690},
- {ch:4,no:"4-5",name:"상단의 마차길",en:"CARAVAN ROAD",foes:["vareon", "wolf", "wolf"],lv:42,gold:2888,xp:1444,boss:true},
+ {ch:4,no:"4-5",name:"상단의 마차길",en:"CARAVAN ROAD",foes:["goldsting", "wolf", "wolf"],lv:42,gold:2888,xp:1444,boss:true},
  {ch:4,no:"4-6",name:"등불 거리",en:"LANTERN STREET",foes:["wraith", "wraith", "wolf"],lv:42,gold:1444,xp:722},
  {ch:4,no:"4-7",name:"분수 광장",en:"FOUNTAIN PLAZA",foes:["wolf", "wraith", "wolf", "wraith"],lv:43,gold:1476,xp:738},
  {ch:4,no:"4-8",name:"성벽 위",en:"ON THE WALL",foes:["wraith", "wraith", "wolf", "wolf", "wolf"],lv:44,gold:1508,xp:754},
  {ch:4,no:"4-9",name:"교역로 끝",en:"ROAD END",foes:["wraith", "wraith", "wraith", "wolf", "wolf"],lv:45,gold:1540,xp:770},
- {ch:4,no:"4-10",name:"교역로의 우두머리",en:"ROAD BOSS",foes:["vareon"],lv:48,gold:4908,xp:2454,boss:true},
+ {ch:4,no:"4-10",name:"교역로의 우두머리",en:"ROAD BOSS",foes:["redwing"],lv:48,gold:4908,xp:2454,boss:true},
  {ch:5,no:"5-1",name:"황금빛 초원",en:"GOLDEN MEADOW",foes:["wolf", "wolf", "wolf"],lv:49,gold:1668,xp:834},
  {ch:5,no:"5-2",name:"깃발 기둥",en:"BANNER PILLAR",foes:["wolf", "wraith", "wolf"],lv:50,gold:1700,xp:850},
  {ch:5,no:"5-3",name:"요새 유적",en:"FORT RUINS",foes:["wolf", "wolf", "wraith", "wolf"],lv:51,gold:1732,xp:866},
  {ch:5,no:"5-4",name:"설산 아래",en:"BELOW THE PEAKS",foes:["wraith", "wolf", "wraith", "wolf", "wolf"],lv:52,gold:1764,xp:882},
- {ch:5,no:"5-5",name:"바람의 언덕",en:"WINDY HILL",foes:["vareon", "wolf", "wolf"],lv:54,gold:3656,xp:1828,boss:true},
+ {ch:5,no:"5-5",name:"바람의 언덕",en:"WINDY HILL",foes:["crownhorn", "wolf", "wolf"],lv:54,gold:3656,xp:1828,boss:true},
  {ch:5,no:"5-6",name:"옛 성문",en:"OLD GATE",foes:["wraith", "wraith", "wolf"],lv:54,gold:1828,xp:914},
  {ch:5,no:"5-7",name:"일족의 제단",en:"CLAN ALTAR",foes:["wolf", "wraith", "wolf", "wraith"],lv:55,gold:1860,xp:930},
  {ch:5,no:"5-8",name:"얼어붙은 호수",en:"FROZEN LAKE",foes:["wraith", "wraith", "wolf", "wolf", "wolf"],lv:56,gold:1892,xp:946},
  {ch:5,no:"5-9",name:"설산 관문",en:"SNOW PASS",foes:["wraith", "wraith", "wraith", "wolf", "wolf"],lv:57,gold:1924,xp:962},
- {ch:5,no:"5-10",name:"일족의 재회",en:"CLAN REUNION",foes:["vareon"],lv:60,gold:6060,xp:3030,boss:true},
+ {ch:5,no:"5-10",name:"일족의 재회",en:"CLAN REUNION",foes:["snowbison"],lv:60,gold:6060,xp:3030,boss:true},
 ];
 // 보스 구성은 임시: x-5 = 보스+부하 2, x-10 = 보스 단독(특수 보스전 형태). 스토리 확정 후 스테이지별로 재설정.
 const chOf=st=>CHAPTERS.find(c=>c.no===st.ch);
@@ -1627,7 +1659,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av" style="${avStyle(56)}"></span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.8</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.11</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -1653,7 +1685,7 @@ function lobbyTilt(ask){if(tiltOn||!window.DeviceOrientationEvent)return;const D
  if(typeof DOE.requestPermission==='function'){if(ask)DOE.requestPermission().then(r=>{if(r==='granted')bind();}).catch(()=>{});}else bind();}
 /* 로비 터치 효과: 룬 링(회전하는 점선 원 + 룬 글자) + 사방으로 흩어지는 빛 파편 */
 function lobbyFx(s,e){if(!state.motion)return;const r=s.getBoundingClientRect(),k=r.width/390,x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
- let h='<i class="rr"></i><i class="rn">ᚱ ᛟ ᚦ ᛉ</i>';for(let i=0;i<8;i++){const a=i/8*Math.PI*2+Math.random()*.5,d=22+Math.random()*20;h+=`<i class="sh" style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(a*57.3+90).toFixed(0)}deg"></i>`;}
+ let h='<i class="rr"></i><i class="r2"></i>';for(let i=0;i<8;i++){const a=i/8*Math.PI*2+Math.random()*.5,d=22+Math.random()*20;h+=`<i class="sh" style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(a*57.3+90).toFixed(0)}deg"></i>`;}
  const f=el(`<div class="lb-fx" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px">${h}</div>`);s.appendChild(f);setTimeout(()=>f.remove(),760);}
 /* v4.6 프로필 사진: 5인 얼굴 선택(state.avatar=id) 또는 기기 사진(128px 정사각 JPEG → 이 기기 localStorage 별도 키, 클라우드 state 에는 안 실음 → state.avatar='up') */
 const AV_KEY='shinheun-avatar';
@@ -1671,17 +1703,18 @@ function profileDialog(){
   im.onerror=()=>{URL.revokeObjectURL(u);toast('이미지를 열 수 없어요');};im.src=u;});
 }
 /* ---------- v4.7 플레이어 스킬 맵 화면 (SVG · 드래그 이동 / 핀치·휠 확대) ---------- */
-let skView={x:0,y:0,k:.62},skSel=null;
+let skView={x:0,y:0,k:1.05},skSel=null; /* v4.9 초기 배율 .62→1.05 (바깥 5링이 화면 폭에 들어옴) */
 function skState(n){const sk=state.sk||{};if(n.id==='c'||sk[n.id])return 'own';if((state.plv||1)<n.lv)return 'lock';return sk[n.par]||n.par==='c'?'open':'dim';}
 function viewSkills(){
- const s=el(`<section class="screen skills"><div class="topbar"><div class="left"><button class="btn ghost sk-back" data-a="back">‹ 뒤로</button><span class="stage-name">플레이어 스킬</span></div><div class="right"><span class="turn">Lv.${state.plv||1}</span><span class="turn" id="sk-gold"></span></div></div><div class="sk-map" id="sk-map"><svg viewBox="-400 -400 800 800" preserveAspectRatio="xMidYMid meet"><g id="sk-g"></g></svg></div><div class="sk-info panel" id="sk-info"></div></section>`);
+ const s=el(`<section class="screen skills"><div class="topbar"><div class="left"><button class="btn ghost sk-back" data-a="back">‹ 뒤로</button><span class="stage-name">플레이어 스킬</span></div><div class="right"><span class="turn">Lv.${state.plv||1}</span><span class="turn" id="sk-gold"></span></div></div><div class="sk-sum panel"><span id="sk-gold2"></span><span id="sk-next"></span></div><div class="sk-map" id="sk-map"><svg viewBox="-400 -400 800 800" preserveAspectRatio="xMidYMid meet"><g id="sk-g"></g></svg></div><div class="sk-info panel" id="sk-info"></div></section>`);
  const g=$('#sk-g',s),map=$('#sk-map',s),info=$('#sk-info',s);
  const paint=()=>{const tr=`translate(${skView.x} ${skView.y}) scale(${skView.k})`;g.setAttribute('transform',tr);};
- const draw=()=>{$('#sk-gold',s).textContent='● '+fmt(state.gold);
+ const draw=()=>{$('#sk-gold',s).textContent='● '+fmt(state.gold);$('#sk-gold2',s).textContent='남은 골드 ● '+fmt(state.gold)+'G';
   let h='';for(const n of SK_NODES){if(!n.par)continue;const p=SK_BY[n.par],on=skState(n)==='own';h+=`<line x1="${p.x}" y1="${p.y}" x2="${n.x}" y2="${n.y}" stroke="${on?SK_BR[n.br].c:'#3a3644'}" stroke-width="${on?3:2}" opacity="${on?.9:.6}"/>`;}
-  for(const n of SK_NODES){const st=skState(n),c=n.br<0?'#e8e2f0':SK_BR[n.br].c,sp=SK_SPEC[n.id]?1:0,r=n.id==='c'?22:sp?18:14;
-   h+=`<g data-n="${n.id}" class="skn ${st}${skSel===n.id?' sel':''}"><circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${st==='own'?c:'#15131a'}" stroke="${st==='dim'||st==='lock'?'#4a4656':c}" stroke-width="${st==='open'||skSel===n.id?4:2.5}"/>${sp?`<circle cx="${n.x}" cy="${n.y}" r="${r+5}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/>`:''}${st==='lock'?`<text x="${n.x}" y="${n.y+4}" text-anchor="middle" font-size="12" fill="#8e8a99">🔒</text>`:n.id==='c'?`<text x="${n.x}" y="${n.y+4}" text-anchor="middle" font-size="11" fill="#15131a" font-weight="700">記</text>`:''}</g>`;}
-  for(let r=1;r<=5;r++)if((state.plv||1)<SK_RING[r-1].lv)h+=`<text x="0" y="${-70*r-22}" text-anchor="middle" font-size="12" fill="#8e8a99">${r}링 · Lv.${SK_RING[r-1].lv} 필요</text>`;
+  for(const n of SK_NODES){const st=skState(n),c=n.br<0?'#e8e2f0':SK_BR[n.br].c,sp=SK_SPEC[n.id]?1:0,r=n.id==='c'?30:sp?24:20; /* v4.9 노드 확대·상태별 색/밝기: 찍힘=꽉 찬 색+흰 테두리, 찍기 가능=금 테두리+옅은 색, 이어짐 전=어둡게, 잠김=자물쇠 */
+   h+=`<g data-n="${n.id}" class="skn ${st}${skSel===n.id?' sel':''}"><circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${st==='lock'||st==='dim'?'#15131a':c}" fill-opacity="${st==='own'?1:st==='open'?.3:1}" stroke="${st==='own'?'#fff':st==='open'?'#ffd77a':'#4a4656'}" stroke-width="${st==='open'||skSel===n.id?4.5:3}"/>${sp?`<circle cx="${n.x}" cy="${n.y}" r="${r+6}" fill="none" stroke="${st==='own'||st==='open'?c:'#4a4656'}" stroke-width="2" stroke-dasharray="4 4"/>`:''}${st==='lock'?`<text x="${n.x}" y="${n.y+6}" text-anchor="middle" font-size="18" fill="#a8a3b5">🔒</text>`:n.id==='c'?`<text x="${n.x}" y="${n.y+7}" text-anchor="middle" font-size="20" fill="#15131a" font-weight="700">記</text>`:''}</g>`;}
+  for(let r=1;r<=5;r++)if((state.plv||1)<SK_RING[r-1].lv)h+=`<text x="0" y="${-70*r-38}" text-anchor="middle" font-size="16" font-weight="700" fill="#b9b4c6" stroke="#0c0b0f" stroke-width="3" paint-order="stroke">${r}링 · Lv.${SK_RING[r-1].lv} 필요</text>`;
+  const nr=SK_RING.find(R=>(state.plv||1)<R.lv);$('#sk-next',s).textContent=nr?`다음 해금 · Lv.${nr.lv} (${SK_RING.indexOf(nr)+1}링)`:'모든 링 해금 완료';
   g.innerHTML=h;paint();
   const n=SK_BY[skSel];if(!n){info.innerHTML='<small>노드를 눌러 확인하세요. 중심 「기록」에서 이어진 노드부터 골드로 찍을 수 있어요.</small>';return;}
   const st=skState(n),why=st==='lock'?`플레이어 Lv.${n.lv} 필요`:st==='dim'?'이어진 노드를 먼저 찍어야 해요':st==='own'?'찍힘':'',ok=st==='open'&&state.gold>=n.cost;
@@ -1900,7 +1933,7 @@ function viewAdventure(){
 
 /* ---------- 전투 준비 ---------- */
 function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id)),B=skBonus();return {side:'ally',i,id,name:h.name,en:h.en,atk:Math.round(h.atk*m*(1+B.atk)),max:Math.round(h.hp*m*(1+B.hp)),hp:Math.round(h.hp*m*(1+B.hp)),spd:h.spd+B.spd,def:Math.round(h.def*(1+B.hp)),s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:h.s2.cd,cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
-function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
+function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,img:f.img||key,tint:f.tint||'',name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
 /* v3.8 전투력 (표시 전용 · 전투 계산에는 안 씀) — 아군·적 같은 식
    전투력 = √(공격 기대치 × 생존 기대치) × 10, 파티/적 편성 = 합계 (란체스터식: 합계 비율로 우열 비교)
    공격 기대치 = 공격력 × (1 + 치명·약점 기대 가산) × (1 + 스킬 가산) × 속도/100 · 생존 기대치 = 체력 × (1 + 방어/100)
@@ -1968,7 +2001,7 @@ function foeLayout(){const b=battle;if(!b)return;const W=374,H=242,HEAD=26;const
  if(boss){place(boss,.5,212,1.0);const m=others.length;const cs=m===1?[[.15,150]]:m===2?[[.14,150],[.86,150]]:m===3?[[.13,140],[.87,140],[.5,120]]:[[.12,140],[.88,140],[.2,225],[.8,225]];others.forEach((f,i)=>{const c=cs[i]||[.5,150];place(f,c[0],c[1],.78);});return;}
  const m=b.foes.length;const form=FORM[Math.min(5,Math.max(1,m))],sc=FORM_S[Math.min(5,Math.max(1,m))];b.foes.forEach((f,i)=>{const c=form[i]||[.5,200];place(f,c[0],c[1],sc);});}
 function foePos(n,i,f){if(f.left==null)foeLayout();return {left:f.left,top:f.top};}
-function foeHtml(f){const p=foePos(battle.foes.length,f.i,f);return `<div class="foe ${f.boss?'boss':''}" data-i="${f.i}" style="left:${p.left}px;top:${p.top}px;width:${f.sw||f.w}px;z-index:${f.z||1}"><div class="tag">${f.boss?'<span class="boss">BOSS</span>':''}<span class="nm">${f.name}</span><span class="lv">LV.${battle.stage.lv}</span></div><div class="bar"><i class="ghost"></i><i class="fill"></i></div><div class="buffs bstrip foe-strip"></div><div class="shadow"></div><img class="sprite" src="${A[f.key]}" alt="${f.name}" style="width:${f.sw||f.w}px;height:${f.sh||f.h}px"><svg class="marker" viewBox="0 0 76 76"><path d="M2 18V2h16M58 2h16v16M74 58v16H58M18 74H2V58" fill="none" stroke="#F4F2F6" stroke-width="2"/><path d="M38 30v16M30 38h16" stroke="#D6203F" stroke-width="2"/></svg></div>`;}
+function foeHtml(f){const p=foePos(battle.foes.length,f.i,f);return `<div class="foe ${f.boss?'boss':''}${f.tint?' tinted':''}" data-i="${f.i}" style="${f.tint?`--tint:${f.tint};`:''}left:${p.left}px;top:${p.top}px;width:${f.sw||f.w}px;z-index:${f.z||1}"><div class="tag">${f.boss?'<span class="boss">BOSS</span>':''}<span class="nm">${f.name}</span><span class="lv">LV.${battle.stage.lv}</span></div><div class="bar"><i class="ghost"></i><i class="fill"></i></div><div class="buffs bstrip foe-strip"></div><div class="shadow"></div><img class="sprite" src="${A[f.img]}" alt="${f.name}" style="width:${f.sw||f.w}px;height:${f.sh||f.h}px"><svg class="marker" viewBox="0 0 76 76"><path d="M2 18V2h16M58 2h16v16M74 58v16H58M18 74H2V58" fill="none" stroke="#F4F2F6" stroke-width="2"/><path d="M38 30v16M30 38h16" stroke="#D6203F" stroke-width="2"/></svg></div>`;}
 const ICON={single:'<path d="M5 1 9 5 5 9 1 5Z" fill="none" stroke="#fff" stroke-width="1.3"/>',aoe:'<path d="M1 5h8M5 1v8M2 2l6 6M8 2l-6 6" stroke="#fff" stroke-width="1.1"/>',heal:'<path d="M5 1.5v7M1.5 5h7" stroke="#fff" stroke-width="1.5"/>',selfheal:'<path d="M5 1.5v7M1.5 5h7" stroke="#fff" stroke-width="1.5"/>',atkup:'<path d="M5 8V2M2 5l3-3 3 3" fill="none" stroke="#fff" stroke-width="1.3"/>',selfatk:'<path d="M5 8V2M2 5l3-3 3 3" fill="none" stroke="#fff" stroke-width="1.3"/>',defup:'<path d="M5 1 8.5 2.5V5c0 2-1.5 3.3-3.5 4C3 8.3 1.5 7 1.5 5V2.5Z" fill="none" stroke="#fff" stroke-width="1.2"/>',defdown:'<path d="M5 2v6M2 5l3 3 3-3" fill="none" stroke="#fff" stroke-width="1.3"/>'};
 /* 스킬 컨셉 아이콘 (16x16 SVG) — 스킬명으로 매칭, 없으면 타입 아이콘 */
 const SKICON={
@@ -2050,7 +2083,7 @@ function paintCards(){const b=battle;if(!b)return;for(const h of b.allies){const
 const FACE={jin:{x:.51,y:.29,z:2.7},eir:{x:.492,y:.2,z:3.7,ar:.75},aren:{x:.56,y:.15,z:4.3},riana:{x:.54,y:.178,z:5.6},clea:{x:.515,y:.18,z:3.6},wolf:{x:.42,y:.32,z:1.7,ar:96/92},wraith:{x:.5,y:.16,z:2.0,ar:96/118},vareon:{x:.5,y:.2,z:1.8,ar:170/190},ch2_boar:{x:.3,y:.4,z:1.6,ar:16/9},ch2_spider:{x:.4,y:.4,z:1.6,ar:16/9},ch2_lizard:{x:.3,y:.45,z:1.6,ar:16/9},ch2_nestmother:{x:.35,y:.4,z:1.6,ar:16/9},ch2_roadbreaker:{x:.3,y:.4,z:1.6,ar:16/9}};
 function faceStyle(key,size){const f=FACE[key]||{x:.5,y:.15,z:2.4};const ar=f.ar||(2/3);const H=size*f.z,Wd=H*ar;const px=(size/2-f.x*Wd)/(size-Wd)*100,py=(size/2-f.y*H)/(size-H)*100;return `background-image:url(${A[key]});background-size:${Wd.toFixed(1)}px ${H.toFixed(1)}px;background-position:${px.toFixed(1)}% ${py.toFixed(1)}%;background-repeat:no-repeat`;}
 function paintOrder(){const b=battle,row=$('#order');if(!row)return;
- const chip=(u,cls)=>{const sz=cls==='now'?40:cls==='next'?22:27;return `<div class="chip ${u.side==='enemy'?'enemy':''} ${cls}" title="${u.name}" style="${faceStyle(u.side==='enemy'?u.key:u.id,sz)}"></div>`;};
+ const chip=(u,cls)=>{const sz=cls==='now'?40:cls==='next'?22:27;return `<div class="chip ${u.side==='enemy'?'enemy':''} ${cls}" title="${u.name}" style="${faceStyle(u.side==='enemy'?u.img:u.id,sz)}"></div>`;};
  const next=[...alive(b.allies),...alive(b.foes)].sort((x,y)=>effSpd(y)-effSpd(x));
  row.innerHTML=b.order.map((u,i)=>chip(u,i===0?'now':'')).join('')+`<div class="rdiv"><span>R${b.round+1}</span></div>`+next.map(u=>chip(u,'next')).join('');
  row.scrollLeft=0;}
@@ -2066,9 +2099,9 @@ function fx(u,kind,label){if(!state.motion)return;if(!state.fx&&!['heal','buff',
 async function quickBanner(u,skill,sp=false){SND.play(sp?'special':'cast',{kind:skAoe(skill)?'aoe':skillKind(skill),det:u.i});if(!state.motion){await sleep(200);return;}
  const dur=state.fx?620:380;
  // 일반 스킬 미니 컷인: 전장 위에 작은 초상 + 스킬명 띠. 속성별 색·장식이 다름 (공격 참격선 / 전체 줄무늬 / 회복 입자 / 버프 상승 화살 / 디버프 하강 화살)
- const k=skAoe(skill)?'aoe':skillKind(skill);const art=A[u.side==='enemy'?u.key:u.id];
+ const k=skAoe(skill)?'aoe':skillKind(skill);const art=A[u.side==='enemy'?u.img:u.id];
  const deco={atk:'<i class="sl"></i>',aoe:'<i class="st"></i><i class="st s2"></i><i class="st s3"></i>',heal:'<i class="p"></i><i class="p p2"></i><i class="p p3"></i><i class="p p4"></i>',buff:'<i class="ch"></i><i class="ch c2"></i><i class="ch c3"></i>',debuff:'<i class="ch dn"></i><i class="ch dn c2"></i><i class="ch dn c3"></i>'}[k]||'';
- const q=el(`<div class="mini t-${k} ${u.side==='enemy'?'enemy':''} ${sp?'sp':''}"><div class="band">${deco}</div><div class="face" style="${faceStyle(u.side==='enemy'?u.key:u.id,70)}"></div><div class="txt"><span class="who">${u.side==='enemy'?'ENEMY · ':''}${u.en||u.name}</span><span class="nm">${skill.name}</span></div></div>`);
+ const q=el(`<div class="mini t-${k} ${u.side==='enemy'?'enemy':''} ${sp?'sp':''}"><div class="band">${deco}</div><div class="face" style="${faceStyle(u.side==='enemy'?u.img:u.id,70)}"></div><div class="txt"><span class="who">${u.side==='enemy'?'ENEMY · ':''}${u.en||u.name}</span><span class="nm">${skill.name}</span></div></div>`);
  $('#app').appendChild(q);await sleep(dur/rate());q.classList.add('out');setTimeout(()=>q.remove(),220/rate());}
 function flashHit(u,grade=''){const n=unitNode(u);if(!n)return;
  /* 피격: HP 30% 이상 → 피격 일러스트(art.hit)로 잠깐 전환 후 복귀 / 30% 미만 → 부상 일러스트 유지 + 흔들림(.card.wounded.hit) */
@@ -2102,7 +2135,7 @@ async function cutin(u,skill){const b=battle;if(!state.motion){toast(`${u.name} 
   await sleep(160/vr);c.classList.add('settle');
   await sleep(1000/vr);c.classList.add('out');await sleep(240/vr);c.remove();dim.remove();return;
  }
- c=el(`<div class="cutin t-${skAoe(skill)?'aoe':skillKind(skill)} ${u.side==='enemy'?'enemy':''} ${special?'sp':''}"><div class="glow"></div>${skAoe(skill)?'<div class="slashes"><i></i><i></i><i></i></div>':''}<div class="stripes"></div><img class="art" src="${A[u.side==='enemy'?u.key:u.id]}" alt=""><div class="rim"></div><div class="ray"></div><div class="ray r2"></div>${copy}</div>`);
+ c=el(`<div class="cutin t-${skAoe(skill)?'aoe':skillKind(skill)} ${u.side==='enemy'?'enemy':''} ${special?'sp':''}"><div class="glow"></div>${skAoe(skill)?'<div class="slashes"><i></i><i></i><i></i></div>':''}<div class="stripes"></div><img class="art" src="${A[u.side==='enemy'?u.img:u.id]}" alt=""><div class="rim"></div><div class="ray"></div><div class="ray r2"></div>${copy}</div>`);
  $('#app').append(dim,c);await sleep(1300/cutRate());c.classList.add("out");await sleep(240/cutRate());c.remove();dim.remove();}
 
 /* ---------- 전투 로직 ---------- */
