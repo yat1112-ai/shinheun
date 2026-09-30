@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.13)</title>
+<title>신흔 DIVINE TRACE (v4.16)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1176,6 +1176,15 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .screen.lb>.lb-jn{transform:translate3d(calc(var(--tx)*32px),calc(var(--ty)*19px),0) scale(1.06)}
 .screen.lb>.lb-fg{transform:translate3d(calc(var(--tx)*18px),calc(var(--ty)*11px),0) scale(1.06)}
 .lb-jn img,.lb-fg img{width:100%;height:100%;object-fit:cover;display:block}
+/* ===== v4.16 폴드8 삼성 인터넷: 프로필 사진·재화 아이콘이 어두운 문제 (어두운 판이 위 레이어로 그려지던 stacking 문제 정리) ===== */
+/* 어두운 판은 컨테이너(isolate) 맨 뒤(-1), 프레임(2) < 사진·아이콘·글자(4 이상) */
+.lb-prof::after,.lb-cur>span::after,.lb-side::after{z-index:-1}
+.screen.lb .lb-av{z-index:4;opacity:1;filter:none;mix-blend-mode:normal}
+.screen.lb .lb-cur i{z-index:4;display:block;background:none;border:0;border-radius:0;transform:none;box-shadow:none;filter:none;opacity:1;mix-blend-mode:normal}
+.screen.lb .lb-cur .g i,.screen.lb .lb-cur .c i{background:none;box-shadow:none;transform:none;filter:none}
+.lb-cur i svg{display:block;width:100%;height:100%}
+.screen.lb .lb-pt,.screen.lb .lb-pw{z-index:4}
+.lb-prof,.lb-cur>span{filter:none;opacity:1;mix-blend-mode:normal;-webkit-backdrop-filter:none;backdrop-filter:none}
 
 </style>
 </head>
@@ -1250,7 +1259,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.13—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.16—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1271,24 +1280,24 @@ const rnd=(a,b)=>a+Math.random()*(b-a);
    turns: 효과를 받은 캐릭터가 자기 행동을 마칠 때마다 1 감소 (시전자 본인은 시전한 그 행동에서는 줄지 않음) */
 const HEROES=[
  {id:'jin',   name:'진',    en:'JIN',   role:'주인공 · 약점 공략', atk:118,hp:760,spd:104,def:22,
-  s1:{name:'달빛의 일격',cd:3,fx:[{t:'dmg',to:'weakest',mult:2.0,hits:1,pattern:'slam',weakUp:.25}]},
-  s2:{name:'시계의 맥동',cd:4,fx:[{t:'buff',to:'allies',k:'atk',v:.15,turns:2},{t:'buff',to:'allies',k:'spd',v:.10,turns:2}]},
+  s1:{name:'시계의 맥동',cd:3,when:'needBuff',icon:'jin_s2',cut:'jin_skill',fx:[{t:'buff',to:'allies',k:'atk',v:.15,turns:2},{t:'buff',to:'allies',k:'spd',v:.10,turns:2}]},
+  s2:{name:'달빛의 일격',cd:4,icon:'jin_s1',cut:'jin_skill2',fx:[{t:'dmg',to:'weakest',mult:2.0,hits:1,pattern:'slam',weakUp:.25}]},
   art:{skill:'jin_skill',down:'jin_down',hurt:'jin_hurt',hit:'jin_hit',glow:{x:29,y:31}}},
  {id:'eir',   name:'에이르',en:'EIR',   role:'수녀 · 회복',       atk:82, hp:680,spd:96, def:18,
-  s1:{name:'세르엘의 손길',cd:3,fx:[{t:'heal',to:'lowest',pct:.22},{t:'regen',to:'same',pct:.03,turns:2}]},
-  s2:{name:'성역',cd:4,fx:[{t:'buff',to:'allies',k:'dr',v:.10,turns:2},{t:'regen',to:'allies',pct:.03,turns:2}]},
+  s1:{name:'세르엘의 손길',cd:3,when:'needHeal',icon:'eir_s1',fx:[{t:'heal',to:'lowest',mult:2.2},{t:'regen',to:'same',mult:.3,turns:2}]},
+  s2:{name:'성역',cd:4,when:'needBuff',icon:'eir_s2',cut:'eir_skill',fx:[{t:'buff',to:'allies',k:'dr',v:.10,turns:2},{t:'shield',to:'allies',atkMult:1.0,turns:2}]},
   art:{skill:'eir_skill',down:'eir_down',hurt:'eir_hurt',hit:'eir_hit',glow:{x:51,y:58}}},
  {id:'aren',  name:'아렌',  en:'AREN',  role:'절친 · 공격',       atk:132,hp:820,spd:99, def:24,
-  s1:{name:'베르단의 참격',cd:3,fx:[{t:'dmg',to:'target',mult:1.25,hits:2,pattern:'combo'}]},
-  s2:{name:'투지',cd:4,fx:[{t:'buff',to:'self',k:'atk',v:.25,turns:2},{t:'dmg',to:'target',mult:1.1,hits:1,pattern:'slam'}]},
+  s1:{name:'베르단의 참격',cd:3,icon:'aren_s1',fx:[{t:'dmg',to:'target',mult:1.25,hits:2,pattern:'combo'}]},
+  s2:{name:'투지',cd:4,when:'needBuff',icon:'aren_s2',cut:'aren_skill',fx:[{t:'buff',to:'self',k:'atk',v:.25,turns:2},{t:'dmg',to:'all',mult:.7,hits:1,pattern:'burst',killAtk:.05}]},
   art:{skill:'aren_skill',down:'aren_down',hurt:'aren_hurt',hit:'aren_hit',glow:{x:70,y:34}}},
  {id:'riana', name:'리아나',en:'RIANA', role:'모험가 · 속공',     atk:108,hp:700,spd:122,def:16,
-  s1:{name:'쌍검 난무',cd:3,fx:[{t:'dmg',to:'random',mult:.55,hits:6,pattern:'random'}]},
-  s2:{name:'약점 간파',cd:4,fx:[{t:'debuff',to:'foes',k:'mark',v:.20,turns:2},{t:'debuff',to:'foes',k:'def',v:-.25,turns:2}]},
+  s1:{name:'약점 간파',cd:3,when:'needMark',icon:'riana_s2',cut:'riana_skill',fx:[{t:'debuff',to:'foes',k:'mark',v:.20,turns:2},{t:'debuff',to:'foes',k:'def',v:-.25,turns:2}]},
+  s2:{name:'쌍검 난무',cd:4,icon:'riana_s1',cut:'riana_skill2',fx:[{t:'dmg',to:'random',mult:.55,hits:6,pattern:'random',markUp:.30}]},
   art:{skill:'riana_skill',down:'riana_down',hurt:'riana_hurt',hit:'riana_hit',glow:{x:71,y:55}}},
  {id:'clea',  name:'클레아',en:'CLEA',  role:'영애 · 보호형 탱커', atk:74, hp:1040,spd:78,def:38,
-  s1:{name:'방패 강타',cd:3,fx:[{t:'dmg',to:'target',mult:.8,defMult:1.6,hits:1,pattern:'bash'},{t:'debuff',to:'same',k:'atk',v:-.15,turns:2}]},
-  s2:{name:'견고한 서약',cd:4,fx:[{t:'taunt',to:'self',turns:2},{t:'buff',to:'self',k:'dr',v:.20,turns:2},{t:'shield',to:'allies',base:'self',pct:.06,turns:2}]},
+  s1:{name:'견고한 서약',cd:3,when:'needBuff',icon:'clea_s2',cut:'clea_skill1',fx:[{t:'taunt',to:'self',turns:2},{t:'buff',to:'self',k:'dr',v:.20,turns:2},{t:'shield',to:'allies',defMult:1.6,turns:2}]},
+  s2:{name:'방패 강타',cd:4,icon:'clea_s1',cut:'clea_skill2',fx:[{t:'dmg',to:'target',mult:.8,defMult:1.6,hits:1,pattern:'bash'},{t:'debuff',to:'same',k:'atk',v:-.15,turns:2}]},
   art:{skill:'clea_skill',down:'clea_down',hurt:'clea_hurt',hit:'clea_hit',glow:{x:82,y:34}}},
 ];
 /* v3.3: 아군에 보호막·피해 감소·분담·도발이 생긴 만큼 적 공격력 +18% (늑대 70→83, 망령 기사 88→104, 바레온 120→142) — 시뮬레이션으로 기존 난이도(남은 HP·라운드 수)에 맞춤 */
@@ -1298,8 +1307,12 @@ const FOES={
  vareon:{name:'바레온',boss:true,atk:142,hp:2200,spd:92,def:30,w:170,h:190,
    s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
  /* v4.10 챕터 보스(이름 있는 보스) — 새 이미지 전까지 기존 이미지 재사용: img=이미지 키(나중에 키만 교체), tint=CSS filter 색조. 스탯은 vareon 과 동일 계열 */
- sootmane:  {name:'검댕갈기 우두머리',img:'wolf',  tint:'hue-rotate(200deg) brightness(.7) saturate(1.2)',boss:true,atk:142,hp:2200,spd:92,def:30,w:150,h:144,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
- nightclaw: {name:'밤갈퀴',          img:'wolf',  tint:'hue-rotate(260deg) brightness(.55) saturate(1.5)',boss:true,atk:142,hp:2200,spd:92,def:30,w:200,h:191,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ /* v4.15 1챕터 몬스터 (키 = art 파일명): 스탯은 기존 wolf/wraith 와 동일(밸런스 유지), w·h 는 실제 이미지 비율 */
+ ch1_hound: {name:'그늘갈기 들개',atk:83,hp:420,spd:110,def:10,w:120,h:76},
+ ch1_moth:  {name:'등불먹이 나방',atk:83,hp:420,spd:110,def:10,w:96,h:117},
+ ch1_shade: {name:'길잃은 잔영',  atk:104,hp:520,spd:84,def:22,w:66,h:123},
+ sootmane:  {name:'검댕갈기 우두머리',img:'ch1_sootmane',boss:true,atk:142,hp:2200,spd:92,def:30,w:140,h:187,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
+ nightclaw: {name:'밤갈퀴',          img:'ch1_nightclaw',boss:true,atk:142,hp:2200,spd:92,def:30,w:210,h:144,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
  deepcrusher:{name:'심층 파쇄수',    img:'wraith',tint:'hue-rotate(150deg) brightness(.85) saturate(1.3)',boss:true,atk:142,hp:2200,spd:92,def:30,w:150,h:185,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
  goldsting: {name:'황금침 무리장',   img:'wolf',  tint:'sepia(1) saturate(3.5) brightness(1.1)',boss:true,atk:142,hp:2200,spd:92,def:30,w:160,h:153,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
  redwing:   {name:'붉은날개 대상매', img:'wraith',tint:'saturate(2.6) hue-rotate(-40deg) brightness(.95)',boss:true,atk:142,hp:2200,spd:92,def:30,w:170,h:210,s1:{name:'광석의 포효',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}},
@@ -1322,16 +1335,16 @@ const CHAPTERS=[
  {no:5,name:'일족의 고원',   en:'HIGHLAND OF THE CLAN',bg:'bg_ch5',mood:'탁 트임',desc:'리아나의 오빠와 흩어진 일족을 찾아서.'},
 ];
 const STAGES=[
- {ch:1,no:"1-1",name:"저물녘 마을길",en:"VILLAGE LANE",foes:["wolf", "wolf", "wolf"],lv:1,gold:132,xp:66},
- {ch:1,no:"1-2",name:"세르엘 교회 앞",en:"SEREL CHAPEL",foes:["wolf", "wraith", "wolf"],lv:2,gold:164,xp:82},
- {ch:1,no:"1-3",name:"강가의 다리",en:"RIVER BRIDGE",foes:["wolf", "wolf", "wraith", "wolf"],lv:3,gold:196,xp:98},
- {ch:1,no:"1-4",name:"마을 외곽 언덕",en:"OUTSKIRT HILL",foes:["wraith", "wolf", "wraith", "wolf", "wolf"],lv:4,gold:228,xp:114},
- {ch:1,no:"1-5",name:"등불의 골목",en:"LANTERN ALLEY",foes:["sootmane", "wolf", "wolf"],lv:6,gold:584,xp:292,boss:true},
- {ch:1,no:"1-6",name:"포도밭 오솔길",en:"VINEYARD PATH",foes:["wraith", "wraith", "wolf"],lv:6,gold:292,xp:146},
- {ch:1,no:"1-7",name:"오래된 물레방아",en:"OLD WATERMILL",foes:["wolf", "wraith", "wolf", "wraith"],lv:7,gold:324,xp:162},
- {ch:1,no:"1-8",name:"종탑 아래",en:"UNDER THE BELL",foes:["wraith", "wraith", "wolf", "wolf", "wolf"],lv:8,gold:356,xp:178},
- {ch:1,no:"1-9",name:"저녁 안개 들판",en:"MISTY FIELD",foes:["wraith", "wraith", "wraith", "wolf", "wolf"],lv:9,gold:388,xp:194},
- {ch:1,no:"1-10",name:"밤의 끝",en:"END OF NIGHT",foes:["nightclaw"],lv:12,gold:1452,xp:726,boss:true},
+ {ch:1,no:"1-1",name:"저물녘 마을길",en:"VILLAGE LANE",foes:["ch1_hound", "ch1_hound", "ch1_hound"],bg:"bg_1_1",lv:1,gold:132,xp:66},
+ {ch:1,no:"1-2",name:"세르엘 교회 앞",en:"SEREL CHAPEL",foes:["ch1_hound", "ch1_moth", "ch1_hound"],bg:"bg_1_2",lv:2,gold:164,xp:82},
+ {ch:1,no:"1-3",name:"강가의 다리",en:"RIVER BRIDGE",foes:["ch1_moth", "ch1_hound", "ch1_moth", "ch1_hound"],bg:"bg_1_3",lv:3,gold:196,xp:98},
+ {ch:1,no:"1-4",name:"마을 외곽 언덕",en:"OUTSKIRT HILL",foes:["ch1_moth", "ch1_shade", "ch1_moth", "ch1_hound"],bg:"bg_1_4",lv:4,gold:228,xp:114},
+ {ch:1,no:"1-5",name:"등불의 골목",en:"LANTERN ALLEY",foes:["sootmane", "ch1_hound", "ch1_hound"],bg:"bg_1_5",lv:6,gold:584,xp:292,boss:true},
+ {ch:1,no:"1-6",name:"포도밭 오솔길",en:"VINEYARD PATH",foes:["ch1_hound", "ch1_moth", "ch1_hound"],bg:"bg_1_6",lv:6,gold:292,xp:146},
+ {ch:1,no:"1-7",name:"오래된 물레방아",en:"OLD WATERMILL",foes:["ch1_shade", "ch1_hound", "ch1_shade", "ch1_hound"],bg:"bg_1_7",lv:7,gold:324,xp:162},
+ {ch:1,no:"1-8",name:"종탑 아래",en:"UNDER THE BELL",foes:["ch1_shade", "ch1_hound", "ch1_moth", "ch1_hound", "ch1_hound"],bg:"bg_1_8",lv:8,gold:356,xp:178},
+ {ch:1,no:"1-9",name:"저녁 안개 들판",en:"MISTY FIELD",foes:["ch1_shade", "ch1_shade", "ch1_hound", "ch1_moth", "ch1_hound"],bg:"bg_1_9",lv:9,gold:388,xp:194},
+ {ch:1,no:"1-10",name:"밤의 끝",en:"END OF NIGHT",foes:["nightclaw"],bg:"bg_1_10",lv:12,gold:1452,xp:726,boss:true},
  {ch:2,no:"2-1",name:"안개 낀 오솔길",en:"MISTY PATH",foes:["ch2_boar", "ch2_boar", "ch2_boar"],bg:"bg_2_1",lv:13,gold:516,xp:258},
  {ch:2,no:"2-2",name:"돌 이정표",en:"OLD WAYSTONE",foes:["ch2_boar", "ch2_lizard", "ch2_boar"],bg:"bg_2_2",lv:14,gold:548,xp:274},
  {ch:2,no:"2-3",name:"가도의 숲",en:"ROADSIDE WOODS",foes:["ch2_lizard", "ch2_spider", "ch2_lizard", "ch2_spider"],bg:"bg_2_3",lv:15,gold:580,xp:290},
@@ -1381,16 +1394,21 @@ const WEAK={chance:.15,mult:1.35}, CRIT={chance:.10,mult:1.5}, WOUND=.30;
 const P=v=>Math.round(v*1000)/10+'%', PP=v=>Math.round(v*1000)/10+'%p';
 const TO_TXT={self:'자신',allies:'아군 전체',lowest:'HP 비율이 가장 낮은 아군 1명',foes:'적 전체',target:'적 1명',weakest:'적 1명(HP 비율이 가장 낮은 적 우선)',all:'적 전체',random:'무작위 적',same:'같은 대상'};
 const KTXT={atk:'공격력',def:'방어력',spd:'속도'};
+/* 시전자 지원 계수: 영웅 기본 공격력 대비 현재 공격력(레벨·스킬 맵 반영)의 증가분 절반을 버프·디버프 크기에 곱함, 0.8~1.2배 */
+const supCoef=(atk,base)=>base>0?Math.min(1.2,Math.max(.8,1+(atk/base-1)*.5)):1;
+const supOf=u=>{const h=u&&u.side==='ally'&&HEROES.find(x=>x.id===u.id);return h?supCoef(u.atk,h.atk):1;};
+const supTxt=(v,st,sg,pp)=>{const s=st.sup||1;return Math.abs(s-1)<.001?'':` <b>[현재 ${sg}${pp?PP(Math.abs(v)*s):P(Math.abs(v)*s)}]</b>`;};
 function fxText(e,st,pre=0){const to=e.to==='same'&&e.t==='debuff'?'맞은 적':TO_TXT[e.to]||'';
  switch(e.t){
   case 'dmg':{const per=Math.round(st.atk*(1+pre)*e.mult+(e.defMult?st.def*e.defMult:0));
    const head=e.to==='random'?`무작위 적에게 ${e.hits}회(매 타 대상을 새로 고름)`:`${to}에게 ${e.hits>1?e.hits+'회':'1회'}`;
-   return `${head} · 1타 피해 = 공격력의 ${P(e.mult)}${e.defMult?` + 방어력의 ${P(e.defMult)}`:''} <b>[현재 ${fmt(per)}${pre?` · 강화 +${P(pre)} 반영`:''}]</b>${e.weakUp?` · 이 공격 약점 확률 +${PP(e.weakUp)}`:''}`;}
-  case 'heal':return `${to} 회복: 대상 최대 HP의 ${P(e.pct)}`;
-  case 'regen':return `${to} 지속 회복: ${e.turns}턴 동안 자기 턴 시작마다 최대 HP의 ${P(e.pct)}`;
-  case 'shield':return `${to}에게 보호막: ${e.base==='self'?`${st.name} 최대 HP의 ${P(e.pct)} <b>[현재 ${fmt(Math.round(st.hp*e.pct))}]</b>`:`대상 최대 HP의 ${P(e.pct)}`} · ${e.turns}턴 (HP보다 먼저 피해를 흡수)`;
-  case 'buff':return e.k==='dr'?`${to} 받는 피해 -${P(e.v)} · ${e.turns}턴`:`${to} ${KTXT[e.k]} +${P(e.v)} · ${e.turns}턴${e.k==='spd'?' (행동 순서는 다음 라운드부터 반영)':''}`;
-  case 'debuff':return e.k==='mark'?`${to}에 급소 표식 · ${e.turns}턴: 그 적을 공격할 때 약점 확률 +${PP(e.v)}`:e.k==='vuln'?`${to} 받는 피해 +${P(e.v)} · ${e.turns}턴`:`${to} ${KTXT[e.k]} ${P(e.v)} · ${e.turns}턴`;
+   const extra=(e.markUp?` · 급소 표식이 있는 적에게 피해 +${P(e.markUp)}`:'')+(e.killAtk?` · 적을 쓰러뜨릴 때마다 자신의 공격력 +${P(e.killAtk)}(2턴)`:'');
+   return `${head} · 1타 피해 = 공격력의 ${P(e.mult)}${e.defMult?` + 방어력의 ${P(e.defMult)}`:''} <b>[현재 ${fmt(per)}${pre?` · 강화 +${P(pre)} 반영`:''}]</b>${e.weakUp?` · 이 공격 약점 확률 +${PP(e.weakUp)}`:''}${extra}`;}
+  case 'heal':return `${to} 회복: ${st.name} 공격력의 ${P(e.mult)} <b>[현재 ${fmt(Math.round(st.atk*e.mult))}]</b> (대상 최대 HP 상한 없음, 부족한 HP만큼만 회복)`;
+  case 'regen':return `${to} 지속 회복: ${e.turns}턴 동안 자기 턴 시작마다 ${st.name} 공격력의 ${P(e.mult)} <b>[현재 ${fmt(Math.round(st.atk*e.mult))}]</b>`;
+  case 'shield':return `${to}에게 보호막: ${e.atkMult?`${st.name} 공격력의 ${P(e.atkMult)} <b>[현재 ${fmt(Math.round(st.atk*e.atkMult))}]</b>`:e.defMult?`${st.name} 방어력의 ${P(e.defMult)} <b>[현재 ${fmt(Math.round(st.def*e.defMult))}]</b>`:`${st.name} 최대 HP의 ${P(e.pct)} <b>[현재 ${fmt(Math.round(st.hp*e.pct))}]</b>`} · ${e.turns}턴 (HP보다 먼저 피해를 흡수)`;
+  case 'buff':return e.k==='dr'?`${to} 받는 피해 -${P(e.v)}${supTxt(e.v,st,'-')} · ${e.turns}턴`:`${to} ${KTXT[e.k]} +${P(e.v)}${supTxt(e.v,st,'+')} · ${e.turns}턴${e.k==='spd'?' (행동 순서는 다음 라운드부터 반영)':''}`;
+  case 'debuff':return e.k==='mark'?`${to}에 급소 표식 · ${e.turns}턴: 그 적을 공격할 때 약점 확률 +${PP(e.v)}${supTxt(e.v,st,'+',1)}`:e.k==='vuln'?`${to} 받는 피해 +${P(e.v)} · ${e.turns}턴`:`${to} ${KTXT[e.k]} ${P(e.v)}${supTxt(e.v,st,'')} · ${e.turns}턴`;
   case 'taunt':return `자신에게 도발 · ${e.turns}턴: 적의 단일 대상 공격이 모두 ${st.name}에게 향함 (전체 공격은 제외)`;
  }return '';}
 /* 같은 스킬 안에서 앞서 건 자기 공격력 강화는 뒤 피해 계산에 그대로 들어가므로 설명 수치에도 반영 (예: 아렌 「투지」) */
@@ -1398,7 +1416,7 @@ function descSkill(sk,st){let pre=0;return sk.fx.map(e=>{const s=fxText(e,st,pre
 /* 전투 컷인 오른쪽 수치 (첫 효과 기준, 데이터에서 생성) */
 function skLabel(sk){const e=sk.fx[0];switch(e.t){
  case 'dmg':return e.hits>1?`×${e.mult} <span>× ${e.hits} HIT</span>`:`×${e.mult}${e.defMult?` <span>+ DEF×${e.defMult}</span>`:' <span>DMG</span>'}`;
- case 'heal':return `${P(e.pct)} <span>HEAL</span>`;
+ case 'heal':return `ATK×${e.mult} <span>HEAL</span>`;
  case 'buff':return e.k==='dr'?`-${P(e.v)} <span>DMG TAKEN ${e.turns}T</span>`:`+${P(e.v)} <span>${({atk:'ATK',def:'DEF',spd:'SPD'})[e.k]} ${e.turns}T</span>`;
  case 'debuff':return e.k==='mark'?`MARK <span>${e.turns}T</span>`:`${P(e.v)} <span>${({atk:'ATK',def:'DEF',spd:'SPD'})[e.k]} ${e.turns}T</span>`;
  case 'taunt':return `TAUNT <span>${e.turns}T</span>`;
@@ -1672,8 +1690,8 @@ function viewLobby(){
   <div class="lb-bg"><img src="${lay?A.lobby_l_bg:bgu}" alt=""></div>${lay?`<div class="lb-jn"><img src="${A.lobby_l_jin}" alt=""></div><div class="lb-fg"><img src="${A.lobby_l_fg}" alt=""></div>`:''}<div class="lb-veil"></div>
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av" style="${avStyle(56)}"></span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
-  <div class="lb-cur"><span class="g"><i></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.13</span>
+  <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.16</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -1847,7 +1865,7 @@ function viewHeroes(){
 }
 /* 상세 내용 조각(팝업 heroDetail · 캐릭터 창 공용) */
 function heroInfo(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);const lore=LORE[id]||{};const ps=PASSIVE[id];
- const cur={name:h.name,atk:st.atk,def:st.def,hp:st.hp};const li=arr=>arr.map(t=>`<li>${t}</li>`).join('');
+ const cur={name:h.name,atk:st.atk,def:st.def,hp:st.hp,sup:supCoef(st.atk,h.atk)};const li=arr=>arr.map(t=>`<li>${t}</li>`).join('');
  const skRow=(sk,sp)=>`<div class="skrow"><span class="sk ${sp?'sp':''}">${skIcon(sk,h,sp?'s2':'s1')}</span><div><div class="skn">${sk.name} <small>${sp?'★ 특수':'일반'} · 쿨다운 ${sk.cd}턴</small></div><ul class="skd">${li(descSkill(sk,cur))}</ul></div></div>`;
  const nameOf=i=>(HEROES.find(x=>x.id===i)||{}).name||'???';
  const syn=SYNERGY.filter(sy=>sy.ids.includes(id)).map(sy=>{const open=!sy.locked&&sy.ids.every(owned);const members=sy.ids.map(i=>owned(i)?nameOf(i):'???').join(' + ');
@@ -1861,7 +1879,7 @@ function heroInfo(id){const h=HEROES.find(x=>x.id===id);const st=heroStats(h);co
   nm:`<div class="nm"><span class="r">${h.en} · ${h.role}</span><span class="n">${h.name}</span><span class="lv">LV.${st.lv} <small>XP ${st.xp}/${st.need}</small> <small class="own">보유 · ${state.party.includes(id)?'편성 중':'대기'}</small></span></div>`,
   lore:`<div class="lore"><div><span class="k">출신</span>${lore.origin||'-'}</div><div><span class="k">성격</span>${lore.trait||'-'}</div><div><span class="k">무기</span>${lore.weapon||'-'}</div><p>${lore.intro||''}</p></div>`,
   stats:`<div class="stats"><div><span class="k">공격</span><b>${st.atk}</b></div><div><span class="k">방어</span><b>${st.def}</b></div><div><span class="k">체력</span><b>${fmt(st.hp)}</b></div><div><span class="k">속도</span><b>${st.spd}</b></div><div><span class="k">치명 확률</span><b>${P(critT)}</b><small>×${CRIT.mult}</small></div><div><span class="k">약점 확률</span><b>${P(weakT)}</b><small>×${WEAK.mult}</small></div></div>`,
-  skills:`<div class="sec">스킬</div><div class="sks">${skRow(h.s1,false)}${skRow(h.s2,true)}<div class="sknote">두 스킬이 모두 쿨다운 중이면 기본 공격: 적 1명에게 공격력의 100% 피해 1회 <b>[현재 ${fmt(st.atk)}]</b></div></div>`,
+  skills:`<div class="sec">스킬</div><div class="sks">${skRow(h.s1,false)}${skRow(h.s2,true)}<div class="sknote">스킬은 상황에 맞게 자동 선택(힐 → 버프 → 표식·디버프 → 공격 순), 쓸 스킬이 없으면 기본 공격: 적 1명에게 공격력의 100% 피해 1회 <b>[현재 ${fmt(st.atk)}]</b></div></div>`,
   passive:`<div class="sec">고유 패시브</div><div class="sks"><div class="skrow"><span class="sk ps"><svg viewBox="0 0 16 16"><path d="M8 1.5 9.8 6l4.7.4-3.6 3 1.1 4.6L8 11.6 4 14l1.1-4.6-3.6-3L6.2 6Z" fill="#B48CFF"/></svg></span><div><div class="skn">${ps?ps.name:'-'} <small>PASSIVE</small></div><ul class="skd">${ps?li(ps.desc(ps.v)):'<li>설정 대기</li>'}</ul></div></div></div>`,
   syn:`<div class="sec">[파티 시너지]</div><div class="syns">${syn}</div>`,
   calc:`<div class="calc">계산 기준 · 1타 피해 = (공격력×계수 + 방어력×계수) − 적 방어력×0.8, 무작위 ±8% → 약점 ×${WEAK.mult} · 치명 ×${CRIT.mult} → 받는 피해 증가·감소 → 보호막이 HP보다 먼저 흡수<br>[현재] = 현재 레벨 능력치 × 계수 (다른 버프·적 방어력 적용 전) · 적 1명 = 전장에서 누른 적이 있으면 그 적 · 턴 = 효과를 받은 캐릭터 자신의 행동 횟수 · 스킬은 전투 시작부터 사용 가능</div>`};}
@@ -2046,9 +2064,9 @@ const SKICON={
  '견고한 서약':'<path d="M8 1.5 13 3.5v4c0 3.2-2.2 5.6-5 6.8-2.8-1.2-5-3.6-5-6.8v-4Z" fill="none" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 5v5M5.5 7.5h5" stroke="#BFF5DD" stroke-width="1.5" stroke-linecap="round"/>',
 };
 // 스킬 이미지: art/skills/sk_<id>_<s1|s2>.webp 가 있으면 그림, 없으면 SVG 아이콘
-const skIcon=(sk,h,k)=>{const key=h&&k?'sk_'+(h.id||h)+'_'+k:null;if(key&&A[key])return `<img class="ci img" src="${A[key]}" alt="">`;return SKICON[sk.name]?`<svg viewBox="0 0 16 16" class="ci">${SKICON[sk.name]}</svg>`:`<svg viewBox="0 0 10 10">${ICON[skIconType(sk)]}</svg>`;};
+const skIcon=(sk,h,k)=>{const key=sk.icon?'sk_'+sk.icon:h&&k?'sk_'+(h.id||h)+'_'+k:null;if(key&&A[key])return `<img class="ci img" src="${A[key]}" alt="">`;return SKICON[sk.name]?`<svg viewBox="0 0 16 16" class="ci">${SKICON[sk.name]}</svg>`:`<svg viewBox="0 0 10 10">${ICON[skIconType(sk)]}</svg>`;};
 const skIconType=sk=>{const k=skillKind(sk);return k==='atk'?(skAoe(sk)?'aoe':'single'):k==='heal'?'heal':k==='debuff'?'defdown':'atkup';};
-const skTip=(h,sk)=>sk.name+' · '+descSkill(sk,{name:h.name,atk:h.atk,def:h.def,hp:h.max}).join(' / ').replace(/<[^>]+>/g,'');
+const skTip=(h,sk)=>sk.name+' · '+descSkill(sk,{name:h.name,atk:h.atk,def:h.def,hp:h.max,sup:supOf(h)}).join(' / ').replace(/<[^>]+>/g,'');
 function cardHtml(h){return `<div class="card cut-r" data-i="${h.i}"><img class="art" src="${A[h.id]}" alt="${h.name}"><div class="shade"></div><div class="aura"></div><div class="vign"></div><div class="flash"></div><div class="buffs bstrip"></div><div class="meta"><span class="n">${h.name}<em class="lvtag">LV.${heroLv(h.id)}</em></span><div class="bar"><i class="ghost"></i><i class="fill"></i><i class="shd"></i><span class="hpv"></span></div><div class="skills"><span class="sk s1 ${isSpecial(h,h.s1)?'sp':''}" title="${skTip(h,h.s1)}">${skIcon(h.s1,h,'s1')}<b></b></span><span class="sk s2 ${isSpecial(h,h.s2)?'sp':''}" title="${skTip(h,h.s2)}">${skIcon(h.s2,h,'s2')}<b></b></span></div></div></div>`;}
 
 /* 조각 위치: 사선 바(.hp)는 앞뒤 끝이 채움의 사선과 맞도록 컷 폭만큼 넓혀 같은 기울기로 자름 */
@@ -2099,7 +2117,7 @@ function buffGroups(u){const m={};for(const x of u.buffs){const bad=isBad(x);con
  const all=Object.values(m).sort((a,c)=>(BORDER[a.k]??9)-(BORDER[c.k]??9));return {buffs:all.filter(x=>!x.bad),debuffs:all.filter(x=>x.bad)};}
 /* 칩/길게 누르기 설명 문장 — 실제 버프 값에서 생성 */
 function buffLine(x){const t=x.perm?(x.stk?` (${x.src} ${x.stk}중첩 · 전투 끝까지)`:` (${x.src||'효과'} · 전투 끝까지)`):` · ${x.t}턴`;
- switch(x.k){case 'shield':return `보호막 ${fmt(x.v)}${t}`;case 'taunt':return `도발${t}`;case 'regen':return `지속 회복 매 턴 최대 HP ${P(x.v)}${t}`;case 'dr':return `받는 피해 -${P(x.v)}${t}`;case 'vuln':return `빈틈: 받는 피해 +${P(x.v)}${t}`;case 'mark':return `급소 표식: 약점 확률 +${PP(x.v)}${t}`;}
+ switch(x.k){case 'shield':return `보호막 ${fmt(x.v)}${t}`;case 'taunt':return `도발${t}`;case 'regen':return `지속 회복 매 턴 ${fmt(x.v)}${t}`;case 'dr':return `받는 피해 -${P(x.v)}${t}`;case 'vuln':return `빈틈: 받는 피해 +${P(x.v)}${t}`;case 'mark':return `급소 표식: 약점 확률 +${PP(x.v)}${t}`;}
  return `${BNAME[x.k]||x.k} ${x.v>=0?'+':'-'}${P(Math.abs(x.v))}${t}`;}
 function buffChips(u){if(!u.buffs.length)return '';const g=buffGroups(u);
  const chip=x=>{const st=['vuln','mark'].includes(x.k);const cls=x.bad?(st?'st '+x.k:'down'):'up '+x.k;const ico=x.bad?(st?BICON[x.k]:BICON.down):(BICON[x.k]||BICON.atk);const num=x.perm?(x.stk?'×'+x.stk:'∞'):x.t;
@@ -2109,7 +2127,7 @@ function buffChips(u){if(!u.buffs.length)return '';const g=buffGroups(u);
 function buffTip(u){const g=buffGroups(u);const lines=[...g.buffs,...g.debuffs].map(buffLine);toast(lines.length?lines.join('  |  '):'효과 없음');}
 function paintCards(){const b=battle;if(!b)return;for(const h of b.allies){const n=$(`.card[data-i="${h.i}"]`);if(!n)continue;if(h.hp<=0)h.buffs=[];const bf=$('.buffs',n);if(bf){const html=buffChips(h);if(bf.innerHTML!==html)bf.innerHTML=html;}auraCls(n,h);const pct=Math.max(0,h.hp)/h.max*100,old=Number(n.dataset.hp??pct);n.dataset.hp=pct;setBar($('.bar',n),pct,old);$('.hpv',n).innerHTML=`${fmt(Math.max(0,h.hp))}<span> / ${fmt(h.max)}</span>`;{const sd=$('.shd',n);if(sd){const sw=h.hp>0?Math.min(100,buffVal(h,'shield')/h.max*100):0;sd.style.width=sw+'%';sd.style.left=Math.max(0,Math.min(pct,100-sw))+'%';}}n.classList.toggle('taunt',h.hp>0&&hasBuff(h,'taunt'));n.classList.toggle('dead',h.hp<=0);n.classList.toggle('wounded',h.hp>0&&h.hp/h.max<WOUND);swapArt(n,h);for(const k of ['s1','s2']){const s=$('.'+k,n);s.classList.toggle('ready',h[k].cd===0&&h.hp>0);s.classList.toggle('cool',h[k].cd>0);$('b',s).textContent=h[k].cd>0?h[k].cd:'';}}}
 /* 얼굴 중심점(이미지 내 비율)과 확대 배율 — 행동순서·결과창·미니컷인 얼굴 크롭용. 새 일러스트가 오면 여기만 갱신 */
-const FACE={jin:{x:.51,y:.29,z:2.7},eir:{x:.492,y:.2,z:3.7,ar:.75},aren:{x:.56,y:.15,z:4.3},riana:{x:.54,y:.178,z:5.6},clea:{x:.515,y:.18,z:3.6},wolf:{x:.42,y:.32,z:1.7,ar:96/92},wraith:{x:.5,y:.16,z:2.0,ar:96/118},vareon:{x:.5,y:.2,z:1.8,ar:170/190},ch2_boar:{x:.3,y:.4,z:1.6,ar:16/9},ch2_spider:{x:.4,y:.4,z:1.6,ar:16/9},ch2_lizard:{x:.3,y:.45,z:1.6,ar:16/9},ch2_nestmother:{x:.35,y:.4,z:1.6,ar:16/9},ch2_roadbreaker:{x:.3,y:.4,z:1.6,ar:16/9}};
+const FACE={jin:{x:.51,y:.29,z:2.7},eir:{x:.492,y:.2,z:3.7,ar:.75},aren:{x:.56,y:.15,z:4.3},riana:{x:.54,y:.178,z:5.6},clea:{x:.515,y:.18,z:3.6},wolf:{x:.42,y:.32,z:1.7,ar:96/92},wraith:{x:.5,y:.16,z:2.0,ar:96/118},vareon:{x:.5,y:.2,z:1.8,ar:170/190},ch1_hound:{x:.3,y:.4,z:1.8,ar:760/481},ch1_moth:{x:.5,y:.3,z:1.8,ar:624/759},ch1_shade:{x:.5,y:.15,z:2.2,ar:407/760},ch1_sootmane:{x:.35,y:.3,z:1.8,ar:570/760},ch1_nightclaw:{x:.25,y:.4,z:1.8,ar:759/522},ch2_boar:{x:.3,y:.4,z:1.6,ar:16/9},ch2_spider:{x:.4,y:.4,z:1.6,ar:16/9},ch2_lizard:{x:.3,y:.45,z:1.6,ar:16/9},ch2_nestmother:{x:.35,y:.4,z:1.6,ar:16/9},ch2_roadbreaker:{x:.3,y:.4,z:1.6,ar:16/9}};
 function faceStyle(key,size){const f=FACE[key]||{x:.5,y:.15,z:2.4};const ar=f.ar||(2/3);const H=size*f.z,Wd=H*ar;const px=(size/2-f.x*Wd)/(size-Wd)*100,py=(size/2-f.y*H)/(size-H)*100;return `background-image:url(${A[key]});background-size:${Wd.toFixed(1)}px ${H.toFixed(1)}px;background-position:${px.toFixed(1)}% ${py.toFixed(1)}%;background-repeat:no-repeat`;}
 function paintOrder(){const b=battle,row=$('#order');if(!row)return;
  const chip=(u,cls)=>{const sz=cls==='now'?40:cls==='next'?22:27;return `<div class="chip ${u.side==='enemy'?'enemy':''} ${cls}" title="${u.name}" style="${faceStyle(u.side==='enemy'?u.img:u.id,sz)}"></div>`;};
@@ -2141,12 +2159,12 @@ async function cutin(u,skill){const b=battle;if(!state.motion){toast(`${u.name} 
  if(!state.fx||state.speed>=4){await quickBanner(u,skill,true);return;} // 이펙트 간소화 또는 x4 고속: 특수스킬도 미니 컷인으로
  SND.play(isSpecial(u,skill)?'special':'cast',{kind:skAoe(skill)?'aoe':skillKind(skill),det:u.i});
  const dim=el('<div class="dim"></div>');
- const special=isSpecial(u,skill);const motion=special&&u.art&&u.art.skill&&A[u.art.skill];
+ const special=isSpecial(u,skill);const ck=cutKey(u,skill);const motion=special&&ck&&A[ck];
  const copy=`<div class="band"></div><div class="copy"><small>${special?'★ SPECIAL':u.side==='enemy'?'ENEMY SKILL':'SKILL'} · ${u.en||u.name}</small><strong>${skill.name}</strong></div><div class="mult">${skLabel(skill)}</div>`;
  let c;
- if(motion&&u.art.video&&A[u.art.video]){
+ if(motion&&u.art.video&&A[u.art.video]&&skill.cut===u.art.skill){ // 동작 영상은 그 컷인 원본을 쓰는 스킬(진 시계의 맥동)에만
   // 최소 동작 영상(작은 차이 키프레임만 보간 + 섬광 컷) + 카메라 무빙
-  const g=u.art.fglow||{x:50,y:15};const rk0=u.art.skill; // 영상이 뜨기 전까지 정지 일러스트를 깔아 빈 화면 방지
+  const g=u.art.fglow||{x:50,y:15};const rk0=ck; // 영상이 뜨기 전까지 정지 일러스트를 깔아 빈 화면 방지
   c=el(`<div class="cutin gold flip"><div class="glow"></div><div class="stripes"></div><div class="lines"></div><div class="frames"><img class="poster" src="${A[rk0]}" alt=""><video class="vid" muted playsinline autoplay preload="auto" poster="${A[rk0]}"><source src="${A[u.art.video]}" type="video/mp4">${A[u.art.video+'_v']?`<source src="${A[u.art.video+'_v']}" type="video/webm">`:''}</video></div><div class="rays" style="left:${g.x}%;top:${g.y}%"></div><div class="burst" style="left:${g.x}%;top:${g.y}%"></div>${dustHtml(16)}<div class="rim"></div><div class="flashw"></div>${copy}</div>`);
   $('#app').append(dim,c);const vr=cutRate();c.style.setProperty('--vr',vr);
   const v=$('video',c);v.addEventListener('playing',()=>c.classList.add('vready'),{once:true});try{v.playbackRate=vr;v.currentTime=0;await v.play().catch(()=>{});}catch(e){}
@@ -2156,7 +2174,7 @@ async function cutin(u,skill){const b=battle;if(!state.motion){toast(`${u.name} 
  }
  if(motion){
   // 캐릭터는 거의 정지(머리카락·스카프만 미세하게), 카메라가 얼굴 → 팔 → 시계로 올라가고 발광 순간 펀치 → 천천히 당김
-  const g=u.art.glow||{x:50,y:20},rk=u.art.skill;
+  const g=u.art.glow||{x:50,y:20},rk=ck;
   c=el(`<div class="cutin gold c-${u.id}"><div class="glow"></div><div class="stripes"></div><div class="lines"></div><div class="rig pose"><img class="rl body" src="${A[rk]}" alt="">${rigLayers(rk,'jinsk')}</div><div class="rays" style="left:${g.x}%;top:${g.y}%"></div><div class="burst" style="left:${g.x}%;top:${g.y}%"></div>${dustHtml(16)}<div class="rim"></div><div class="flashw"></div>${copy}</div>`);
   $('#app').append(dim,c);const vr=cutRate();c.style.setProperty('--vr',vr);
   await sleep(380/vr);c.classList.add('raise');
@@ -2201,7 +2219,7 @@ function healUnit(src,t,base,{noAmp=false,fxOn=true,quiet=false}={}){if(!t||t.hp
  if(src&&src.side==='ally')for(const sy of synOn(battle))if(sy.hook&&sy.hook.healMod)v*=sy.hook.healMod(src,t,battle)||1;
  v=Math.round(v);const before=t.hp;t.hp=Math.min(t.max,t.hp+v);const got=t.hp-before;if(src)src.heal=(src.heal||0)+got;
  if(quiet&&got<=0)return 0;popDmg(t,v,'heal');if(fxOn)fx(t,quiet?'regen':'heal');if(t.side==='ally')paintCards();return v;}
-function tickRegen(u){for(const x of u.buffs.filter(x=>x.k==='regen'))healUnit(x.by||null,u,u.max*x.v,{noAmp:true,quiet:true});}
+function tickRegen(u){for(const x of u.buffs.filter(x=>x.k==='regen'))healUnit(x.by||null,u,x.v,{noAmp:true,quiet:true});}
 /* 클레아 「수호의 맹세」: 다른 아군이 맞을 때 대신 받을 수호자와 비율 */
 function guardFor(t,b){for(const g of alive(b.allies)){const p=passiveOf(g);if(p&&p.hook&&p.hook.guard){let r=p.hook.guard(g,t,b);if(r>0){for(const sy of synOn(b))if(sy.hook&&sy.hook.shareAdd)r+=sy.hook.shareAdd(g,t,b)||0;return {g,r:Math.min(.9,r)};}}}return null;}
 function afterHit(u,res,att){const b=battle;
@@ -2214,7 +2232,7 @@ function onDown(u,att){const b=battle;u.buffs=[];if(u.side==='enemy'&&b.target==
 async function hitOne(att,tgt,e,{skill=null,fxk=null,seq=0,weak:wk=null}={}){const b=battle;if(!b||b.done||!tgt||tgt.hp<=0)return 0;
  const weak=wk!=null?wk:Math.random()<weakChance(att,tgt,e),crit=Math.random()<critChance(att);
  let dmg=calcDamage(att,tgt,e);if(weak)dmg*=WEAK.mult;if(crit)dmg*=CRIT.mult;
- dmg*=outMod(att,tgt,b);dmg*=1+Math.max(0,buffVal(tgt,'vuln'));dmg*=1-drOf(tgt);dmg=Math.max(1,Math.round(dmg));
+ dmg*=outMod(att,tgt,b);if(e.markUp&&buffVal(tgt,'mark')>0)dmg*=1+e.markUp;dmg*=1+Math.max(0,buffVal(tgt,'vuln'));dmg*=1-drOf(tgt);dmg=Math.max(1,Math.round(dmg));
  // 수호: 아군 피격 시 클레아가 일부를 대신 받음 (클레아 자신의 받는 피해 감소·보호막 적용)
  let gd=null,part=0;if(tgt.side==='ally'){gd=guardFor(tgt,b);if(gd)part=Math.round(dmg*gd.r);}
  const res=applyDamage(tgt,dmg-part);
@@ -2258,25 +2276,34 @@ async function runSkill(u,skill){const b=battle;const foes=u.side==='ally'?b.foe
  const pick=to=>{const m=alive(mates);switch(to){case 'self':return u.hp>0?[u]:[];case 'allies':return m;case 'foes':case 'all':return alive(foes);case 'lowest':return m.length?[m.reduce((x,y)=>y.hp/y.max<x.hp/x.max?y:x)]:[];case 'same':return last.filter(x=>x.hp>0);default:{const t=pickTarget(u,foes,to==='weakest'?'weakest':null);return t?[t]:[];}}};
  for(const e of skill.fx){if(b.done||battle!==b||u.hp<=0)break;
   switch(e.t){
-   case 'dmg':last=await execAttack(u,skill,e,foes);break;
-   case 'heal':{last=pick(e.to);SND.play('heal');for(const t of last){healUnit(u,t,t.max*e.pct);const n=unitNode(t);n&&(n.classList.remove('healed'),void n.offsetWidth,n.classList.add('healed'));}paintCards();await sleep(350);break;}
-   case 'regen':{last=pick(e.to);for(const t of last){addBuff(t,{k:'regen',v:e.pct,t:e.turns,fresh:t===u,src:skill.name,by:u});fx(t,'regen');}paintAll();await sleep(160);break;}
-   case 'shield':{last=pick(e.to);SND.play('shield');for(const t of last){const amt=Math.round((e.base==='self'?u.max:t.max)*e.pct);addBuff(t,{k:'shield',v:amt,t:e.turns,fresh:t===u,src:skill.name,by:u});fx(t,'barrier','+'+fmt(amt));}paintAll();await sleep(420);break;}
-   case 'buff':{last=pick(e.to);SND.play(e.k==='dr'?'shield':'buff');for(const t of last){addBuff(t,{k:e.k,v:e.v,t:e.turns,fresh:t===u,src:skill.name});fx(t,e.k==='dr'||e.k==='def'?'shield':'buff',({atk:'ATK',def:'DEF',spd:'SPD',dr:'GUARD'})[e.k]+(e.k==='dr'?'':' ↑'));}paintAll();await sleep(420);break;}
-   case 'debuff':{last=pick(e.to);SND.play('debuff');for(const t of last){addBuff(t,{k:e.k,v:e.v,t:e.turns,bad:true,src:skill.name});fx(t,e.k==='mark'?'mark':'debuff',e.k==='mark'?'MARK':({atk:'ATK',def:'DEF',spd:'SPD'})[e.k]+' ↓');}paintAll();await sleep(420);break;}
+   case 'dmg':{last=await execAttack(u,skill,e,foes);if(e.killAtk&&u.hp>0){const k=last.filter(t=>t.hp<=0).length;if(k){addBuff(u,{k:'atk',v:e.killAtk*k,t:2,fresh:true,src:skill.name+' 처치'});pfx(u,'ATK ↑');paintAll();}}break;}
+   case 'heal':{last=pick(e.to);SND.play('heal');for(const t of last){healUnit(u,t,atkOf(u)*e.mult);const n=unitNode(t);n&&(n.classList.remove('healed'),void n.offsetWidth,n.classList.add('healed'));}paintCards();await sleep(350);break;}
+   case 'regen':{last=pick(e.to);for(const t of last){addBuff(t,{k:'regen',v:Math.round(atkOf(u)*e.mult),t:e.turns,fresh:t===u,src:skill.name,by:u});fx(t,'regen');}paintAll();await sleep(160);break;}
+   case 'shield':{last=pick(e.to);SND.play('shield');for(const t of last){const amt=Math.round(e.atkMult?atkOf(u)*e.atkMult:e.defMult?defOf(u)*e.defMult:(e.base==='self'?u.max:t.max)*e.pct);addBuff(t,{k:'shield',v:amt,t:e.turns,fresh:t===u,src:skill.name,by:u});fx(t,'barrier','+'+fmt(amt));}paintAll();await sleep(420);break;}
+   case 'buff':{last=pick(e.to);SND.play(e.k==='dr'?'shield':'buff');for(const t of last){addBuff(t,{k:e.k,v:e.v*supOf(u),t:e.turns,fresh:t===u,src:skill.name});fx(t,e.k==='dr'||e.k==='def'?'shield':'buff',({atk:'ATK',def:'DEF',spd:'SPD',dr:'GUARD'})[e.k]+(e.k==='dr'?'':' ↑'));}paintAll();await sleep(420);break;}
+   case 'debuff':{last=pick(e.to);SND.play('debuff');for(const t of last){addBuff(t,{k:e.k,v:e.v*supOf(u),t:e.turns,bad:true,src:skill.name});fx(t,e.k==='mark'?'mark':'debuff',e.k==='mark'?'MARK':({atk:'ATK',def:'DEF',spd:'SPD'})[e.k]+' ↓');}paintAll();await sleep(420);break;}
    case 'taunt':{last=u.hp>0?[u]:[];addBuff(u,{k:'taunt',v:1,t:e.turns,fresh:true,src:skill.name});SND.play('shield');fx(u,'taunt','TAUNT');paintAll();await sleep(300);break;}
   }}
  return last;}
-// 특수스킬 판정 규칙: 캐릭터당 일반스킬(s1) 1개 + 특수스킬(s2) 1개. 특수는 전용 아트가 있으면 금색 모션 컷인, 없으면 풀 컷인
-const isSpecial=(u,sk)=>!!(u.side==='ally'&&sk&&sk===u.s2);
+/* 스킬 선택(아군): 쿨이 찬 스킬 중 상황 우선순위 — ①힐(아군 HP 70% 미만) ②버프·도발·보호막(효과가 아직 없을 때) ③표식·디버프(적에게 아직 없을 때) ④공격 · 해당 없으면 null(기본 공격). 적은 s1 쿨이 차면 사용
+   스킬 데이터 when: needHeal / needBuff / needMark (없으면 공격 스킬). 이미 걸린 효과는 buffs 의 src(스킬 이름)로 판단 */
+function chooseSkill(u,b){const s=[u.s1,u.s2].filter(x=>x&&x.cd===0);if(!s.length)return null;if(u.side==='enemy')return s[0];
+ const mates=alive(b.allies),foes=alive(b.foes),lack=(sk,list)=>list.some(t=>!t.buffs.some(x=>x.src===sk.name&&x.t>0));
+ const tgs=sk=>sk.fx.some(e=>e.to==='allies'||e.to==='lowest')?mates:[u];
+ return s.find(k=>k.when==='needHeal'&&mates.some(t=>t.hp/t.max<.7))
+  ||s.find(k=>k.when==='needBuff'&&lack(k,tgs(k)))
+  ||s.find(k=>k.when==='needMark'&&foes.length&&lack(k,foes))
+  ||s.find(k=>k.fx.some(e=>e.t==='dmg'))||null;}
+/* 특수스킬 판정: s2 이거나 전용 컷인(cut)이 지정된 스킬. 컷인·아이콘은 슬롯이 아니라 스킬 데이터(cut·icon)에 묶임 */
+const isSpecial=(u,sk)=>!!(u.side==='ally'&&sk&&(sk===u.s2||sk.cut));
+const cutKey=(u,sk)=>sk&&sk.cut&&A[sk.cut]?sk.cut:u.art&&u.art.skill;
 async function act(u){const b=battle;const foes=u.side==='ally'?b.foes:b.allies;b.acts=(b.acts||0)+1;paintHud();
  // 내 턴 시작: 내 스킬 쿨다운 1 감소 (첫 턴 제외) → 지속 회복 → 연계·약속 받기
  if(u.acted){for(const k of ['s1','s2'])if(u[k]&&u[k].cd>0)u[k].cd--;}
  tickRegen(u);
  if(u.side==='ally'){if(b.link&&b.link.from!==u.i){u._amp=b.link.v;b.link=null;pfx(u,'연계 +'+P(u._amp));}u._woodNow=!!u._wood;u._wood=false;if(u._woodNow)pfx(u,'약속 +'+P(SYN.wood.v.amp));}
  // 스킬 선택: s1 → s2 → 기본 공격
- let skill=null;if(u.side==='ally'){if(u.s1.cd===0)skill=u.s1;else if(u.s2.cd===0)skill=u.s2;}
- if(u.side==='enemy'&&u.s1&&u.s1.cd===0)skill=u.s1;
+ const skill=chooseSkill(u,b);
  const node=unitNode(u);if(node){node.classList.add('acting');if(skill)node.classList.add('sk-'+skillKind(skill));}
  // 특수스킬만 풀 컷인, 나머지(아군 일반스킬·적 스킬)는 미니 컷인
  if(skill&&isSpecial(u,skill))await cutin(u,skill);else if(skill)await quickBanner(u,skill);
