@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v4.5)</title>
+<title>신흔 DIVINE TRACE (v4.7)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1098,6 +1098,48 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .lb-tabs button i{font-size:17px}
 .lb-tabs button.on{box-shadow:none}
 
+/* ===== v4.6 로비 수정: 시차 4방향(가로 2 : 세로 1) · 재화 아이콘/+ 버튼 · 가독성 판 · 프로필 창 ===== */
+.screen.lb>.lb-bg{transform:translate(calc(var(--tx)*-12px),calc(var(--ty)*-6px));transition:transform .18s linear}
+.screen.lb>.lb-hero{transform:translate(calc(var(--tx)*6px),calc(var(--ty)*3px));transition:transform .18s linear}
+/* 프레임(::before z2)이 아이콘·+ 를 덮던 문제: 아이콘·버튼을 프레임 위로 */
+.screen.lb .lb-cur i{z-index:4}
+.screen.lb .lb-cur b{z-index:4;color:#fff;text-shadow:0 1px 3px #000,0 0 6px #000}
+.screen.lb .lb-cur button{z-index:5;color:#3a2606;font-weight:700;background:linear-gradient(180deg,#ffe08a,#e0a52c);box-shadow:0 0 0 1px #7a4d08,0 1px 3px rgba(0,0,0,.6)}
+.screen.lb .lb-cur .g i{background:radial-gradient(circle at 35% 30%,#fff6cc,#f2b73a 55%,#9a6212);box-shadow:0 0 0 1px #6b4308,0 0 6px rgba(255,205,90,.6)}
+.screen.lb .lb-cur .c i{background:linear-gradient(135deg,#f2f8ff,#7fb2ff 50%,#6a4bde);box-shadow:0 0 0 1px #2a2a7a,0 0 6px rgba(130,170,255,.7)}
+/* 어두운 반투명 판(프레임 뒤) */
+.lb-prof::after,.lb-cur>span::after,.lb-side::after{content:'';position:absolute;inset:3px;z-index:0;pointer-events:none;border-radius:10px;background:linear-gradient(180deg,rgba(8,6,12,.7),rgba(8,6,12,.55))}
+.lb-side .lb-mi i{color:#ffd77a;text-shadow:0 1px 3px #000,0 0 6px #000}
+.lb-side .lb-mi b{color:#fff;text-shadow:0 1px 3px #000,0 0 5px #000}
+.screen.lb .lb-pt b{color:#fff;text-shadow:0 1px 3px #000,0 0 6px #000}
+.screen.lb .lb-lv{color:#f3eee2;text-shadow:0 1px 3px #000,0 0 5px #000}
+.screen.lb .lb-lv i{background:rgba(255,255,255,.3)}
+.screen.lb .lb-lv em{background:linear-gradient(90deg,#5c93d6,#bfe3ff)}
+.screen.lb .lb-pw{color:#ffd77a;text-shadow:0 1px 3px #000,0 0 6px #000}
+.lb-adv .t b,.lb-tabs button{text-shadow:0 1px 3px #000,0 0 5px #000}
+.lb-tabs button{color:#e8e1d2}
+.screen.lb .lb-av{cursor:pointer}
+/* 프로필 창 */
+.pf-pick{margin:6px 0}
+.pf-pick .lp{cursor:pointer}
+.pause .btn[disabled]{opacity:.55}
+
+/* ===== v4.7 플레이어 스킬 맵 ===== */
+.screen.skills{gap:6px}
+.sk-back{height:28px;padding:0 10px;font-size:13px}
+.sk-map{flex:1 1 auto;min-height:0;border:1px solid var(--line);border-radius:8px;background:radial-gradient(circle at 50% 50%,#1d1a26,#0c0b0f 75%);touch-action:none;overflow:hidden;cursor:grab}
+.sk-map svg{width:100%;height:100%;display:block;user-select:none}
+.sk-map .skn{cursor:pointer}
+.sk-map .skn.dim,.sk-map .skn.lock{opacity:.55}
+.sk-map .skn.open circle:first-child{filter:drop-shadow(0 0 5px rgba(255,215,122,.9))}
+.sk-info{padding:8px 10px;min-height:86px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--silver)}
+.sk-info .ni{display:flex;justify-content:space-between;align-items:baseline}
+.sk-info .ni b{font-size:15px;color:#fff}
+.sk-info p{margin:0;line-height:1.4}
+.sk-info .nr{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#ffd77a}
+.sk-info .nr .btn{height:34px;min-width:110px;font-size:14px}
+.sk-info .nr em{font-style:normal;color:var(--muted)}
+
 </style>
 </head>
 <body>
@@ -1171,7 +1213,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.5 — 게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.7— 게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1386,7 +1428,7 @@ function dustHtml(n=14){let h='';for(let i=0;i<n;i++){const x=Math.random()*100,
 
 /* ---------- 저장 ---------- */
 const SAVE_KEY='shinheun-v1';
-const defaultState=()=>({gold:0,xp:0,cleared:{},party:['jin','eir','aren','riana','clea'],levels:{},speed:1,auto:true,fx:true,motion:true,after:'stop',chapter:1,name:'',msg:'',lobby:'jin',ts:0});
+const defaultState=()=>({gold:0,xp:0,cleared:{},party:['jin','eir','aren','riana','clea'],levels:{},speed:1,auto:true,fx:true,motion:true,after:'stop',chapter:1,name:'',msg:'',lobby:'jin',avatar:'jin',plv:1,pxp:0,sk:{},ts:0});
 /* v4.1 프로필: 이름(8자, 비면 ALLY → 전투 HUD 좌측) · 상태 메시지(40자, 설정 프로필 카드에만) */
 const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const strCut=(t,n)=>[...String(t||'').trim()].slice(0,n).join('');
@@ -1525,6 +1567,23 @@ const cutRate=()=>state.speed===1?1:state.speed===2?1.45:2.4; // 컷인 전용(x
 const heroLv=id=>state.levels[id]||1;
 const lvMult=lv=>1+(lv-1)*.08;
 const xpForLv=lv=>Math.round(100*Math.pow(1.35,lv-1));
+/* v4.6 플레이어 레벨(임시 규칙): 스테이지 승리 시 그 스테이지 xp 의 절반(올림)을 pxp 에 가산, 다음 레벨 필요치 = 80×1.3^(lv-1) */
+const plNeed=lv=>Math.round(80*Math.pow(1.3,lv-1));
+function plGain(n){state.plv=state.plv||1;state.pxp=(state.pxp||0)+n;while(state.pxp>=plNeed(state.plv)){state.pxp-=plNeed(state.plv);state.plv++;}}
+/* ---------- v4.7 플레이어 스킬 맵 (노드 데이터는 코드로 생성 · 찍은 노드 = state.sk[id]=1) ----------
+   링 r(1~5) = 4r 노드, 반지름 70r, 각도 순서대로 5갈래(공격·수호·신속·탐색·통찰) 구역 · 부모 = 안쪽 링에서 가장 가까운 각도의 노드(1링은 중심 「기록」)
+   효과: 공격 파티 공격 +1% · 수호 최대HP·방어 +1% · 신속 속도 +1(3링~ +2, 5링 +3) · 탐색 골드·경험치 +2% · 통찰 전투 시작 보호막 최대HP 1% · 공격/수호 합계 상한 +25% */
+const SK_BR=[{n:'공격',c:'#e0475b'},{n:'수호',c:'#4a8fe0'},{n:'신속',c:'#4cc46a'},{n:'탐색',c:'#e0b13a'},{n:'통찰',c:'#a86be0'}];
+const SK_RING=[{lv:1,a:500,b:1000},{lv:5,a:2000,b:4000},{lv:10,a:8000,b:15000},{lv:20,a:30000,b:60000},{lv:30,a:100000,b:200000}];
+const SK_SPEC={'2-0':{n:'선제 일격',t:'first',v:.10,d:'전투 첫 턴 파티 공격 +10%'},'3-0':{n:'수호의 막',t:'shield',v:.05,d:'전투 시작 시 아군 보호막 최대 HP의 5%'},'4-0':{n:'풍요의 손길',t:'eco',v:.05,d:'골드·경험치 획득 +5%'},'5-0':{n:'각성',t:'shield',v:.08,d:'전투 시작 시 아군 보호막 최대 HP의 8%'},'5-10':{n:'결의',t:'first',v:.10,d:'전투 첫 턴 파티 공격 +10% (중첩)'}};
+const SK_NODES=(()=>{const L=[{id:'c',r:0,x:0,y:0,n:'기록',d:'모든 갈래의 시작점',cost:0,lv:1,par:null,br:-1}];
+ for(let r=1;r<=5;r++){const n=4*r,R=SK_RING[r-1];for(let i=0;i<n;i++){const a=(-90+360*i/n)*Math.PI/180,br=Math.floor(i/n*5),sp=SK_SPEC[r+'-'+i],cost=Math.round((R.a+(R.b-R.a)*i/(n-1))/50)*50;
+  let d,t,v;if(sp){d=sp.d;t=sp.t;v=sp.v;}else if(br===0){t='atk';v=.01;d='파티 공격력 +1%';}else if(br===1){t='hp';v=.01;d='파티 최대 HP·방어력 +1%';}else if(br===2){t='spd';v=r>=5?3:r>=3?2:1;d=`파티 속도 +${v}`;}else if(br===3){t='eco';v=.02;d='골드·경험치 획득 +2%';}else{t='shield';v=.01;d='전투 시작 시 아군 보호막 최대 HP의 1%';}
+  const pn=4*(r-1);L.push({id:r+'-'+i,r,x:Math.round(70*r*Math.cos(a)),y:Math.round(70*r*Math.sin(a)),n:sp?sp.n:`${SK_BR[br].n} ${r}-${i+1}`,d,t,v,cost,lv:R.lv,br,par:r===1?'c':(r-1)+'-'+(Math.round(i/n*pn)%pn)});}}
+ return L;})();
+const SK_BY=Object.fromEntries(SK_NODES.map(n=>[n.id,n]));
+function skBonus(){const B={atk:0,hp:0,spd:0,eco:0,shield:0,first:0};for(const n of SK_NODES){if(n.id==='c'||!(state.sk||{})[n.id])continue;B[n.t==='hp'?'hp':n.t]+=n.v;}B.atk=Math.min(B.atk,.25);B.hp=Math.min(B.hp,.25);return B;}
+function skBattleStart(us){const B=skBonus();for(const u of us){if(B.shield>0)addBuff(u,{k:'shield',v:Math.round(u.max*B.shield),t:3,src:'sk'});if(B.first>0)addBuff(u,{k:'atk',v:B.first,t:2,src:'sk'});}}
 
 /* ---------- 화면 스케일 ---------- */
 function fit(){const w=innerWidth,h=innerHeight,s=Math.min(w/390,h/624);$('#app').style.transform=`scale(${s})`;}
@@ -1535,7 +1594,7 @@ let page='lobby', battle=null;
 function go(p){page=p;if(p!=='battle')clearResume();render();}
 const CH_MOOD={1:'warm',2:'calm',3:'heavy',4:'bright',5:'open'};
 function bgmFor(){if(page==='battle'&&battle)return battle.stage.boss?'boss':(CH_MOOD[battle.stage.ch]||'calm');if(page==='result')return null;return 'lobby';}
-function render(){const app=$('#app');app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,settings:viewSettings,adventure:viewAdventure,battle:viewBattle,result:viewResult}[page];app.appendChild(v());document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
+function render(){const app=$('#app');app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,skills:viewSkills,settings:viewSettings,adventure:viewAdventure,battle:viewBattle,result:viewResult}[page];app.appendChild(v());document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild;}
 function toast(msg){const t=el(`<div class="toast">${msg}</div>`);$('#app').appendChild(t);setTimeout(()=>t.remove(),1500);}
 
@@ -1551,16 +1610,16 @@ const LOBBY_SAY={eir:['세르엘님, 오늘도 모두를 지켜 주세요.','다
 const lobbyId=()=>LOBBY_IDS.includes(state.lobby)&&RIG[state.lobby]&&A[state.lobby+'_l_body']?state.lobby:'jin';
 function viewLobby(){
  const L=lobbyId(),LN=(HEROES.find(h=>h.id===L)||{}).name||'진',LINES=LOBBY_SAY[L]||LOBBY_LINES;
- const J='jin',lv=heroLv(J),xpc=((state.heroXp||{})[J]||0)/xpForLv(lv)*100,nx=nextStage();
+ const J='jin',lv=state.plv||1,xpc=(state.pxp||0)/plNeed(lv)*100,nx=nextStage(); /* v4.6 프로필 Lv = 플레이어 레벨 */
  /* v4.5 시안 재조정: 진 선택 시 배경+진 합성 컷(lobby_bg_jin)을 배경 레이어로, 프레임 시트(lobby_frames)를 CSS 배경 크롭으로 사용. 진 외 대표는 bg_lobby + 리그 */
  const bgJ=L==='jin'&&A.lobby_bg_jin,bgu=bgJ?A.lobby_bg_jin:A.bg_lobby;
  const mi=(ic,lb,p,go)=>`<button class="lb-mi" ${go?`data-go="${go}"`:`data-soon="${lb}"`} style="--p:${p}"><i>${ic}</i><b>${lb}</b></button>`;
- const s=el(`<section class="screen lobby lb${bgJ?' bgj':''}" style="--frm:url(${A.lobby_frames});--bgu:url(${bgu})">
+ const s=el(`<section class="screen lobby lb${bgJ?' bgj':''}" style="--frm:url(${A.lobby_frames});--bgu:url(${bgu});--tx:${tiltV.x};--ty:${tiltV.y}">
   <div class="lb-bg"><img src="${bgu}" alt=""></div><div class="lb-veil"></div>
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
-  <div class="lb-prof"><span class="lb-av" style="${faceStyle(J,56)}"></span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
+  <div class="lb-prof"><span class="lb-av" style="${avStyle(56)}"></span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.5</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.7</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -1569,21 +1628,70 @@ function viewLobby(){
  </section>`);
  let sayT=null;
  s.addEventListener('pointerdown',e=>{lobbyTilt(true);lobbyFx(s,e);});
+ s.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse'||!state.motion)return;const r=s.getBoundingClientRect(),cl=v=>Math.max(-1,Math.min(1,v));setTilt(cl((e.clientX-r.left)/r.width*2-1),cl((e.clientY-r.top)/r.height*2-1));}); /* PC 테스트: 마우스 4방향 */
  s.addEventListener('click',e=>{if(e.target.closest('#cloud')){if(cloud.kind==='fb'&&cloud.status!=='cloud')go('settings');else saveCodeDialog();return;}
+  if(e.target.closest('.lb-av')){profileDialog();return;}
   const so=e.target.closest('[data-soon]');if(so){toast(so.dataset.soon+' · 준비중');return;}
   const b=e.target.closest('[data-go]');if(b){go(b.dataset.go);return;}
   if(e.target.closest('#lb-hero')){const q=$('#lb-say',s);q.textContent=LINES[Math.floor(Math.random()*LINES.length)];q.classList.remove('on');void q.offsetWidth;q.classList.add('on');clearTimeout(sayT);sayT=setTimeout(()=>q.classList.remove('on'),3200);}});
  return s;
 }
 /* 로비 자이로 시차: 기울기 → --tx/--ty (±1). 미지원·권한 거부면 이벤트가 안 와서 정지 상태 그대로. iOS 는 첫 터치 때 권한 요청 */
-let tiltOn=false;
+let tiltOn=false,tiltV={x:0,y:0},tiltB0=null;
+function setTilt(x,y){tiltV={x,y};const s=page==='lobby'&&state.motion?$('.lb'):null;if(!s)return;s.style.setProperty('--tx',x.toFixed(3));s.style.setProperty('--ty',y.toFixed(3));}
+/* v4.6 상하 시차: beta 는 처음 잡은 자세(tiltB0)를 기준으로 상대값 + 천천히 기준 추종 → 어떤 자세로 들어도 위아래로 반응 */
 function lobbyTilt(ask){if(tiltOn||!window.DeviceOrientationEvent)return;const DOE=DeviceOrientationEvent;
- const bind=()=>{tiltOn=true;let raf=0;addEventListener('deviceorientation',e=>{if(e.gamma==null||raf)return;raf=requestAnimationFrame(()=>{raf=0;const s=page==='lobby'&&state.motion?$('.lb'):null;if(!s)return;const cl=v=>Math.max(-1,Math.min(1,v));s.style.setProperty('--tx',cl(e.gamma/25).toFixed(3));s.style.setProperty('--ty',cl(((e.beta||0)-45)/25).toFixed(3));});});};
+ const bind=()=>{tiltOn=true;let raf=0;addEventListener('deviceorientation',e=>{if(e.gamma==null||raf)return;raf=requestAnimationFrame(()=>{raf=0;const cl=v=>Math.max(-1,Math.min(1,v)),b=e.beta||0;if(tiltB0==null)tiltB0=b;tiltB0+=(b-tiltB0)*.015;setTilt(cl(e.gamma/25),cl((b-tiltB0)/18));});});};
  if(typeof DOE.requestPermission==='function'){if(ask)DOE.requestPermission().then(r=>{if(r==='granted')bind();}).catch(()=>{});}else bind();}
 /* 로비 터치 효과: 룬 링(회전하는 점선 원 + 룬 글자) + 사방으로 흩어지는 빛 파편 */
 function lobbyFx(s,e){if(!state.motion)return;const r=s.getBoundingClientRect(),k=r.width/390,x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
  let h='<i class="rr"></i><i class="rn">ᚱ ᛟ ᚦ ᛉ</i>';for(let i=0;i<8;i++){const a=i/8*Math.PI*2+Math.random()*.5,d=22+Math.random()*20;h+=`<i class="sh" style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(a*57.3+90).toFixed(0)}deg"></i>`;}
  const f=el(`<div class="lb-fx" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px">${h}</div>`);s.appendChild(f);setTimeout(()=>f.remove(),760);}
+/* v4.6 프로필 사진: 5인 얼굴 선택(state.avatar=id) 또는 기기 사진(128px 정사각 JPEG → 이 기기 localStorage 별도 키, 클라우드 state 에는 안 실음 → state.avatar='up') */
+const AV_KEY='shinheun-avatar';
+function avStyle(size){if(state.avatar==='up'){try{const u=localStorage.getItem(AV_KEY);if(u)return `background:#1a1418 url(${u}) center/cover no-repeat`;}catch(e){}}return faceStyle(LOBBY_IDS.includes(state.avatar)?state.avatar:'jin',size);}
+function profileDialog(){
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>프로필</span><small>Lv. ${state.plv||1}</small></div><p class="note">프로필 사진을 골라 주세요.</p><div class="setbox lb-pick pf-pick">${LOBBY_IDS.map(id=>`<button class="lp${state.avatar===id?' on':''}" data-av="${id}"><span style="${faceStyle(id,44)}"></span><b>${(HEROES.find(h=>h.id===id)||{}).name||id}</b></button>`).join('')}</div><div class="row"><button class="btn cut-r" data-a="up">사진 올리기</button><input type="file" accept="image/*" hidden></div><div class="row"><button class="btn cut-r" data-a="skills">플레이어 스킬</button></div><div class="row"><button class="btn ghost" data-a="close">닫기</button></div></div></div>`);
+ $('#app').appendChild(d);
+ const done=()=>{save();render();};
+ d.addEventListener('click',e=>{const a=e.target.closest('[data-a]'),v=e.target.closest('[data-av]');
+  if(v){state.avatar=v.dataset.av;done();return;}
+  if(!a)return;if(a.dataset.a==='close')d.remove();else if(a.dataset.a==='skills'){d.remove();go('skills');}else if(a.dataset.a==='up')$('input',d).click();});
+ $('input',d).addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const im=new Image(),u=URL.createObjectURL(f);
+  im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=128;const m=Math.min(im.width,im.height);c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,128,128);URL.revokeObjectURL(u);
+   try{localStorage.setItem(AV_KEY,c.toDataURL('image/jpeg',.85));state.avatar='up';done();}catch(x){toast('사진을 저장하지 못했어요');}};
+  im.onerror=()=>{URL.revokeObjectURL(u);toast('이미지를 열 수 없어요');};im.src=u;});
+}
+/* ---------- v4.7 플레이어 스킬 맵 화면 (SVG · 드래그 이동 / 핀치·휠 확대) ---------- */
+let skView={x:0,y:0,k:.62},skSel=null;
+function skState(n){const sk=state.sk||{};if(n.id==='c'||sk[n.id])return 'own';if((state.plv||1)<n.lv)return 'lock';return sk[n.par]||n.par==='c'?'open':'dim';}
+function viewSkills(){
+ const s=el(`<section class="screen skills"><div class="topbar"><div class="left"><button class="btn ghost sk-back" data-a="back">‹ 뒤로</button><span class="stage-name">플레이어 스킬</span></div><div class="right"><span class="turn">Lv.${state.plv||1}</span><span class="turn" id="sk-gold"></span></div></div><div class="sk-map" id="sk-map"><svg viewBox="-400 -400 800 800" preserveAspectRatio="xMidYMid meet"><g id="sk-g"></g></svg></div><div class="sk-info panel" id="sk-info"></div></section>`);
+ const g=$('#sk-g',s),map=$('#sk-map',s),info=$('#sk-info',s);
+ const paint=()=>{const tr=`translate(${skView.x} ${skView.y}) scale(${skView.k})`;g.setAttribute('transform',tr);};
+ const draw=()=>{$('#sk-gold',s).textContent='● '+fmt(state.gold);
+  let h='';for(const n of SK_NODES){if(!n.par)continue;const p=SK_BY[n.par],on=skState(n)==='own';h+=`<line x1="${p.x}" y1="${p.y}" x2="${n.x}" y2="${n.y}" stroke="${on?SK_BR[n.br].c:'#3a3644'}" stroke-width="${on?3:2}" opacity="${on?.9:.6}"/>`;}
+  for(const n of SK_NODES){const st=skState(n),c=n.br<0?'#e8e2f0':SK_BR[n.br].c,sp=SK_SPEC[n.id]?1:0,r=n.id==='c'?22:sp?18:14;
+   h+=`<g data-n="${n.id}" class="skn ${st}${skSel===n.id?' sel':''}"><circle cx="${n.x}" cy="${n.y}" r="${r}" fill="${st==='own'?c:'#15131a'}" stroke="${st==='dim'||st==='lock'?'#4a4656':c}" stroke-width="${st==='open'||skSel===n.id?4:2.5}"/>${sp?`<circle cx="${n.x}" cy="${n.y}" r="${r+5}" fill="none" stroke="${c}" stroke-width="1.5" stroke-dasharray="3 3"/>`:''}${st==='lock'?`<text x="${n.x}" y="${n.y+4}" text-anchor="middle" font-size="12" fill="#8e8a99">🔒</text>`:n.id==='c'?`<text x="${n.x}" y="${n.y+4}" text-anchor="middle" font-size="11" fill="#15131a" font-weight="700">記</text>`:''}</g>`;}
+  for(let r=1;r<=5;r++)if((state.plv||1)<SK_RING[r-1].lv)h+=`<text x="0" y="${-70*r-22}" text-anchor="middle" font-size="12" fill="#8e8a99">${r}링 · Lv.${SK_RING[r-1].lv} 필요</text>`;
+  g.innerHTML=h;paint();
+  const n=SK_BY[skSel];if(!n){info.innerHTML='<small>노드를 눌러 확인하세요. 중심 「기록」에서 이어진 노드부터 골드로 찍을 수 있어요.</small>';return;}
+  const st=skState(n),why=st==='lock'?`플레이어 Lv.${n.lv} 필요`:st==='dim'?'이어진 노드를 먼저 찍어야 해요':st==='own'?'찍힘':'',ok=st==='open'&&state.gold>=n.cost;
+  info.innerHTML=`<div class="ni"><b>${n.n}</b><small>${n.id==='c'?'':SK_BR[n.br].n+' · '+n.r+'링'}</small></div><p>${n.d}</p><div class="nr"><span>${n.id==='c'?'':'● '+fmt(n.cost)+'G'}</span>${st==='open'?`<button class="btn primary cut-r" data-a="buy" ${ok?'':'disabled'}>${ok?'찍기':'골드 부족'}</button>`:`<em>${why}</em>`}</div>`;};
+ const buy=()=>{const n=SK_BY[skSel];if(!n||skState(n)!=='open'||state.gold<n.cost)return;state.gold-=n.cost;(state.sk=state.sk||{})[n.id]=1;save();toast('스킬을 찍었어요');draw();};
+ // 드래그 이동 · 핀치/휠 확대 (움직임 6px 미만이면 탭 = 노드 선택)
+ const ps=new Map();let moved=0,pd=0;const unit=()=>800/Math.min(map.clientWidth,map.clientHeight||1);
+ map.addEventListener('pointerdown',e=>{ps.set(e.pointerId,[e.clientX,e.clientY]);if(ps.size===1)moved=0;if(ps.size===2){const [a,b]=[...ps.values()];pd=Math.hypot(a[0]-b[0],a[1]-b[1]);}});
+ map.addEventListener('pointermove',e=>{const o=ps.get(e.pointerId);if(!o)return;const u=unit();
+  if(ps.size===1){const dx=e.clientX-o[0],dy=e.clientY-o[1];moved+=Math.abs(dx)+Math.abs(dy);skView.x+=dx*u;skView.y+=dy*u;}
+  else if(ps.size===2){ps.set(e.pointerId,[e.clientX,e.clientY]);const [a,b]=[...ps.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pd>0)skView.k=Math.min(2.2,Math.max(.35,skView.k*d/pd));pd=d;moved+=9;}
+  ps.set(e.pointerId,[e.clientX,e.clientY]);paint();});
+ const up=e=>{const t=ps.has(e.pointerId);ps.delete(e.pointerId);if(!t)return;if(e.type==='pointerup'&&moved<6&&ps.size===0){const nd=e.target.closest&&e.target.closest('[data-n]');if(nd){skSel=nd.dataset.n;draw();}}};
+ map.addEventListener('pointerup',up);map.addEventListener('pointercancel',up);
+ map.addEventListener('wheel',e=>{e.preventDefault();skView.k=Math.min(2.2,Math.max(.35,skView.k*(e.deltaY<0?1.1:.91)));paint();},{passive:false});
+ s.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='back')go('lobby');else if(a.dataset.a==='buy')buy();});
+ setTimeout(draw,0);return s;
+}
 /* ---------- 설정 (사운드 · 계정) ---------- */
 function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||cloud.status==='sync';
  const tog=(id,label,on,sub)=>`<button class="setrow" data-tog="${id}"><span><b>${label}</b>${sub?`<small>${sub}</small>`:''}</span><i class="sw ${on?'on':''}"></i></button>`;
@@ -1647,7 +1755,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
 }
 function saveProfile(s){state.name=strCut($('#pf-name',s).value,8);state.msg=strCut($('#pf-msg',s).value,40);save();render();SND.play('toggle');toast('프로필 저장됨');}
 /* ---------- 캐릭터 도감 ---------- */
-function heroStats(h){const lv=heroLv(h.id),m=lvMult(lv);return {lv,atk:Math.round(h.atk*m),hp:Math.round(h.hp*m),def:h.def,spd:h.spd,crit:CRIT.chance,critM:CRIT.mult,weak:WEAK.chance,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
+function heroStats(h){const lv=heroLv(h.id),m=lvMult(lv),B=skBonus();return {lv,atk:Math.round(h.atk*m*(1+B.atk)),hp:Math.round(h.hp*m*(1+B.hp)),def:Math.round(h.def*(1+B.hp)),spd:h.spd+B.spd,crit:CRIT.chance,critM:CRIT.mult,weak:WEAK.chance,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
 const owned=id=>!!HEROES.find(h=>h.id===id); // 현재는 5명 전원 보유. 소환 시스템이 생기면 state.owned 기준으로 변경
 /* v3.6 도감 = 아이콘 그리드(탭: 영웅만 활성) → 아이콘을 누르면 캐릭터 창(viewCharacter) */
 function viewHeroes(){
@@ -1783,7 +1891,7 @@ function viewAdventure(){
 }
 
 /* ---------- 전투 준비 ---------- */
-function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id));return {side:'ally',i,id,name:h.name,en:h.en,atk:Math.round(h.atk*m),max:Math.round(h.hp*m),hp:Math.round(h.hp*m),spd:h.spd,def:h.def,s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:h.s2.cd,cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
+function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id)),B=skBonus();return {side:'ally',i,id,name:h.name,en:h.en,atk:Math.round(h.atk*m*(1+B.atk)),max:Math.round(h.hp*m*(1+B.hp)),hp:Math.round(h.hp*m*(1+B.hp)),spd:h.spd+B.spd,def:Math.round(h.def*(1+B.hp)),s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:h.s2.cd,cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
 function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
 /* v3.8 전투력 (표시 전용 · 전투 계산에는 안 씀) — 아군·적 같은 식
    전투력 = √(공격 기대치 × 생존 기대치) × 10, 파티/적 편성 = 합계 (란체스터식: 합계 비율로 우열 비교)
@@ -1810,6 +1918,7 @@ function startBattle(stageIndex,keepRepeat=false){
  const st=STAGES[stageIndex];state.chapter=st.ch;
  if(!state.cleared[st.no]&&state.speed>4-1){state.speed=2;save();} // 미클리어 스테이지는 최대 x2
  battle={stage:st,stageIndex,round:0,allies:state.party.map(mkHero),syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
+ skBattleStart(battle.allies);
  page='battle';render();
  battle.last=performance.now();saveResume();
  SND.play(keepRepeat?'next':'start');const intro=stageBanner('start',st,keepRepeat&&battle.repeat.runs>0?(state.after==='repeat'?`반복 ${battle.repeat.runs+1}회차`:'NEXT STAGE'):'BATTLE START',battle.syn);
@@ -2128,7 +2237,7 @@ async function loop(){const b=battle;if(!b||b.done)return;if(b.paused){setTimeou
 function pauseMenu(){const b=battle;b.paused=true;const p=el(`<div class="pause"><div class="box panel" style="padding:12px"><div class="sm" style="font-size:20px;text-align:center;margin-bottom:6px">일시정지</div><button class="btn primary cut-r" id="p-resume">계속</button><button class="btn ghost" id="p-motion">모션 ${state.motion?'끄기':'켜기'}</button><button class="btn ghost" id="p-sfx">효과음 ${SND.cfg().sfx?'끄기':'켜기'}</button><button class="btn ghost" id="p-bgm">배경음 ${SND.cfg().bgm?'끄기':'켜기'}</button><button class="btn ghost" id="p-lobby">로비로</button></div></div>`);$('#app').appendChild(p);p.addEventListener('click',e=>{if(e.target.closest('#p-resume')){b.paused=false;b.last=performance.now();p.remove();}if(e.target.closest('#p-motion')){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);$('#p-motion',p).textContent=`모션 ${state.motion?'끄기':'켜기'}`;}if(e.target.closest('#p-sfx')){SND.set('sfx',!SND.cfg().sfx);$('#p-sfx',p).textContent=`효과음 ${SND.cfg().sfx?'끄기':'켜기'}`;SND.play('toggle');}if(e.target.closest('#p-bgm')){SND.set('bgm',!SND.cfg().bgm);$('#p-bgm',p).textContent=`배경음 ${SND.cfg().bgm?'끄기':'켜기'}`;}if(e.target.closest('#p-lobby')){b.done=true;battle=null;go('lobby');}});}
 function finish(win){const b=battle;b.done=true;b.win=win;SND.play(win?'win':'lose');
  const st=b.stage;let gold=0,xp=0,first=false;
- if(win){first=!state.cleared[st.no];gold=st.gold*(first?1.5:1);xp=st.xp;state.gold+=gold;state.cleared[st.no]=true;const ups=[];for(const id of state.party){const lv=heroLv(id);const need=xpForLv(lv);const cur=(state.heroXp=state.heroXp||{})[id]||0;const nx=cur+xp;if(nx>=need){state.levels[id]=lv+1;state.heroXp[id]=nx-need;ups.push(id);}else state.heroXp[id]=nx;}b.levelUps=ups;save();}
+ if(win){first=!state.cleared[st.no];const EB=1+skBonus().eco;gold=Math.round(st.gold*(first?1.5:1)*EB);xp=Math.round(st.xp*EB);state.gold+=gold;state.cleared[st.no]=true;const ups=[];for(const id of state.party){const lv=heroLv(id);const need=xpForLv(lv);const cur=(state.heroXp=state.heroXp||{})[id]||0;const nx=cur+xp;if(nx>=need){state.levels[id]=lv+1;state.heroXp[id]=nx-need;ups.push(id);}else state.heroXp[id]=nx;}b.levelUps=ups;plGain(Math.ceil(xp/2));save();}
  b.reward={gold,xp,first};
  const mode=state.after;
  if(mode!=='stop'){b.repeat.runs++;if(win){b.repeat.wins++;b.repeat.gold+=gold;b.repeat.xp+=xp;}paintRepeat();saveResume();
