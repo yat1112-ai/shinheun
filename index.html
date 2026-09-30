@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#0C0B0F">
-<title>신흔 DIVINE TRACE (v4.11)</title>
+<meta name="color-scheme" content="only light">
+<meta name="supported-color-schemes" content="light">
+<title>신흔 DIVINE TRACE (v4.13)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1163,12 +1165,23 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .sk-info{flex:0 0 auto;box-sizing:border-box;height:124px;min-height:124px;max-height:124px;overflow-y:auto}
 .sk-sum{min-height:32px;box-sizing:border-box;white-space:nowrap}
 .sk-map{flex:1 1 0;min-height:0}
+/* ===== v4.12 삼성 인터넷 대응: 강제 다크모드 방지 · 로비 터치 드래그 시차 · 재화 아이콘 밝게 ===== */
+:root,html,body{color-scheme:only light}
+.screen.lb{touch-action:none}
+.screen.lb .lb-cur .g i{background:radial-gradient(circle at 35% 30%,#fff8d6,#f2c14e 50%,#b57a14);box-shadow:0 0 0 1.5px #7a4d08,0 0 8px rgba(255,210,90,.85);filter:none}
+.screen.lb .lb-cur .c i{background:linear-gradient(135deg,#ffffff,#4ea8ff 50%,#3a6bff);box-shadow:0 0 0 1.5px #1c3a8a,0 0 8px rgba(78,168,255,.85);filter:none}
+/* ===== v4.13 로비 레이어 분리 시차(진): 배경 10 / 전경 18 / 진 32px, 상하 60% ===== */
+.screen.lb.lay>.lb-bg{inset:0;transform:translate3d(calc(var(--tx)*-10px),calc(var(--ty)*-6px),0) scale(1.05);will-change:transform;transition:transform .3s ease-out}
+.screen.lb>.lb-jn,.screen.lb>.lb-fg{position:absolute;inset:0;z-index:1;pointer-events:none;will-change:transform;transition:transform .3s ease-out}
+.screen.lb>.lb-jn{transform:translate3d(calc(var(--tx)*32px),calc(var(--ty)*19px),0) scale(1.06)}
+.screen.lb>.lb-fg{transform:translate3d(calc(var(--tx)*18px),calc(var(--ty)*11px),0) scale(1.06)}
+.lb-jn img,.lb-fg img{width:100%;height:100%;object-fit:cover;display:block}
 
 </style>
 </head>
 <body>
 <div id="stage"><div id="app" role="application" aria-label="신흔"></div></div>
-<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
+<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "bg_1_1": "art/bg_1_1.webp", "bg_1_10": "art/bg_1_10.webp", "bg_1_2": "art/bg_1_2.webp", "bg_1_3": "art/bg_1_3.webp", "bg_1_4": "art/bg_1_4.webp", "bg_1_5": "art/bg_1_5.webp", "bg_1_6": "art/bg_1_6.webp", "bg_1_7": "art/bg_1_7.webp", "bg_1_8": "art/bg_1_8.webp", "bg_1_9": "art/bg_1_9.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch1_hound": "art/ch1_hound.webp", "ch1_moth": "art/ch1_moth.webp", "ch1_nightclaw": "art/ch1_nightclaw.webp", "ch1_shade": "art/ch1_shade.webp", "ch1_sootmane": "art/ch1_sootmane.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "lobby_l_bg": "art/lobby_l_bg.webp", "lobby_l_fg": "art/lobby_l_fg.webp", "lobby_l_jin": "art/lobby_l_jin.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
 <script>/* ===== 신흔 사운드 (전부 코드 합성 · 음원 파일 없음) =====
    SFX.play(name, opt) : 효과음 / BGM.play(kind) : 배경음 루프 / 설정 state.snd={sfx,bgm,vol}
    음원 파일이 생기면 이 파일의 해당 함수만 파일 재생으로 바꾸면 됨 */
@@ -1237,7 +1250,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.11—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.13—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1653,13 +1666,14 @@ function viewLobby(){
  const J='jin',lv=state.plv||1,xpc=(state.pxp||0)/plNeed(lv)*100,nx=nextStage(); /* v4.6 프로필 Lv = 플레이어 레벨 */
  /* v4.5 시안 재조정: 진 선택 시 배경+진 합성 컷(lobby_bg_jin)을 배경 레이어로, 프레임 시트(lobby_frames)를 CSS 배경 크롭으로 사용. 진 외 대표는 bg_lobby + 리그 */
  const bgJ=L==='jin'&&A.lobby_bg_jin,bgu=bgJ?A.lobby_bg_jin:A.bg_lobby;
+ const lay=bgJ&&A.lobby_l_bg&&A.lobby_l_jin&&A.lobby_l_fg; /* v4.13 진 로비: 배경·진·전경 3장 분리 시차 (없으면 기존 합성 컷) */
  const mi=(ic,lb,p,go)=>`<button class="lb-mi" ${go?`data-go="${go}"`:`data-soon="${lb}"`} style="--p:${p}"><i>${ic}</i><b>${lb}</b></button>`;
- const s=el(`<section class="screen lobby lb${bgJ?' bgj':''}" style="--frm:url(${A.lobby_frames});--bgu:url(${bgu});--tx:${tiltV.x};--ty:${tiltV.y}">
-  <div class="lb-bg"><img src="${bgu}" alt=""></div><div class="lb-veil"></div>
+ const s=el(`<section class="screen lobby lb${bgJ?' bgj':''}${lay?' lay':''}" style="--frm:url(${A.lobby_frames});--bgu:url(${bgu});--tx:${tiltV.x};--ty:${tiltV.y}">
+  <div class="lb-bg"><img src="${lay?A.lobby_l_bg:bgu}" alt=""></div>${lay?`<div class="lb-jn"><img src="${A.lobby_l_jin}" alt=""></div><div class="lb-fg"><img src="${A.lobby_l_fg}" alt=""></div>`:''}<div class="lb-veil"></div>
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av" style="${avStyle(56)}"></span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.11</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.13</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -1667,8 +1681,11 @@ function viewLobby(){
   <nav class="lb-tabs"><button class="on"><i>⌂</i>로비</button><button data-go="party"><i>⚔</i>편성</button><button data-go="heroes"><i>❖</i>도감</button><button data-soon="상점"><i>⚖</i>상점</button><button data-go="settings"><i>⚙</i>설정</button></nav>
  </section>`);
  let sayT=null;
+ lobbyTilt(false);clearTimeout(tiltT);tiltT=setTimeout(()=>{if(!tiltGot||Date.now()-tiltGot>1500)tiltFb=true;},1500); /* v4.12 진입 즉시 센서 등록 */
  s.addEventListener('pointerdown',e=>{lobbyTilt(true);lobbyFx(s,e);});
- s.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse'||!state.motion)return;const r=s.getBoundingClientRect(),cl=v=>Math.max(-1,Math.min(1,v));setTilt(cl((e.clientX-r.left)/r.width*2-1),cl((e.clientY-r.top)/r.height*2-1));}); /* PC 테스트: 마우스 4방향 */
+ const pm=e=>{if(!state.motion)return;const touch=e.pointerType!=='mouse';if(touch&&!(tiltFb&&(!tiltGot||Date.now()-tiltGot>3000)))return;const r=s.getBoundingClientRect();setTilt(tiltClamp((e.clientX-r.left)/r.width*2-1),tiltClamp((e.clientY-r.top)/r.height*2-1));}; /* PC 마우스 4방향 + 센서 미수신 시 터치 드래그 */
+ s.addEventListener('pointermove',pm);s.addEventListener('pointerdown',pm);
+ const pr=e=>{if(e.pointerType!=='mouse'&&tiltFb&&(!tiltGot||Date.now()-tiltGot>3000))setTilt(0,0);};s.addEventListener('pointerup',pr);s.addEventListener('pointercancel',pr);
  s.addEventListener('click',e=>{if(e.target.closest('#cloud')){if(cloud.kind==='fb'&&cloud.status!=='cloud')go('settings');else saveCodeDialog();return;}
   if(e.target.closest('.lb-av')){profileDialog();return;}
   const so=e.target.closest('[data-soon]');if(so){toast(so.dataset.soon+' · 준비중');return;}
@@ -1680,9 +1697,20 @@ function viewLobby(){
 let tiltOn=false,tiltV={x:0,y:0},tiltB0=null;
 function setTilt(x,y){tiltV={x,y};const s=page==='lobby'&&state.motion?$('.lb'):null;if(!s)return;s.style.setProperty('--tx',x.toFixed(3));s.style.setProperty('--ty',y.toFixed(3));}
 /* v4.6 상하 시차: beta 는 처음 잡은 자세(tiltB0)를 기준으로 상대값 + 천천히 기준 추종 → 어떤 자세로 들어도 위아래로 반응 */
-function lobbyTilt(ask){if(tiltOn||!window.DeviceOrientationEvent)return;const DOE=DeviceOrientationEvent;
- const bind=()=>{tiltOn=true;let raf=0;addEventListener('deviceorientation',e=>{if(e.gamma==null||raf)return;raf=requestAnimationFrame(()=>{raf=0;const cl=v=>Math.max(-1,Math.min(1,v)),b=e.beta||0;if(tiltB0==null)tiltB0=b;tiltB0+=(b-tiltB0)*.015;setTilt(cl(e.gamma/25),cl((b-tiltB0)/18));});});};
- if(typeof DOE.requestPermission==='function'){if(ask)DOE.requestPermission().then(r=>{if(r==='granted')bind();}).catch(()=>{});}else bind();}
+/* v4.12 센서 즉시 등록(로비 진입 시), 미수신 1.5초 후 터치 드래그 폴백, devicemotion 보조, 권한 필요 환경만 첫 터치에서 요청 */
+let tiltGot=0,tiltFb=false,tiltT=0,tiltA0=null;
+const tiltClamp=v=>Math.max(-1,Math.min(1,v));
+function lobbyTilt(ask){const DOE=window.DeviceOrientationEvent,DME=window.DeviceMotionEvent;if(!DOE&&!DME)return;
+ const bind=()=>{if(tiltOn)return;tiltOn=true;let raf=0;
+  addEventListener('deviceorientation',e=>{if(e.gamma==null||raf)return;raf=requestAnimationFrame(()=>{raf=0;const b=e.beta||0;tiltGot=Date.now();tiltSrc='orient';if(tiltB0==null)tiltB0=b;tiltB0+=(b-tiltB0)*.015;setTilt(tiltClamp(e.gamma/25),tiltClamp((b-tiltB0)/18));});});
+  addEventListener('devicemotion',e=>{if(tiltSrc==='orient'&&Date.now()-tiltGot<2000)return;const g=e.accelerationIncludingGravity;if(!g||g.x==null)return;
+   if(!tiltA0)tiltA0={x:g.x,y:g.y};tiltGot=Date.now();tiltSrc='motion';setTilt(tiltClamp(-(g.x-tiltA0.x)/5),tiltClamp((g.y-tiltA0.y)/5));});};
+ const need=[DOE,DME].filter(o=>o&&typeof o.requestPermission==='function');
+ if(!need.length)bind();else if(ask)Promise.all(need.map(o=>o.requestPermission())).then(r=>{if(r.every(x=>x==='granted'))bind();}).catch(()=>{});}
+let tiltSrc='';
+const tiltStatus=()=>!(window.DeviceOrientationEvent||window.DeviceMotionEvent)?'미지원':Date.now()-tiltGot<3000?'수신중 ('+(tiltSrc==='motion'?'가속도':'기울기')+')':tiltFb?'미수신 · 터치 드래그로 대체':'대기중';
+function tiltRetry(){tiltGot=0;tiltB0=null;tiltA0=null;tiltFb=false;lobbyTilt(true);clearTimeout(tiltT);tiltT=setTimeout(()=>{if(!tiltGot)tiltFb=true;},1500);}
+addEventListener('resize',()=>{tiltB0=null;tiltA0=null;setTilt(0,0);});addEventListener('orientationchange',()=>{tiltB0=null;tiltA0=null;setTilt(0,0);});
 /* 로비 터치 효과: 룬 링(회전하는 점선 원 + 룬 글자) + 사방으로 흩어지는 빛 파편 */
 function lobbyFx(s,e){if(!state.motion)return;const r=s.getBoundingClientRect(),k=r.width/390,x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
  let h='<i class="rr"></i><i class="r2"></i>';for(let i=0;i<8;i++){const a=i/8*Math.PI*2+Math.random()*.5,d=22+Math.random()*20;h+=`<i class="sh" style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(a*57.3+90).toFixed(0)}deg"></i>`;}
@@ -1771,7 +1799,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
    <button class="setrow" id="s-code"><span><b>저장 코드</b><small>기기 간 수동 이동 (복사 / 붙여넣기)</small></span><em>›</em></button>`}
   </div>
   <div class="setsec">기타</div>
-  <div class="setbox">${tog('motion','모션',state.motion,'끄면 카드·컷인 움직임 최소화')}${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
+  <div class="setbox">${tog('motion','모션 효과',state.motion,'끄면 카드·컷인·로비 시차 움직임 최소화')}<button class="setrow" id="s-tilt"><span><b>센서 상태 · ${tiltStatus()}</b><small>로비 기울기 시차 · 눌러서 다시 시도</small></span><em>↻</em></button>${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
    <button class="setrow danger" id="s-reset"><span><b>진행도 초기화</b><small>이 기기와 클라우드 저장을 모두 지움 (되돌릴 수 없음)</small></span><em>!</em></button></div>
   <div class="party-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn primary cut-r" data-go="adventure">모험으로</button></div>
  </section>`);
@@ -1782,6 +1810,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
    if(k==='all'){const on=!(c.sfx||c.bgm);SND.set('sfx',on);SND.set('bgm',on);}else if(k==='sfx'||k==='bgm')SND.set(k,!c[k]);else if(k==='motion'){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);}else if(k==='fx'){state.fx=!state.fx;save();document.body.classList.toggle('fx-off',!state.fx);}
    render();SND.play('toggle');return;}
   if(e.target.closest('#pf-save')){saveProfile(s);return;}
+  if(e.target.closest('#s-tilt')){tiltRetry();toast('센서 다시 시도 중…');setTimeout(()=>{if(page==='settings')render();},1700);return;}
   const lp=e.target.closest('[data-lobby]');if(lp){state.lobby=lp.dataset.lobby;save();render();SND.play('toggle');toast('로비 캐릭터 · '+lp.textContent.trim());return;}
   if(e.target.closest('#s-bak')){backupFile();return;}
   if(e.target.closest('#s-restore')){const b=readBak();if(b&&confirm('보관된 진행도로 되돌릴까요? (현재 진행도는 다시 보관됨)')){backupState(state);state={...defaultState(),...b.state};save();render();toast('진행도 복구됨');}return;}
