@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.43)</title>
+<title>신흔 DIVINE TRACE (v4.44)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1358,7 +1358,12 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .sellcfg .bf,.fsheet .bf{display:flex;flex-wrap:wrap;gap:3px}
 .sellcfg .bf button{flex:1 1 0;min-width:44px;height:28px;padding:0 3px;font-size:11.5px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
 .sellcfg .bf button.on{color:#fff;background:rgba(214,32,63,.22);box-shadow:inset 0 0 0 1px var(--red)}
-.sellcfg #sc-q{width:100%}
+.sellcfg .stp{display:flex;align-items:center;gap:4px;margin-top:4px}
+.sellcfg .stp input[type=range]{flex:1 1 0;min-width:0}
+.sellcfg .stp button{flex:0 0 32px;height:30px;padding:0;font-size:16px;color:#fff;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px var(--line);touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.sellcfg .stp .stn{flex:0 0 48px;width:48px;height:30px;padding:0 2px;text-align:center;font-size:13px;color:#fff;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:6px}
+.sellcfg .note.warn{color:#ff8a5c;font-size:11px;margin:4px 0 0}
+.sellcfg .note.warn:empty{display:none}
 .sellcfg .note{margin:8px 0 2px}
 /* v4.43 가방 모달 잘림 수정: #app(390×624 논리 px) 기준 max-height, 본문만 스크롤·제목(.h)과 마지막 버튼 줄(.row)은 sticky 고정 (vh 의존 제거) */
 .pause{grid-template-rows:100%}
@@ -1580,7 +1585,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.43—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.44—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -2090,7 +2095,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.43</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.44</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2244,23 +2249,13 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
  const s=el(`<section class="screen settings">
   <div class="topbar"><div class="left"><span class="stage-no">SET</span><span class="stage-name">설정</span></div><div class="right"><span class="turn">v${(document.title.match(/v([\d.]+)/)||[])[1]||''}</span></div></div>
   <div class="pf-card"><span class="pf-av">${avMine(40)}</span><span class="pf-t"><b>${esc(pName())}</b><small>${state.msg?esc(strCut(state.msg,40)):'상태 메시지를 입력해 보세요'}</small></span></div>
-  <div class="ch-tabs set-tabs">${[['prof','프로필'],['snd','사운드'],['gear','장비'],['etc','기타']].map(([k,n])=>`<button class="${setTab===k?'on':''}" data-stab="${k}">${n}</button>`).join('')}</div>
+  <div class="ch-tabs set-tabs">${[['prof','프로필'],['snd','사운드'],['etc','기타']].map(([k,n])=>`<button class="${setTab===k?'on':''}" data-stab="${k}">${n}</button>`).join('')}</div>
   <div class="set-body">
   ${setTab==='prof'?`<div class="setsec">프로필 편집</div>
   <div class="setbox">
    <label class="setrow pf-in"><span><b>이름</b><small>8자 이내 · 전투 화면 상단 ALLY 자리에 표시 (비우면 ALLY)</small></span><input id="pf-name" type="text" maxlength="8" value="${esc(state.name)}" placeholder="ALLY" autocomplete="off"></label>
    <label class="setrow pf-in"><span><b>상태 메시지</b><small>40자 이내 · 이 화면 프로필 카드에만 표시</small></span><input id="pf-msg" type="text" maxlength="40" value="${esc(state.msg)}" placeholder="상태 메시지" autocomplete="off"></label>
    <button class="setrow" id="pf-save"><span><b>프로필 저장</b></span><em>✓</em></button></div>`:''}
-  ${setTab==='gear'?`<div class="setsec">장비</div>
-  <div class="setbox">${tog('alock','자동 잠금',icu().al,'점수가 기준 이상인 새 장비를 자동으로 잠금 (판매·정리 보호)')}
-   <div class="setrow"><span><b>자동잠금 기준 · ${icu().as}점</b><small>추천값(눌러서 적용): 입문 60 · 성장 70 · 고급 80 · 엔드 90</small></span></div>
-   <div class="bf lock-sug">${ITEM_CFG.lockSug.map(v=>`<button class="${icu().as===v?'on':''}" data-las="${v}">${v}</button>`).join('')}</div>
-   ${tog('aclean','자동 정리',icu().ac,'새 장비를 얻을 때 조건에 맞는 불필요 장비를 즉시 판매 (잠금·착용·프리셋·즐겨찾기·강화 장비는 보호)')}
-   ${tog('adis','6성 자동 분해',icu().ad,'새로 얻은 6성 장비를 즉시 세트 파편으로 분해 (잠금·자동잠금·착용·프리셋·즐겨찾기 보호, 기본 꺼짐)')}
-   <button class="setrow" id="s-sellcfg"><span><b>판매 설정</b><small>${sellSummary()} · 가방 일괄 판매와 자동 정리가 같은 기준</small></span><em>›</em></button>
-   <div class="setrow"><span><b>파밍 단계별 추천 설정</b><small>${ITEM_CFG.farm[farmSel].n}: 자동잠금 ${ITEM_CFG.farm[farmSel].as}점 · ${ITEM_CFG.farm[farmSel].cs}성 이하 ${ITEM_CFG.farm[farmSel].ct}점 미만 정리 (자동 정리 켬/끔은 그대로)</small></span></div>
-   <div class="bf lock-sug">${ITEM_CFG.farm.map((f,i)=>`<button class="${farmSel===i?'on':''}" data-fs="${i}">${f.n}</button>`).join('')}<button class="apply" id="s-farm">적용</button></div>
-   <button class="setrow" id="s-relock"><span><b>자동잠금 재평가</b><small>기준을 바꾼 뒤 가방 전체를 다시 판정 · 적용 전 미리보기</small></span><em>›</em></button></div>`:''}
   ${setTab==='snd'?`<div class="setsec">사운드</div>
   <div class="setbox">${tog('all','소리 전체',c.sfx||c.bgm,'끄면 효과음·배경음 모두 꺼짐')}${tog('sfx','효과음',c.sfx)}${tog('bgm','배경음악',c.bgm)}
    <div class="setrow"><span><b>음량</b><small>${Math.round(c.vol*100)}%</small></span><input type="range" id="vol" min="0" max="100" value="${Math.round(c.vol*100)}"></div></div>`:''}
@@ -2303,11 +2298,6 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   const t=e.target.closest('[data-tog]');if(t){const k=t.dataset.tog;const c=SND.cfg();
    if(k==='all'){const on=!(c.sfx||c.bgm);SND.set('sfx',on);SND.set('bgm',on);}else if(k==='sfx'||k==='bgm')SND.set(k,!c[k]);else if(k==='motion'){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);}else if(k==='fx'){state.fx=!state.fx;save();document.body.classList.toggle('fx-off',!state.fx);}else if(k==='alock'){icu().al=icu().al?0:1;save();}else if(k==='aclean'){icu().ac=icu().ac?0:1;save();}else if(k==='adis'){icu().ad=icu().ad?0:1;save();}
    render();SND.play('toggle');return;}
-  const ls=e.target.closest('[data-las]');if(ls){icu().as=Number(ls.dataset.las);save();render();SND.play('toggle');return;}
-  if(e.target.closest('#s-sellcfg')){sellDialog();return;}
-  const fs=e.target.closest('[data-fs]');if(fs){farmSel=Number(fs.dataset.fs);render();return;}
-  if(e.target.closest('#s-farm')){const f=ITEM_CFG.farm[farmSel];icu().as=f.as;icu().cs=f.cs;icu().ct=f.ct;{const c=icu().sc;c.s=[1,2,3,4,5].map(n=>n<=f.cs?1:0);c.q=f.ct;}save();render();toast(`「${f.n}」 추천 설정을 적용했어요`);return;}
-  if(e.target.closest('#s-relock')){relockDialog();return;}
   if(e.target.closest('#s-errlog')){errDialog();return;}
   if(e.target.closest('#s-rigv')){rigViewer();return;}
   if(e.target.closest('#pf-save')){saveProfile(s);return;}
@@ -2650,23 +2640,38 @@ function bulkDialog(){const p=bulkPlan(),n=p.sell.length;
 /* v4.27 판매 설정 창: 바꾸는 즉시 저장(icu().sc). 슬라이더는 놓을 때 다시 그림 */
 function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcfg"></div></div>`),box=$('.box',d);$('#app').appendChild(d);
  const statK=Object.keys(ITEM_CFG.stat),btn=(on,at,l)=>`<button class="${on?'on':''}" ${at}>${l}</button>`;
+ const stpHtml=(k,v,mn)=>`<div class="stp"><button data-stm="${k}:-1" aria-label="1 감소">−</button><input type="range" id="rg-${k}" data-rg="${k}" min="${mn}" max="100" step="1" value="${v}"><button data-stm="${k}:1" aria-label="1 증가">+</button><input type="number" class="stn" id="nm-${k}" data-nm="${k}" min="${mn}" max="100" step="1" inputmode="numeric" value="${v}"></div>`;
+ const warnHtml=()=>icu().al&&icu().sc.q>icu().as?`⚠ 잠긴 장비는 팔리지 않아요(자동잠금 ${icu().as}점 이상)`:'';
  const draw=()=>{try{draw0();}catch(e){console.error('sellDialog',e);box.innerHTML=`<div class="h"><span>판매 설정</span></div><p class="note">오류: ${String(e&&e.message||e).replace(/</g,'&lt;')}</p><div class="row"><button class="btn ghost" data-hx>닫기</button></div>`;}};
  const draw0=()=>{const c=icu().sc,p=bulkPlan();
-  box.innerHTML=`<div class="h"><span>판매 설정</span><small>일괄 판매 · 자동 판매 공통</small></div>
+  box.innerHTML=`<div class="h"><span>판매 설정</span><small>자동 잠금 · 자동 판매 · 분해 통합</small></div>
+  <div class="sc-b"><span class="k">자동 잠금 점수 · <b id="lb-as">${icu().as}점</b> <small>이 점수 이상인 새 장비를 자동 잠금 (판매·정리 보호)</small></span><div class="bf">${btn(!icu().al,'data-al="0"','OFF')}${btn(icu().al,'data-al="1"','ON')}</div>${stpHtml('as',icu().as,1)}</div>
+  <p class="note warn" id="sc-warn">${warnHtml()}</p>
   <div class="sc-b"><span class="k">성급</span><div class="bf">${[1,2,3,4,5].map(n=>btn(c.s[n-1],`data-ss="${n-1}"`,n+'★')).join('')}</div></div>
   <div class="sc-b"><span class="k">부위</span><div class="bf">${ITEM_CFG.slots.map((sl,t)=>btn(c.t[t],`data-st="${t}"`,sl.n)).join('')}</div></div>
-  <div class="sc-b"><span class="k">점수 미만 · <b id="sc-ql">${c.q?c.q+'점':'제한 없음'}</b></span><input type="range" id="sc-q" min="0" max="100" step="5" value="${c.q}"></div>
+  <div class="sc-b"><span class="k">점수 미만 · <b id="lb-q">${c.q?c.q+'점':'제한 없음'}</b></span>${stpHtml('q',c.q,0)}</div>
   <div class="sc-b"><span class="k">부옵션 개수</span><div class="bf">${[[9,'제한 없음'],[0,'0개 이하'],[1,'1개 이하'],[2,'2개 이하'],[3,'3개 이하']].map(([v,l])=>btn(c.bn===v,`data-sb="${v}"`,l)).join('')}</div></div>
   <div class="sc-b"><span class="k">주옵션 종류 <small>고른 종류만 판매 · 비우면 전체</small></span><div class="bf">${statK.map(k=>btn(c.mm.includes(k),`data-sm="${k}"`,ITEM_CFG.stat[k].n)).join('')}</div></div>
   <div class="sc-b"><span class="k">부옵션 종류 <small>고른 옵션이 없는 장비만 판매 · 비우면 무시</small></span><div class="bf">${statK.map(k=>btn(c.bm.includes(k),`data-sx="${k}"`,ITEM_CFG.stat[k].n)).join('')}</div></div>
   <div class="sc-b"><span class="k">획득 즉시 자동 판매 <small>자동사냥·전투 중 얻은 장비에 같은 기준 적용</small></span><div class="bf">${btn(!icu().ac,'data-auto="0"','OFF')}${btn(icu().ac,'data-auto="1"','ON')}</div></div>
+  <div class="sc-b"><span class="k">6성 자동 분해 <small>새 6성 장비를 즉시 세트 파편으로 분해 (잠금·착용·즐겨찾기 보호)</small></span><div class="bf">${btn(!icu().ad,'data-dis="0"','OFF')}${btn(icu().ad,'data-dis="1"','ON')}</div></div>
   <div class="sc-b"><span class="k">보호 예외 <small>일괄 판매에만 적용 · 자동 판매는 항상 보호 유지</small></span><div class="bf">${btn(c.xa,'data-xx="xa"','🔐 자동잠금도 판매')}${btn(c.xm,'data-xx="xm"','🔒 수동잠금도 판매')}</div></div>
   <p class="note">프리셋(모험·레이드) 사용·즐겨찾기·강화한 장비와 6성은 항상 제외 · 지금 기준 <b>${p.sell.length}개</b> · +${fmt(p.gold)}G</p><p class="note why" id="sc-why">${sellWhyHtml()}</p>${incHtml(p.inc)}
   <div class="row"><button class="btn ghost" data-sv ${p.sell.length?'':'disabled'}>판매 대상 보기</button><button class="btn ghost" data-rl>자동잠금 재평가</button></div>
   <div class="row"><button class="btn ${p.sell.length?'primary':'ghost'}" data-bk ${p.sell.length?'':'disabled'}>일괄 판매</button><button class="btn ghost" data-hx>닫기</button></div>`;};
  const tg=(a,v)=>{const i=a.indexOf(v);if(i<0)a.push(v);else a.splice(i,1);};
- d.addEventListener('input',e=>{if(e.target.id==='sc-q'){icu().sc.q=Number(e.target.value);$('#sc-ql',d).textContent=icu().sc.q?icu().sc.q+'점':'제한 없음';$('#sc-why',d).innerHTML=sellWhyHtml();}});
- d.addEventListener('change',e=>{if(e.target.id==='sc-q'){save();draw();}});
+ /* v4.44 점수 1단위 조정: 슬라이더(step 1)·−/+(길게 누르면 반복)·숫자 직접 입력. 값 바뀔 때는 화면 일부만 갱신하고 손을 뗄 때 다시 그림 */
+ const SK={q:{min:0,get:()=>icu().sc.q,set:v=>{icu().sc.q=v;}},as:{min:1,get:()=>icu().as,set:v=>{icu().as=v;}}};
+ const setVal=(k,v)=>{const m=SK[k].min;v=Math.max(m,Math.min(100,Math.round(Number(v))||m));SK[k].set(v);
+  const r=$('#rg-'+k,d),n=$('#nm-'+k,d),l=$('#lb-'+k,d);if(r)r.value=v;if(n)n.value=v;if(l)l.textContent=(k==='q'&&!v)?'제한 없음':v+'점';
+  const w=$('#sc-warn',d);if(w)w.innerHTML=warnHtml();const y=$('#sc-why',d);if(y)y.innerHTML=sellWhyHtml();};
+ let hold=null;const stopHold=()=>{if(!hold)return;clearTimeout(hold.t);clearInterval(hold.i);hold=null;save();draw();};
+ d.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-stm]');if(!b)return;const [k,dl]=b.dataset.stm.split(':'),dv=Number(dl);e.preventDefault();stopHold();
+  setVal(k,SK[k].get()+dv);hold={t:setTimeout(()=>{hold.i=setInterval(()=>setVal(k,SK[k].get()+dv),70);},400)};});
+ ['pointerup','pointercancel','pointerleave'].forEach(ev=>d.addEventListener(ev,stopHold,true));
+ d.addEventListener('contextmenu',e=>{if(e.target.closest('[data-stm]'))e.preventDefault();});
+ d.addEventListener('input',e=>{const k=e.target.dataset.rg;if(k)setVal(k,e.target.value);});
+ d.addEventListener('change',e=>{const k=e.target.dataset.rg||e.target.dataset.nm;if(!k)return;setVal(k,e.target.value);save();draw();});
  d.addEventListener('click',async e=>{const c=icu().sc,g=k=>e.target.closest(`[${k}]`);
   if(e.target===d||g('data-hx')){d.remove();if(page==='settings'||page==='bag')render();return;}
   if(g('data-bk')){d.remove();bulkDialog();return;}
@@ -2680,6 +2685,8 @@ function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcf
   else if(a=g('data-sm'))tg(c.mm,a.dataset.sm);
   else if(a=g('data-sx'))tg(c.bm,a.dataset.sx);
   else if(a=g('data-auto'))icu().ac=Number(a.dataset.auto);
+  else if(a=g('data-al'))icu().al=Number(a.dataset.al);
+  else if(a=g('data-dis'))icu().ad=Number(a.dataset.dis);
   else return;
   save();draw();});
  draw();}
