@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.37)</title>
+<title>신흔 DIVINE TRACE (v4.38)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1463,6 +1463,13 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .pslots .ps small{font-size:10.5px;line-height:1.3;color:var(--silver);overflow-wrap:anywhere}
 .pslots .ps.em small,.pslots .ps.dim small{color:var(--muted)}
 .pslots .ps.dim{opacity:.55}.pslots .ps small.why{color:#ff9a8a}
+/* v4.38 에이르 리그 미리보기 (개발용) */
+.rigv{max-width:92vw;max-height:92vh;overflow:auto}
+.rigv .rv-cv{display:block;width:100%;height:min(46vh,340px);object-fit:contain;background:rgba(255,255,255,.04);border-radius:8px}
+.rigv .rv-info{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.rigv .rv-bt{display:flex;flex-wrap:wrap;gap:6px}
+.rigv .rv-bt .btn{flex:1 1 30%;height:36px;min-width:0}
+.rigv .rv-bt .btn.on{border-color:var(--gold,#e6c36a);color:var(--gold,#e6c36a)}
 /* v4.37 현재 착용·프리셋 카드: 누르면 장비 팝업, 해제/비우기 버튼 */
 .pslots .ps.ed{cursor:pointer;padding-bottom:26px}
 .pslots .ps .px{position:absolute;right:4px;bottom:4px;min-height:22px;padding:2px 8px;font-size:10.5px;line-height:1.2;white-space:nowrap;color:#fff;background:rgba(255,90,77,.22);border:1px solid rgba(255,90,77,.55);cursor:pointer}
@@ -1556,7 +1563,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.37—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.38—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -2048,7 +2055,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.37</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.38</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2141,6 +2148,59 @@ function viewSkills(){
  s.addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;if(a.dataset.a==='back')go('lobby');else if(a.dataset.a==='buy')buy();});
  setTimeout(draw,0);return s;
 }
+/* ---------- v4.38 스켈레탈 리그 재생기 (자체 구현 · 에이르 프로토타입 · 개발 확인용 뷰어에서만 사용) ----------
+   데이터: layers[{id,img,parent,pivot:[x,y](0~1, 이미지 비율),pos:[x,y](부모 기준 오프셋, 이미지 크기 비율),z}]
+   anims: 레이어 id → {rot:[진폭도,주기초,위상], x:[진폭,주기,위상], y:[..], sx:[..], sy:[..]} (사인 파형, loop:false 면 1회 후 정지) */
+const SKRIG={
+ eir:{ver:1,layers:[
+  {id:'body',img:'eir_l_body',parent:null,pivot:[.5,.95],pos:[0,0],z:1},
+  {id:'hair',img:'eir_l_hair',parent:'body',pivot:[.5,.2],pos:[0,0],z:2},
+  {id:'scarf',img:'eir_l_scarf',parent:'body',pivot:[.5,.3],pos:[0,0],z:3}],
+ anims:{
+  idle:{loop:1,len:3,body:{y:[.004,3,0],sy:[.006,3,0]},hair:{rot:[1.6,2.4,.6],x:[.002,2.4,.6]},scarf:{rot:[2.4,1.8,1.2]}},
+  hit:{loop:0,len:.5,body:{rot:[-5,.5,0],x:[-.02,.5,0]},hair:{rot:[9,.5,.8]},scarf:{rot:[12,.5,.8]}},
+  attack:{loop:0,len:.7,body:{rot:[4,.7,0],x:[.035,.7,0],y:[-.01,.35,0]},hair:{rot:[-7,.7,.9]},scarf:{rot:[-9,.7,.9]}},
+  skill:{loop:0,len:1.2,body:{y:[-.03,1.2,0],sy:[.015,.6,0],rot:[2,1.2,0]},hair:{rot:[10,.6,.7]},scarf:{rot:[14,.6,.7]}},
+  down:{loop:0,len:1,body:{rot:[-12,2,0],y:[.03,2,0]},hair:{rot:[6,1,0]},scarf:{rot:[8,1,0]}},
+  hurt:{loop:1,len:2,body:{rot:[1.5,2,0],y:[.006,2,0]},hair:{rot:[2,1.5,.5]},scarf:{rot:[3,1.5,.5]}}}}
+};
+function skrigVal(a,t,len,loop){if(!a)return 0;const k=loop?t:Math.min(t,len);return a[0]*Math.sin(2*Math.PI*(k/a[1])+a[2]);}
+/* canvas 에 현재 시각 t(초) 의 프레임을 그림. 이미지 로딩 실패 시 false(호출측이 단일 이미지로 폴백) */
+function skrigDraw(cv,rig,name,t,imgs){const an=rig.anims[name];if(!an)return false;const ctx=cv.getContext('2d');
+ const ls=rig.layers.map(l=>({l,im:imgs[l.img]}));if(ls.some(o=>!o.im||!o.im.naturalWidth))return false;
+ const W=cv.width,H=cv.height,bw=ls[0].im.naturalWidth,bh=ls[0].im.naturalHeight,sc=Math.min(W/bw,H/bh),ox=(W-bw*sc)/2,oy=(H-bh*sc)/2;
+ ctx.clearRect(0,0,W,H);
+ const tf={};/* 레이어 id → 누적 변환 */
+ const calc=l=>{if(tf[l.id])return tf[l.id];const p=l.parent?calc(rig.layers.find(x=>x.id===l.parent)):{rot:0,x:0,y:0};const d=an[l.id]||{};
+  const o={rot:p.rot+skrigVal(d.rot,t,an.len,an.loop)*Math.PI/180,x:p.x+l.pos[0]*bw+skrigVal(d.x,t,an.len,an.loop)*bw,y:p.y+l.pos[1]*bh+skrigVal(d.y,t,an.len,an.loop)*bh,sx:1+skrigVal(d.sx,t,an.len,an.loop),sy:1+skrigVal(d.sy,t,an.len,an.loop)};return tf[l.id]=o;};
+ ls.slice().sort((a,b)=>a.l.z-b.l.z).forEach(({l,im})=>{const o=calc(l);ctx.save();ctx.translate(ox+(o.x+l.pivot[0]*bw)*sc,oy+(o.y+l.pivot[1]*bh)*sc);ctx.rotate(o.rot);ctx.scale(o.sx,o.sy);ctx.drawImage(im,-l.pivot[0]*bw*sc,-l.pivot[1]*bh*sc,bw*sc,bh*sc);ctx.restore();});
+ return true;}
+function skrigLoad(rig){return Promise.all(rig.layers.map(l=>new Promise(res=>{if(!A[l.img])return res([l.img,null]);const im=new Image();im.onload=()=>res([l.img,im]);im.onerror=()=>res([l.img,null]);im.src=A[l.img];}))).then(a=>Object.fromEntries(a));}
+/* 재생: rigPlay(canvas,rig,animName,opts) → {stop(), set(name)} · opts:{imgs,onFps(fps,name)} · 배속(--rate)·탭 숨김 정지 반영 */
+function rigPlay(cv,rig,name,opts){opts=opts||{};let cur=name,t0=performance.now(),last=t0,raf=0,dead=false,fc=0,fT=t0;
+ const dpr=Math.min(window.devicePixelRatio||1,2),cw=Math.min(cv.clientWidth||300,360),ch=Math.min(cv.clientHeight||340,400);cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);
+ let el0=0;
+ const step=now=>{if(dead)return;raf=requestAnimationFrame(step);if(document.hidden){last=now;return;}
+  el0+=(now-last)/1000*rate()*(opts.mul?opts.mul():1);last=now;const ok=skrigDraw(cv,rig,cur,el0,opts.imgs||{});if(!ok&&opts.onFail){opts.onFail();dead=true;cancelAnimationFrame(raf);return;}
+  fc++;if(now-fT>=500){if(opts.onFps)opts.onFps(Math.round(fc*1000/(now-fT)),cur);fc=0;fT=now;}};
+ raf=requestAnimationFrame(step);
+ return{stop(){dead=true;cancelAnimationFrame(raf);},set(n){if(rig.anims[n]){cur=n;el0=0;}},get name(){return cur;}};}
+function rigViewer(){const rig=SKRIG.eir;
+ const d=el(`<div class="pause"><div class="box wide rigv"><div class="h"><span>에이르 리그 미리보기</span><small>개발용 · v4.38</small></div>
+  <canvas class="rv-cv"></canvas><div class="rv-info"><span id="rv-fps">FPS -</span><span id="rv-an">idle</span><span id="rv-rt">속도 ×${rate()}</span></div>
+  <div class="rv-bt">${['idle','hit','attack','skill','down','hurt'].map(n=>`<button class="btn ghost${n==='idle'?' on':''}" data-an="${n}">${n}</button>`).join('')}</div>
+  <div class="rv-bt"><button class="btn ghost" data-sp="1">×1</button><button class="btn ghost" data-sp="2">×2</button><button class="btn ghost" data-sp="3">×3</button></div>
+  <div class="note rv-note" hidden>리그 이미지를 불러오지 못해 단일 이미지로 표시해요</div>
+  <div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
+ $('#app').appendChild(d);const cv=$('.rv-cv',d);let pl=null,idleT=0,mul=1;
+ const fallback=()=>{$('.rv-note',d).hidden=false;if(A.eir_l_body){const im=el(`<img class="rv-cv" src="${A.eir_l_body}" alt="">`);cv.replaceWith(im);}};
+ skrigLoad(rig).then(imgs=>{if(!d.isConnected)return;if(Object.values(imgs).some(x=>!x))return fallback();
+  pl=rigPlay(cv,rig,'idle',{imgs,onFail:fallback,mul:()=>mul,onFps:(f,n)=>{$('#rv-fps',d).textContent='FPS '+f;$('#rv-an',d).textContent=n;}});});
+ const close=()=>{if(pl)pl.stop();clearTimeout(idleT);d.remove();};
+ d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-hx]')){close();return;}
+  const b=e.target.closest('[data-an]');if(b&&pl){$$('[data-an]',d).forEach(x=>x.classList.toggle('on',x===b));pl.set(b.dataset.an);clearTimeout(idleT);const a=rig.anims[b.dataset.an];if(!a.loop)idleT=setTimeout(()=>{if(pl&&d.isConnected){pl.set('idle');$$('[data-an]',d).forEach(x=>x.classList.toggle('on',x.dataset.an==='idle'));}},a.len*1000/rate()+300);return;}
+  const s=e.target.closest('[data-sp]');if(s){mul=Number(s.dataset.sp)/rate();$('#rv-rt',d).textContent='속도 ×'+s.dataset.sp;}});}
+
 /* ---------- 설정 (사운드 · 계정) ---------- */
 let farmSel=1;
 let setTab='prof';
@@ -2195,7 +2255,8 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   <div class="setsec">기타</div>
   <div class="setbox">${tog('motion','모션 효과',state.motion,'끄면 카드·컷인·로비 시차 움직임 최소화')}<button class="setrow" id="s-tilt"><span><b>센서 상태 · ${tiltStatus()}</b><small>로비 기울기 시차 · 눌러서 다시 시도</small></span><em>↻</em></button>${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
    <button class="setrow" id="s-errlog"><span><b>최근 오류 보기</b><small>문제가 생기면 눌러서 복사한 뒤 알려 주세요 (${errList().length}개)</small></span><em>›</em></button>
-   <button class="setrow danger" id="s-reset"><span><b>진행도 초기화</b><small>이 기기와 클라우드 저장을 모두 지움 (되돌릴 수 없음)</small></span><em>!</em></button></div>`:''}
+   <button class="setrow danger" id="s-reset"><span><b>진행도 초기화</b><small>이 기기와 클라우드 저장을 모두 지움 (되돌릴 수 없음)</small></span><em>!</em></button>
+   <button class="setrow" id="s-rigv"><span><b>개발: 에이르 리그 미리보기</b><small>스켈레탈 재생기 시험 · idle/hit/attack/skill</small></span><em>›</em></button></div>`:''}
   </div>
   <div class="party-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn primary cut-r" data-go="adventure">모험으로</button></div>
  </section>`);
@@ -2212,6 +2273,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   if(e.target.closest('#s-farm')){const f=ITEM_CFG.farm[farmSel];icu().as=f.as;icu().cs=f.cs;icu().ct=f.ct;{const c=icu().sc;c.s=[1,2,3,4,5].map(n=>n<=f.cs?1:0);c.q=f.ct;}save();render();toast(`「${f.n}」 추천 설정을 적용했어요`);return;}
   if(e.target.closest('#s-relock')){relockDialog();return;}
   if(e.target.closest('#s-errlog')){errDialog();return;}
+  if(e.target.closest('#s-rigv')){rigViewer();return;}
   if(e.target.closest('#pf-save')){saveProfile(s);return;}
   if(e.target.closest('#s-tilt')){tiltRetry();toast('센서 다시 시도 중…');setTimeout(()=>{if(page==='settings')render();},1700);return;}
   const lp=e.target.closest('[data-lobby]');if(lp){state.lobby=lp.dataset.lobby;save();render();SND.play('toggle');toast('로비 캐릭터 · '+lp.textContent.trim());return;}
