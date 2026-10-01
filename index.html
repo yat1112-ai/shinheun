@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.31)</title>
+<title>신흔 DIVINE TRACE (v4.32)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1489,7 +1489,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.31—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.32—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1749,7 +1749,7 @@ function readBak(){try{const b=JSON.parse(localStorage.getItem(BAK_KEY)||'null')
 /* v4.30 로드 정규화: 클라우드(Firebase RTDB)는 빈 배열·null 을 저장/복원하지 않아 mm·bm·bag.tmp 등이 사라짐 → defaultState 병합 후 누락 필드만 채움(데이터 삭제 없음) */
 const arr=(v,n,d)=>{const a=Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[]);if(n===undefined)return a;const r=a.slice(0,n);while(r.length<n)r.push(d);return r;};
 function fixSc(u){const sc=u.sc&&typeof u.sc==='object'?u.sc:(u.sc={});
- sc.s=arr(sc.s,5,0);sc.t=arr(sc.t,4,1);sc.mm=arr(sc.mm);sc.bm=arr(sc.bm);
+ sc.s=arr(sc.s,5,0);sc.t=arr(sc.t,4,1);sc.mm=arr(sc.mm);sc.bm=arr(sc.bm);sc.xa=sc.xa?1:0;sc.xp=sc.xp?1:0;sc.xm=sc.xm?1:0; /* v4.32 보호 예외(일괄 판매 전용) */
  if(typeof sc.q!=='number'||isNaN(sc.q))sc.q=typeof u.ct==='number'?u.ct:55;if(typeof sc.bn!=='number'||isNaN(sc.bn))sc.bn=9;return sc;}
 function fixState(s){const d=defaultState(),o={...d,...s};
  for(const k of ['cleared','levels','sk','gear','mats','icu','bag'])if(!o[k]||typeof o[k]!=='object'||Array.isArray(o[k]))o[k]={...d[k]};
@@ -1966,7 +1966,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.31</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.32</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2205,8 +2205,8 @@ const enhAt=(s,x)=>({st:Math.round(ITEM_CFG.enhStone[s-1]*(x+1)),g:Math.round(IT
 const enhCost=it=>enhAt(it.s,it.x||0);
 const enhSpent=it=>{let st=0,g=0;for(let x=0;x<(it.x||0);x++){const c=enhAt(it.s,x);st+=c.st;g+=c.g;}return {st,g};};
 const icu=()=>{const u=state.icu=state.icu||{};if(u.al===undefined){u.al=0;u.as=70;}if(u.ac===undefined){u.ac=0;u.cs=3;u.ct=55;}if(u.ad===undefined)u.ad=0;
- if(!u.sc){u.sc={s:[1,2,3,4,5].map(n=>n<=u.cs?1:0),t:[1,1,1,1],q:u.ct,bn:9,mm:[],bm:[]};} /* v4.27 판매 설정 통합: 기존 cs/ct 에서 마이그레이션 */
- const c=u.sc;if(!Array.isArray(c.s)||!Array.isArray(c.t)||!Array.isArray(c.mm)||!Array.isArray(c.bm)||typeof c.q!=='number'||typeof c.bn!=='number')fixSc(u); /* v4.30 누락 필드 보정 */
+ if(!u.sc){u.sc={s:[1,2,3,4,5].map(n=>n<=u.cs?1:0),t:[1,1,1,1],q:u.ct,bn:9,mm:[],bm:[],xa:0,xp:0,xm:0};} /* v4.27 판매 설정 통합: 기존 cs/ct 에서 마이그레이션 */
+ const c=u.sc;if(!Array.isArray(c.s)||!Array.isArray(c.t)||!Array.isArray(c.mm)||!Array.isArray(c.bm)||typeof c.q!=='number'||typeof c.bn!=='number'||typeof c.xa!=='number'||typeof c.xp!=='number'||typeof c.xm!=='number')fixSc(u); /* v4.30 누락 필드 보정 */
  return u;};
 /* v4.27 판매 설정(icu().sc) 단일 기준: s 성급(1~5) · t 부위 · q 점수 미만(0=무시) · bn 부옵 개수 이하(9=무제한) · mm 주옵 종류(빈=전체) · bm 부옵 종류(선택 옵션이 하나도 없으면 판매, 빈=무시). 일괄 판매·획득 즉시 자동판매가 같이 씀 */
 const sellMatch=(it,sc)=>{const c=icu().sc;if(badItem(it)||it.s>5||!c.s[it.s-1]||!c.t[it.t])return false;if(c.mm.length&&!c.mm.includes(it.m[0]))return false;if(it.b.length>c.bn)return false;
@@ -2382,34 +2382,42 @@ function partyPop(id){
   if(e.target.closest('[data-pt]')){const i=state.party.indexOf(id);if(i>=0){if(state.party.length<=3){toast('최소 3명은 필요해요');return;}state.party.splice(i,1);}else if(state.party.length<5)state.party.push(id);else{toast('파티는 최대 5명이에요');return;}save();render();toast(i>=0?'편성에서 뺐어요':'편성했어요');}});}
 /* v4.23 가방 필터: s 성급 · t 부위 · w 착용 · z 세트(6성) · m 주옵 · b 부옵 · e 강화 · q 점수 · l 잠금 · r 추천(자동잠금 기준 이상). 보관 조건 = 같은 형태 객체(icu().kp) */
 const BAGF0={s:0,t:-1,w:0,z:'',m:'',b:'',e:0,q:0,l:0,r:0};
-let bagF={...BAGF0},bagSort='new';
+let bagF={...BAGF0},bagSort='new',sellView=false; /* v4.32 sellView: 가방을 현재 판매 대상만 보기 */
 const ENH_F=[[0,'강화 전체'],[1,'+0'],[2,'+1~+8'],[3,'+9 이상'],[4,'+12 이상'],[5,'+15']],SC_F=[0,60,70,80,90,95];
 const enhOk=(x,e)=>e===0||(e===1?x===0:e===2?x>=1&&x<=8:e===3?x>=9:e===4?x>=12:x>=15);
 function bagMatch(o,F){if(F.s&&o.s!==F.s)return false;if(F.t>=0&&o.t!==F.t)return false;if(F.w&&(F.w===1)!==!!wornBy(o.i))return false;
  if(F.z&&!(o.s===6&&o.z===F.z))return false;if(F.m&&o.m[0]!==F.m)return false;if(F.b&&!o.b.some(x=>x[0]===F.b))return false;if(!enhOk(o.x||0,F.e))return false;
  if(F.l&&(F.l===1)!==!!o.l)return false;if(F.q||F.r){const sc=bestScore(o).s;if(F.q&&sc<F.q)return false;if(F.r&&sc<icu().as)return false;}return true;}
 /* v4.27 일괄 판매: 판매 설정(sellMatch)에 맞고 보호 규칙(잠금·착용·프리셋·즐겨찾기·강화)에 걸리지 않는 1~5성 장비. 6성은 분해 설정(자동 분해·상세창 분해)을 따로 유지 */
-function bulkPlan(){const sell=state.items.filter(o=>!isProtected(o)&&sellMatch(o));return {sell,gold:sell.reduce((a,o)=>a+sellPrice(o),0),stone:sell.reduce((a,o)=>a+sellStone(o),0)};}
+/* v4.32 일괄 판매 전용 보호 판정(자동판매 cleanable 은 isProtected 그대로): 이상·착용·즐겨찾기·강화는 항상 제외, 자동잠금(l=2)·수동잠금·프리셋은 판매 설정 스위치(xa·xm·xp)로 예외 허용 */
+function sellGuard(it){const c=icu().sc;if(badItem(it))return '이상한 장비';if(wornBy(it.i))return '착용';if(it.f)return '즐겨찾기';if((it.x||0)>0)return '강화';
+ if(it.l===2){if(!c.xa)return '자동잠금';}else if(it.l&&!c.xm)return '수동잠금';if(inPreset(it.i)&&!c.xp)return '프리셋';return '';}
+function bulkPlan(){const sell=state.items.filter(o=>!sellGuard(o)&&sellMatch(o)),inc={a:0,m:0,p:0};
+ sell.forEach(o=>{if(o.l===2)inc.a++;else if(o.l)inc.m++;if(inPreset(o.i))inc.p++;});
+ return {sell,inc,gold:sell.reduce((a,o)=>a+sellPrice(o),0),stone:sell.reduce((a,o)=>a+sellStone(o),0)};}
+const unPreset=ids=>{for(const a of Object.values(state.presets||{}))if(Array.isArray(a))a.forEach(p=>{if(p&&Array.isArray(p.g))p.g=arr(p.g,4,0).map(x=>ids.has(x)?0:x);});}; /* v4.32 판매된 장비를 프리셋 슬롯에서 0 으로 정리(길이 4 유지) */
+const incHtml=inc=>{const t=[inc.a?`자동잠금 ${inc.a}개`:'',inc.m?`수동잠금 ${inc.m}개`:'',inc.p?`프리셋 ${inc.p}개`:''].filter(Boolean);return t.length?`<p class="note" style="color:#ff5a4d;font-weight:700">⚠ 보호 장비 포함: ${t.join(' · ')}<br>판매하면 되돌릴 수 없어요. 프리셋 슬롯은 비워져요.</p>`:'';};
 /* v4.28 제외 사유 집계(표시 전용): 장비 1개당 우선순위 사유 1개만 센다 (보호→6성→성급→부위→주옵→부옵 개수→부옵 종류→점수) */
 function sellWhy(){const c=icu().sc,r={},add=k=>{r[k]=(r[k]||0)+1;};let ok=0;
  state.items.forEach(it=>{
-  if(badItem(it))add('이상한 장비');else if(it.l)add('잠금');else if(wornBy(it.i))add('착용');else if(inPreset(it.i))add('프리셋');else if(it.f)add('즐겨찾기');else if((it.x||0)>0)add('강화');
+  const g=sellGuard(it);
+  if(g)add(g);
   else if(it.s>5)add('6성');else if(!c.s[it.s-1])add('성급 설정 밖');else if(!c.t[it.t])add('부위 설정 밖');
   else if(c.mm.length&&!c.mm.includes(it.m[0]))add('주옵 종류');else if(it.b.length>c.bn)add(`부옵 ${c.bn}개 초과`);
   else if(c.bm.length&&it.b.some(o=>c.bm.includes(o[0])))add('부옵 종류');else if(c.q&&bestScore(it).s>=c.q)add('점수 기준 이상');else ok++;});
  return {ok,total:state.items.length,txt:Object.keys(r).map(k=>`${k} ${r[k]}`).join(' · ')};}
 const sellWhyHtml=()=>{const w=sellWhy();return `전체 ${w.total}개 중 판매 대상 <b>${w.ok}</b>${w.txt?`<br>제외: ${w.txt}`:''}`;};
 function bulkDialog(){const p=bulkPlan(),n=p.sell.length;
- const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 판매</span></div><p class="note">판매 설정 · ${sellSummary()}<br>잠금·착용·프리셋·즐겨찾기·강화한 장비와 6성은 제외돼요.</p><p class="note why">${sellWhyHtml()}</p><div class="bulk-n"><b>${n}개</b> 판매 → <b>+${fmt(p.gold)}G</b>${p.stone?` · 💎+${p.stone}`:''}</div>
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 판매</span></div><p class="note">판매 설정 · ${sellSummary()}<br>착용·즐겨찾기·강화한 장비와 6성은 항상 제외, 잠금·프리셋은 판매 설정 스위치에 따라요.</p><p class="note why">${sellWhyHtml()}</p>${incHtml(p.inc)}<div class="bulk-n"><b>${n}개</b> 판매 → <b>+${fmt(p.gold)}G</b>${p.stone?` · 💎+${p.stone}`:''}</div>
   <div class="row"><button class="btn ${n?'primary':'ghost'}" data-bs ${n?'':'disabled'}>판매하기</button><button class="btn ghost" data-sc>판매 설정</button></div><div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
  $('#app').appendChild(d);
  d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}
   if(e.target.closest('[data-sc]')){d.remove();sellDialog();return;}
   if(!e.target.closest('[data-bs]'))return;
   /* v4.25 사냥 중 드랍이 들어와도 창을 연 시점에 정한 목록만 대상(그 사이 잠금·착용·이미 판매된 것은 제외), 새로 얻은 장비는 포함 안 함 */
-  const have=new Set(state.items.map(o=>o.i)),L=p.sell.filter(o=>have.has(o.i)&&!isProtected(o)),gold=L.reduce((a,o)=>a+sellPrice(o),0),ids=new Set(L.map(o=>o.i));let sn=0;L.forEach(o=>sn+=sellStone(o));
+  const have=new Set(state.items.map(o=>o.i)),L=p.sell.filter(o=>have.has(o.i)&&!sellGuard(o)),gold=L.reduce((a,o)=>a+sellPrice(o),0),ids=new Set(L.map(o=>o.i));let sn=0;L.forEach(o=>sn+=sellStone(o));
   if(!ids.size){d.remove();return;}
-  state.items=state.items.filter(o=>!ids.has(o.i));state.gold+=gold;if(sn)addMat('stone',sn);save();toast(`${ids.size}개 판매 +${fmt(gold)}G`);d.remove();render();});}
+  unPreset(ids);state.items=state.items.filter(o=>!ids.has(o.i));state.gold+=gold;if(sn)addMat('stone',sn);save();toast(`${ids.size}개 판매 +${fmt(gold)}G`);d.remove();render();});}
 /* v4.27 판매 설정 창: 바꾸는 즉시 저장(icu().sc). 슬라이더는 놓을 때 다시 그림 */
 function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcfg"></div></div>`),box=$('.box',d);$('#app').appendChild(d);
  const statK=Object.keys(ITEM_CFG.stat),btn=(on,at,l)=>`<button class="${on?'on':''}" ${at}>${l}</button>`;
@@ -2423,7 +2431,9 @@ function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcf
   <div class="sc-b"><span class="k">주옵션 종류 <small>고른 종류만 판매 · 비우면 전체</small></span><div class="bf">${statK.map(k=>btn(c.mm.includes(k),`data-sm="${k}"`,ITEM_CFG.stat[k].n)).join('')}</div></div>
   <div class="sc-b"><span class="k">부옵션 종류 <small>고른 옵션이 없는 장비만 판매 · 비우면 무시</small></span><div class="bf">${statK.map(k=>btn(c.bm.includes(k),`data-sx="${k}"`,ITEM_CFG.stat[k].n)).join('')}</div></div>
   <div class="sc-b"><span class="k">획득 즉시 자동 판매 <small>자동사냥·전투 중 얻은 장비에 같은 기준 적용</small></span><div class="bf">${btn(!icu().ac,'data-auto="0"','OFF')}${btn(icu().ac,'data-auto="1"','ON')}</div></div>
-  <p class="note">잠금·착용·프리셋·즐겨찾기·강화한 장비와 6성은 항상 제외 · 지금 기준 <b>${p.sell.length}개</b> · +${fmt(p.gold)}G</p><p class="note why" id="sc-why">${sellWhyHtml()}</p>
+  <div class="sc-b"><span class="k">보호 예외 <small>일괄 판매에만 적용 · 자동 판매는 항상 보호 유지</small></span><div class="bf">${btn(c.xa,'data-xx="xa"','🔐 자동잠금도 판매')}${btn(c.xp,'data-xx="xp"','프리셋 장비도 판매')}${btn(c.xm,'data-xx="xm"','🔒 수동잠금도 판매')}</div></div>
+  <p class="note">착용·즐겨찾기·강화한 장비와 6성은 항상 제외 · 지금 기준 <b>${p.sell.length}개</b> · +${fmt(p.gold)}G</p><p class="note why" id="sc-why">${sellWhyHtml()}</p>${incHtml(p.inc)}
+  <div class="row"><button class="btn ghost" data-sv ${p.sell.length?'':'disabled'}>판매 대상 보기</button><button class="btn ghost" data-rl>자동잠금 재평가</button></div>
   <div class="row"><button class="btn ${p.sell.length?'primary':'ghost'}" data-bk ${p.sell.length?'':'disabled'}>일괄 판매</button><button class="btn ghost" data-hx>닫기</button></div>`;};
  const tg=(a,v)=>{const i=a.indexOf(v);if(i<0)a.push(v);else a.splice(i,1);};
  d.addEventListener('input',e=>{if(e.target.id==='sc-q'){icu().sc.q=Number(e.target.value);$('#sc-ql',d).textContent=icu().sc.q?icu().sc.q+'점':'제한 없음';$('#sc-why',d).innerHTML=sellWhyHtml();}});
@@ -2431,7 +2441,10 @@ function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcf
  d.addEventListener('click',e=>{const c=icu().sc,g=k=>e.target.closest(`[${k}]`);
   if(e.target===d||g('data-hx')){d.remove();if(page==='settings'||page==='bag')render();return;}
   if(g('data-bk')){d.remove();bulkDialog();return;}
+  if(g('data-rl')){d.remove();relockDialog();return;}
+  if(g('data-sv')){sellView=true;bagMat=false;bagF.t=-1;d.remove();if(page==='bag')render();else go('bag');return;}
   let a;
+  if(a=g('data-xx')){const k=a.dataset.xx;if(!c[k]&&k==='xm'&&!confirm('직접 잠근(🔒) 장비도 일괄 판매 대상에 포함할까요?\n판매하면 되돌릴 수 없어요.'))return;c[k]=c[k]?0:1;save();draw();return;}
   if(a=g('data-ss'))c.s[Number(a.dataset.ss)]=c.s[Number(a.dataset.ss)]?0:1;
   else if(a=g('data-st'))c.t[Number(a.dataset.st)]=c.t[Number(a.dataset.st)]?0:1;
   else if(a=g('data-sb'))c.bn=Number(a.dataset.sb);
@@ -2472,13 +2485,15 @@ function sumCard(it){if(!it)return '<div class="bsum empty">장비를 누르면 
  return `<div class="bsum" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><div class="bi"><b>${it.z?`[${ITEM_CFG.sets[it.z]}] `:''}${sl.n} <i>${'★'.repeat(it.s)}</i> +${it.x||0}</b><span class="m">주옵 ${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><span class="sb">${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</span><span class="sc2">점수 ${b.s} (${heroNm(b.h)}) · ${w?'착용 '+heroNm(w):'미착용'}</span></div><div class="bq"><button data-q="lock">${it.l?(it.l===2?'🔐':'🔒'):'🔓'}</button><button data-q="fav">${it.f?'⭐':'☆'}</button><button data-q="detail">상세</button></div></div>`;}
 function viewBag(){
  const cap=state.bag.cap,fl=flushTmp(),tn=(state.bag.tmp||[]).length;if(fl){save();setTimeout(()=>toast(`임시 보관함 ${fl}개를 가방으로 옮겼어요`),0);}
- const list=bagSortList(state.items.filter(o=>bagMatch(o,bagF)));
+ const svIds=sellView?new Set(bulkPlan().sell.map(o=>o.i)):null;
+ const list=bagSortList(state.items.filter(o=>bagMatch(o,bagF)&&(!svIds||svIds.has(o.i))));
  if(bagSel&&!itemById(bagSel))bagSel=null;
  const tabs=[[-1,'전체'],...ITEM_CFG.slots.map((sl,t)=>[t,sl.n]),['m','재료']],cur=bagMat?'m':bagF.t,fc=bagFCount();
  const matRows=[['💎','강화석',matN('stone')],['🔶','재련석',matN('rune')],['🎫','입장권',matN('tix')],...Object.keys(ITEM_CFG.sets).map(z=>['🧩',ITEM_CFG.sets[z]+' 파편',matN(fragKey(z))])];
  const s=el(`<section class="screen bag">
   <div class="topbar"><div class="left"><span class="stage-no">BAG</span><span class="stage-name">가방</span></div><div class="right"><span class="turn mats">💎${fmt(matN('stone'))}</span><span class="turn mats">🧩${fragTotal()}</span><span class="turn gold">${fmt(state.gold)}G</span></div></div>
   <div class="bag-tabs">${tabs.map(([v,l])=>`<button class="${String(v)===String(cur)?'on':''}" data-pt="${v}">${l}</button>`).join('')}</div>
+  ${sellView&&!bagMat?`<p class="party-note warn">판매 대상만 보는 중 (${list.length}개) <button class="btn ghost" data-svx>전체 보기</button></p>`:''}
   ${bagMat?`<div class="bag-mats">${matRows.map(([i,n,v])=>`<div class="mrow"><span>${i}</span><b>${n}</b><em>${fmt(v)}</em></div>`).join('')}</div>`
   :`<div class="bsum-w">${sumCard(itemById(bagSel))}</div>
   <div class="bag-grid">${list.map(itemCard).join('')||'<p class="party-note">조건에 맞는 장비가 없어요.</p>'}</div>`}
@@ -2486,7 +2501,7 @@ function viewBag(){
   <div class="bag-bar"><button data-fl class="${fc?'on':''}">필터${fc?' · '+fc:''}</button><button data-sc>판매 설정${icu().ac?' · 자동':''}</button><button class="hot" data-bulk>일괄 판매</button><span class="cnt ${state.items.length>=cap?'full':''}">${state.items.length}/${cap}</span></div>
   <div class="party-foot p3"><button class="btn ghost" data-craft>제작</button><button class="btn ghost" data-go="character">캐릭터</button><button class="btn ghost" data-go="lobby">로비</button></div>
  </section>`);
- s.addEventListener('click',e=>{if(e.target.closest('[data-craft]')){craftDialog();return;}
+ s.addEventListener('click',e=>{if(e.target.closest('[data-svx]')){sellView=false;render();return;}if(e.target.closest('[data-craft]')){craftDialog();return;}
   if(e.target.closest('[data-bulk]')){bulkDialog();return;}if(e.target.closest('[data-sc]')){sellDialog();return;}if(e.target.closest('[data-fl]')){bagFilterDialog();return;}
   const pt=e.target.closest('[data-pt]');if(pt){if(pt.dataset.pt==='m')bagMat=true;else{bagMat=false;bagF.t=Number(pt.dataset.pt);}render();return;}
   const q=e.target.closest('[data-q]');if(q){const it=itemById(bagSel);if(!it)return;if(q.dataset.q==='detail'){itemDetail(it.i);return;}
