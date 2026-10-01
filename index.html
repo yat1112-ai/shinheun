@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.36)</title>
+<title>신흔 DIVINE TRACE (v4.37)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1463,6 +1463,10 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .pslots .ps small{font-size:10.5px;line-height:1.3;color:var(--silver);overflow-wrap:anywhere}
 .pslots .ps.em small,.pslots .ps.dim small{color:var(--muted)}
 .pslots .ps.dim{opacity:.55}.pslots .ps small.why{color:#ff9a8a}
+/* v4.37 현재 착용·프리셋 카드: 누르면 장비 팝업, 해제/비우기 버튼 */
+.pslots .ps.ed{cursor:pointer;padding-bottom:26px}
+.pslots .ps .px{position:absolute;right:4px;bottom:4px;min-height:22px;padding:2px 8px;font-size:10.5px;line-height:1.2;white-space:nowrap;color:#fff;background:rgba(255,90,77,.22);border:1px solid rgba(255,90,77,.55);cursor:pointer}
+.wpanel .pre{display:flex;align-items:center;gap:6px}.wpanel .pre .btn{margin-left:auto;padding:3px 10px;font-size:11px}
 .ppanel .psame{margin:0;text-align:center;font-size:11px;color:var(--muted)}.ppanel .psame.ok{color:#7fe08a}
 .ppanel .pre2 .btn{white-space:nowrap}
 .it .pn{position:absolute;right:2px;top:12px;font-size:10px}
@@ -1552,7 +1556,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.36—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.37—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -2044,7 +2048,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.36</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.37</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2363,12 +2367,13 @@ function applyPreset(hid,i){const g=presetsOf(hid)[i].g;let ok=0,skip=0,gone=0,o
  for(let t=0;t<4;t++){const id=g[t];if(!id)continue;const it=itemById(id);if(!it){skip++;gone++;continue;}const w=wornBy(id);if(w&&w!==hid){skip++;other++;continue;}cur[t]=id;ok++;}
  if(ok)save();return {ok,skip,gone,other};}
 /* v4.35 프리셋 패널: 칩(선택만) + 4슬롯 아이콘 카드 + 착용 중과 비교 + 라벨 분명한 버튼 */
-function presetPanel(id){const ps=presetsOf(id),i=Math.min(preSel,ps.length-1),p=ps[i],cur=(state.gear&&state.gear[id])||[0,0,0,0];
+function presetPanel(id,edit){const ps=presetsOf(id),i=Math.min(preSel,ps.length-1),p=ps[i],cur=(state.gear&&state.gear[id])||[0,0,0,0];
+ const px=t=>edit?`<button class="px" data-px="${t}">✕ 비우기</button>`:'';
  const slot=t=>{const sl=ITEM_CFG.slots[t],x=p.g[t],it=x?itemById(x):null,w=it?wornBy(x):null;
   if(!x)return `<div class="ps em"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small>비어 있음</small></div>`;
-  if(!it)return `<div class="ps dim"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small>사라진 장비 (판매·분해)</small></div>`;
+  if(!it)return `<div class="ps dim${edit?' ed':''}"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small class="why">판매됨 · 사라진 장비</small>${px(t)}</div>`;
   const other=w&&w!==id;
-  return `<div class="ps${other?' dim':''}" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="gi">${sl.ic}</span><b>${sl.n} <i>${'★'.repeat(it.s)}</i> <em>+${it.x||0}</em></b><small>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</small>${other?`<small class="why">${heroNm(w)} 착용 중</small>`:''}</div>`;};
+  return `<div class="ps${other?' dim':''}${edit?' ed':''}" ${edit?`data-vi="${x}"`:''} style="--c:${ITEM_CFG.col[it.s-1]}"><span class="gi">${sl.ic}</span><b>${sl.n} <i>${'★'.repeat(it.s)}</i> <em>+${it.x||0}</em></b><small>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</small>${other?`<small class="why">${heroNm(w)} 착용 중</small>`:''}${px(t)}</div>`;};
  const same=[0,1,2,3].every(t=>(p.g[t]||0)===(cur[t]||0));
  return `<div class="ppanel"><div class="pre"><span class="k">프리셋</span>${ps.map((q,j)=>`<button class="${j===i?'on':''}" data-pa="${j}">${esc(q.n)}</button>`).join('')}</div>
   <div class="pslots">${[0,1,2,3].map(slot).join('')}</div>
@@ -2493,7 +2498,13 @@ function bulkEnhPop(hid){const d=el(`<div class="pause"><div class="box wide"><d
   d.remove();render();if(!n){toast('강화할 수 없어요 (재료 부족 또는 이미 목표 이상)');return;}
   const r2=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화 결과</span></div><p class="note">${n}회 강화했어요<br>${done.join('<br>')}</p><div class="row"><button class="btn primary" data-be="x">확인</button></div></div></div>`);$('#app').appendChild(r2);r2.addEventListener('click',ev=>{if(ev.target===r2||ev.target.closest('[data-be]'))r2.remove();});});}
 /* v4.29 세트 효과·프리셋은 캐릭터창 「상세」 시트로 이동(장비 탭은 스크롤 없이 한 화면) */
-function gearExtra(id){return `<div class="gear">${setLine(id)}${presetPanel(id)}</div>`;}
+function gearExtra(id){return `<div class="gear">${wornPanel(id)}${setLine(id)}${presetPanel(id,1)}</div>`;}
+/* v4.37 세트·프리셋 탭 맨 위 「현재 착용」 4슬롯: 카드를 누르면 장비 팝업(강화·교체), 슬롯별 해제·전체 해제 */
+function wornPanel(id){const g=gearOf(id),has=g.some(Boolean);
+ const slot=t=>{const sl=ITEM_CFG.slots[t],it=g[t];
+  if(!it)return `<div class="ps em" data-gp="${t}"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small>비어 있음 · 눌러서 착용</small></div>`;
+  return `<div class="ps ed" data-vi="${it.i}" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="gi">${sl.ic}</span><b>${sl.n} <i>${'★'.repeat(it.s)}</i> <em>+${it.x||0}</em></b><small>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</small><button class="px" data-gu="${t}">해제</button></div>`;};
+ return `<div class="ppanel wpanel"><div class="pre"><span class="k">현재 착용</span><button class="btn ghost" data-gua ${has?'':'disabled'}>전체 해제</button></div><div class="pslots">${[0,1,2,3].map(slot).join('')}</div></div>`;}
 /* v4.26 캐릭터창 편성 팝업: 현재 캐릭터를 파티에 넣고 빼기 (viewParty 와 같은 규칙: 3~5명, 순서 = 넣은 순서) */
 function partyPop(id){
  const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>편성</span><small>${state.party.length} / 5</small></div><div class="pp-slots">${[0,1,2,3,4].map(i=>{const p=state.party[i];return `<div class="pps${p===id?' me':''}">${p?`<img src="${A[p]}" alt=""><b>${i+1}</b><span>${heroNm(p)}</span>`:`<em>${i+1}</em><span>비어 있음</span>`}</div>`;}).join('')}</div><p class="note">${state.party.includes(id)?`${heroNm(id)}은(는) ${state.party.indexOf(id)+1}번으로 편성 중이에요.`:`${heroNm(id)}은(는) 편성되어 있지 않아요.`} 3~5명, 순서는 넣은 순서예요.</p><div class="row"><button class="btn primary" data-pt>${state.party.includes(id)?'편성에서 빼기':'편성에 넣기'}</button><button class="btn ghost" data-go="party">편성창</button><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
@@ -2745,7 +2756,9 @@ function viewCharacter(){
   const d=e.target.closest('[data-d]');if(d){move(Number(d.dataset.d));return;}
   const c=e.target.closest('[data-cid]');if(c){if(c.dataset.cid!==charId){charId=c.dataset.cid;render();}return;}
   const gu=e.target.closest('[data-gu]');if(gu){unequip(charId,Number(gu.dataset.gu));render();toast('해제했어요');return;}
+  const px=e.target.closest('[data-px]');if(px){const t=Number(px.dataset.px),p=presetsOf(charId)[preSel];p.g[t]=0;save();render();toast(`「${p.n}」 프리셋 ${ITEM_CFG.slots[t].n} 칸을 비웠어요`);return;}
   const gp=e.target.closest('[data-gp]');if(gp){gearPicker(charId,Number(gp.dataset.gp));return;}
+  const vi=e.target.closest('[data-vi]');if(vi){itemDetail(Number(vi.dataset.vi));return;}
   const gn=e.target.closest('[data-gn]');if(gn){enhPop(charId,Number(gn.dataset.gn));return;}
   if(e.target.closest('[data-gbe]')){bulkEnhPop(charId);return;}
   if(e.target.closest('[data-gua]')){if(!gearOf(charId).some(Boolean)){toast('착용한 장비가 없어요');return;}if(!await gameConfirm(`${heroNm(charId)}의 장비를 모두 해제할까요?`))return;for(let t=0;t<4;t++)unequip(charId,t);render();toast('일괄 해제했어요');return;}
