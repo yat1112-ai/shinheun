@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.40)</title>
+<title>신흔 DIVINE TRACE (v4.41)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1576,7 +1576,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.40—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.41—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -2086,7 +2086,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.40</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.41</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2351,7 +2351,7 @@ const ITEM_CFG={
 const USAGE=[['normal','일반'],['boss','보스'],['raid','레이드']];
 /* v4.21 레이드(임시 수치·임시 이미지): 「신흔의 잔향체」6종 = 세트별 6성 드랍. 이미지는 기존 몬스터 재활용(temp:true), 새 이미지가 오면 art 키만 채우면 교체 */
 const RAID_CFG={lv:40,open:'2-10',cost:3,tix:{5:1,10:2},drop:[1,2],rune:[0,2],gold:2000,xp:1000, // lv=1단계 고정 / open=개방 스테이지 / cost=입장권 / tix=x-5·x-10 보스 지급 / drop=6성 장비 수 / rune=재련석
- /* v4.40 단계표(수치만 바꿔도 됨): m=보스 HP·ATK 배율(def·spd 는 (m-1)/2 만큼만 상승) · hi=상위 부옵 안내 문구 · ud=부옵 롤 u 분포 [[확률,하한,상한],..] (배율=0.30+0.20u, 주옵 고정) · pat=특수 패턴 슬롯(6~7단계, 다음 작업) · lock=잠금(8~10단계 특수 레이드 캐릭터 필요) */
+ /* v4.40 단계표(수치만 바꿔도 됨): m=보스 HP·ATK 배율(def·spd 는 (m-1)/2 만큼만 상승) · hi=상위 부옵 안내 문구 · ud=부옵 롤 u 분포 [[확률,하한,상한],..] (배율=0.30+0.20u, 주옵 고정) · pat=(미사용, 패턴은 RP_DESC·rpStart·rpEnd, v4.41) · lock=잠금(8~10단계 특수 레이드 캐릭터 필요) */
  stages:[{m:1,hi:'없음',ud:[[1,0,.5]]},{m:1.25,hi:'없음',ud:[[1,0,.5]]},{m:1.55,hi:'없음',ud:[[1,0,.5]]},{m:1.95,hi:'없음',ud:[[1,0,.5]]},{m:2.45,hi:'없음',ud:[[1,0,.5]]},
   {m:3,hi:'극소수',ud:[[.98,0,.5],[.02,.5,.8]],pat:null},{m:3.7,hi:'소수',ud:[[.94,0,.5],[.06,.5,.8]],pat:null}, /* 시뮬(tests/raid_sub_sim.js): 초안(6단계 5%·7단계 15%+상한 .55)은 7단계 장비 64%가 상위 부옵 보유로 과함 → 2%/6%, 기본 구간 상한 .5, 최대 배율 0.46 */
   {m:4.5,lock:1,pat:null},{m:5.5,lock:1,pat:null},{m:7,lock:1,pat:null}]};
@@ -2920,9 +2920,11 @@ function viewRaid(){const open=raidOpen(),tk=matN('tix'),cost=RAID_CFG.cost,my=p
   <p class="party-note">${!open?`${RAID_CFG.open} 클리어 후 개방돼요.`:sel?`단계를 고르고 입장권 ${cost}개로 도전해요. 이전 단계를 처음 이기면 다음 단계가 열려요. 획득량(6성 장비·재련석·골드·경험치)은 모든 단계 같아요.`:`레이드를 고르세요. 입장권은 x-5 보스 🎫1 · x-10 보스 🎫2 (반복 지급).`}</p>
   ${sel?`<div class="stage-list"><div class="stage-row cut-r boss"><span class="no">${ITEM_CFG.sets[sel.set]}</span><span><div class="nm">${sel.name}</div><div class="en">최고 ${raidBest(sel.set)}단계 클리어 · 추천 ${sel.rec.map(heroNm).join('·')}</div></span><button class="btn ghost" data-rb>목록</button></div></div>
   <div class="raid-lv">${RAID_CFG.stages.map((q,i)=>{const n=i+1,ok=raidUnlocked(sel.set,n);return `<button class="${raidN===n?'on':''} ${ok?'':'lk'}" data-n="${n}">${q.lock?'🔒':ok?'':'🔒'}${n}</button>`;}).join('')}</div>
+  <div class="en" style="margin:4px 2px">🔒 8~10단계: 특수 레이드 캐릭터 필요 (준비중)</div>
   <div class="raid-det panel">${raidSt(raidN).lock?`<div class="nm">${raidN}단계 🔒</div><div class="en">특수 레이드 캐릭터 필요 (준비중)</div>`:!raidUnlocked(sel.set,raidN)?`<div class="nm">${raidN}단계 🔒</div><div class="en">${raidN-1}단계를 먼저 이겨야 열려요</div>`:`<div class="nm">${raidN}단계 · LV.${RAID_CFG.lv}</div><div class="pw ${pwCls(my,fp)}">내 전투력 <b>${fmt(my)}</b> · 적 전투력 <b>${fmt(fp)}</b></div>
    <div class="en">보상 6성 장비 ${RAID_CFG.drop[0]}~${RAID_CFG.drop[1]}개 · 🔶${RAID_CFG.rune[0]}~${RAID_CFG.rune[1]} · GOLD ${fmt(RAID_CFG.gold)} · XP ${fmt(RAID_CFG.xp)} (모든 단계 동일)</div>
    <div class="en">부옵 상위 수치: ${raidSt(raidN).hi}</div>
+   ${raidN>=6&&RP_DESC[sel.set]?`<div class="en">특수 패턴 · ${RP_DESC[sel.set].slice(0,raidN-5).map((d,i)=>(i?'':'6단계: ')+d).join(' / ')}</div>`:''}
    <button class="btn primary cut-r" data-go-r ${tk>=cost?'':'disabled'}>${tk>=cost?'도전':'🎫'+cost+' 필요'}</button>`}</div>`
   :`<div class="stage-list">${RAIDS.map(r=>`<button class="stage-row cut-r boss ${open?'':'locked'}" data-r="${r.set}" ${open?'':'disabled'}><span class="no">${ITEM_CFG.sets[r.set]}</span><span><div class="nm">${r.name}</div><div class="en">추천 ${r.rec.map(heroNm).join('·')}</div><div class="pw">최고 ${raidBest(r.set)}단계 클리어 · 다음 ${Math.min(7,raidBest(r.set)+1)}단계</div></span><span class="st">${raidBest(r.set)}/7</span></button>`).join('')}</div>`}
   <div class="adv-foot"><button class="btn ghost" data-go="adventure">모험</button><button class="btn ghost" data-go="party">편성</button><button class="btn ghost" data-go="bag">가방</button></div>
@@ -2970,7 +2972,7 @@ function startBattle(stageIndex,keepRepeat=false){
  if(!raid&&!state.cleared[st.no]&&state.speed>4-1){state.speed=2;save();} // 미클리어 스테이지는 최대 x2
  let al;ctxOv=raid&&st.raid?'raid':'adv';try{al=state.party.map(mkHero);}finally{ctxOv=null;} // v4.39 일반 스테이지=모험 프리셋, 레이드=레이드 프리셋 장비로 능력치 계산
  battle={stage:st,stageIndex:raid?-1:stageIndex,round:0,allies:al,syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv,st.rm)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
- skBattleStart(battle.allies);battle.st0=state;for(const u of [...battle.allies,...battle.foes])u.bt=battle; // 유닛이 어느 전투 소속인지(이전 전투의 늦은 타격이 새 전투에 들어가지 않게)
+ skBattleStart(battle.allies);rpInit(battle);battle.st0=state;for(const u of [...battle.allies,...battle.foes])u.bt=battle; // 유닛이 어느 전투 소속인지(이전 전투의 늦은 타격이 새 전투에 들어가지 않게)
  if(bg){battle.hunt=true;battle.last=performance.now();saveResume();paintHunt();setTimeout(loop,600/rate());return;}
  page='battle';render();
  battle.last=performance.now();saveResume();
@@ -3185,6 +3187,7 @@ function applyDamage(u,amount){let left=amount,absorbed=0;for(const s of u.buffs
  u.buffs=u.buffs.filter(x=>x.k!=='shield'||x.v>0);const prev=u.hp;u.hp=Math.max(0,u.hp-left);return {absorbed,hp:prev-u.hp,prev};}
 /* 회복: 시전자 연계(_amp) × 시너지 회복 배율. 통계에는 실제로 오른 HP만 */
 function healUnit(src,t,base,{noAmp=false,fxOn=true,quiet=false}={}){if(!t||t.hp<=0)return 0;let v=base*(noAmp?1:1+(src&&src._amp||0));if(src&&src.set4==='grace')v*=1.2;
+ v*=Math.max(0,1+buffVal(t,'heal')); // v4.41 회복 감소 디버프(레이드 생명 7단계)
  if(src&&src.side==='ally')for(const sy of synOn(battle))if(sy.hook&&sy.hook.healMod)v*=sy.hook.healMod(src,t,battle)||1;
  v=Math.round(v);const before=t.hp;t.hp=Math.min(t.max,t.hp+v);const got=t.hp-before;if(src)src.heal=(src.heal||0)+got;
  if(quiet&&got<=0)return 0;popDmg(t,v,'heal');if(fxOn)fx(t,quiet?'regen':'heal');if(t.side==='ally')paintCards();return v;}
@@ -3254,6 +3257,37 @@ async function runSkill(u,skill){const b=battle;const foes=u.side==='ally'?b.foe
    case 'taunt':{last=u.hp>0?[u]:[];addBuff(u,{k:'taunt',v:1,t:e.turns,fresh:true,src:skill.name});SND.play('shield');fx(u,'taunt','TAUNT');paintAll();await sleep(300);break;}
   }}
  return last;}
+/* v4.41 레이드 6~7단계 고유 패턴 (기존 버프·보호막·재생·디버프 구조 재사용, 수치는 처음엔 약하게 · T-093 시뮬로 조정)
+   u.rp=레이드 종류 · u.rl=단계 · u.rt=보스 자신의 턴 수. rpStart=턴 시작 효과, rpEnd=행동 뒤 추가 행동 */
+const RP_DESC={atk:['3턴마다 공격력 +15% 누적(최대 +60%) · HP 50% 이하 광폭(매 턴 추가 타격)','7단계: 2턴 예고 후 전체 강타'],
+ hp:['매 턴 최대 HP 2% 재생 · HP 70%에서 1회 대회복','7단계: 아군이 받는 회복량 -30%'],
+ def:['4턴마다 최대 HP 15% 보호막','7단계: 상시 받는 피해 -20%'],
+ spd:['2턴에 1회 추가 행동','7단계: 첫 턴 연속 추가 행동'],
+ grace:['3턴마다 자가 회복 + 아군 버프 1개 제거','7단계: 같은 때 자신 보호막 + 디버프 해제'],
+ insight:['아군 공격력 -20%·속도 -15% 디버프(3턴마다 갱신)','7단계: 표식 후 대상 집중 폭발']};
+const RP_STK=4,RP_STK_V=.15;
+function rpInit(b){const st=b.stage;if(!st.raid||(st.rs||1)<6)return;for(const f of b.foes){f.rp=st.raid;f.rl=st.rs;f.rt=0;if(f.rp==='def'&&f.rl>=7)addBuff(f,{k:'dr',v:.2,t:1,perm:true,src:'돌갑옷'});}}
+async function rpStart(u,b){u.rt++;const n=u.rt,l=u.rl,al=alive(b.allies);
+ switch(u.rp){
+  case 'atk':{if(n%3===0&&(u.rstk||0)<RP_STK){u.rstk=(u.rstk||0)+1;const o=addBuff(u,{k:'atk',v:RP_STK_V*u.rstk,t:1,perm:true,src:'맹공'});if(o)o.stk=u.rstk;pfx(u,`맹공 ATK +${Math.round(RP_STK_V*u.rstk*100)}%`);}
+   if(!u.rage&&u.hp/u.max<=.5){u.rage=1;pfx(u,'광폭 ×2');}
+   if(l>=7&&n%4===2)pfx(u,'예고: 전체 강타');break;}
+  case 'hp':{healUnit(null,u,u.max*.02,{noAmp:true,quiet:true});
+   if(!u.big&&u.hp/u.max<=.7){u.big=1;healUnit(null,u,u.max*.15,{noAmp:true});pfx(u,'대회복');}
+   if(l>=7&&n===1){for(const a of al)addBuff(a,{k:'heal',v:-.3,t:1,perm:true,bad:true,src:'뿌리 독'});pfx(u,'회복 -30%');paintAll();}break;}
+  case 'def':{if(n%4===0){const v=Math.round(u.max*.15);addBuff(u,{k:'shield',v,t:3,fresh:true,src:'돌갑옷 보호막',by:u});pfx(u,'보호막');}break;}
+  case 'grace':{if(n%3===0){healUnit(null,u,u.max*.08,{noAmp:true});const t=al.find(a=>a.buffs.some(x=>!isBad(x)));if(t){const x=t.buffs.find(x=>!isBad(x));t.buffs=t.buffs.filter(y=>y!==x);pfx(t,'버프 소거');}
+   if(l>=7){addBuff(u,{k:'shield',v:Math.round(u.max*.10),t:3,fresh:true,src:'빛무리 보호막',by:u});u.buffs=u.buffs.filter(x=>!isBad(x));}pfx(u,l>=7?'회복·보호막':'회복');paintAll();}break;}
+  case 'insight':{if(n%3===1){for(const a of al){addBuff(a,{k:'atk',v:-.2,t:3,bad:true,src:'그림자 침식'});addBuff(a,{k:'spd',v:-.15,t:3,bad:true,src:'그림자 침식'});}pfx(u,'ATK·SPD ↓');paintAll();}
+   if(l>=7&&n%4===3&&al.length){const t=pickOf(al);addBuff(t,{k:'mark',v:.3,t:2,bad:true,src:'낙인'});pfx(t,'낙인');paintAll();}break;}
+ }}
+async function rpEnd(u,b){const n=u.rt,l=u.rl,hit=async(mult,t)=>{t=t||pickTarget(u,b.allies,null);if(t&&t.hp>0&&!b.done){await hitOne(u,t,{mult},{});await sleep(150);}};
+ switch(u.rp){
+  case 'atk':{if(u.rage){pfx(u,'광폭');await hit(1);}
+   if(l>=7&&n%4===0){pfx(u,'전체 강타!');await runSkill(u,{name:'폭주 강타',cd:0,fx:[{t:'dmg',to:'all',mult:1.2,hits:1,pattern:'burst'}]});}break;}
+  case 'spd':{if(n%2===0){pfx(u,'추가 행동');await hit(1);}if(l>=7&&n===1){pfx(u,'선제 연속');await hit(1);await hit(1);}break;}
+  case 'insight':{if(l>=7&&n%4===0){const t=alive(b.allies).find(a=>a.buffs.some(x=>x.k==='mark'&&x.src==='낙인'));if(t){pfx(u,'집중 폭발');await hit(1.6,t);}}break;}
+ }}
 /* 스킬 선택(아군): 쿨이 찬 스킬 중 상황 우선순위 — ①힐(아군 HP 70% 미만) ②버프·도발·보호막(효과가 아직 없을 때) ③표식·디버프(적에게 아직 없을 때) ④공격 · 해당 없으면 null(기본 공격). 적은 s1 쿨이 차면 사용
    스킬 데이터 when: needHeal / needBuff / needMark (없으면 공격 스킬). 이미 걸린 효과는 buffs 의 src(스킬 이름)로 판단 */
 function chooseSkill(u,b){const s=[u.s1,u.s2].filter(x=>x&&x.cd===0);if(!s.length)return null;if(u.side==='enemy')return s[0];
@@ -3269,7 +3303,7 @@ const cutKey=(u,sk)=>sk&&sk.cut&&A[sk.cut]?sk.cut:u.art&&u.art.skill;
 async function act(u){const b=battle;const foes=u.side==='ally'?b.foes:b.allies;b.acts=(b.acts||0)+1;paintHud();
  // 내 턴 시작: 내 스킬 쿨다운 1 감소 (첫 턴 제외) → 지속 회복 → 연계·약속 받기
  if(u.acted){for(const k of ['s1','s2'])if(u[k]&&u[k].cd>0)u[k].cd--;}
- tickRegen(u);
+ tickRegen(u);if(u.rp)await rpStart(u,b);
  if(u.side==='ally'){if(b.link&&b.link.from!==u.i){u._amp=b.link.v;b.link=null;pfx(u,'연계 +'+P(u._amp));}u._woodNow=!!u._wood;u._wood=false;if(u._woodNow)pfx(u,'약속 +'+P(SYN.wood.v.amp));}
  // 스킬 선택: s1 → s2 → 기본 공격
  const skill=chooseSkill(u,b);
@@ -3279,6 +3313,7 @@ async function act(u){const b=battle;const foes=u.side==='ally'?b.foes:b.allies;
  // 기본 공격: 약점 판정(기본 15% + 패시브)에 성공하면 HP가 가장 낮은 대상을 노림(도발 중이면 도발 대상). 실패해도 대상의 급소 표식만큼 약점이 될 수 있음 → 합계 = 약점 확률 + 표식 (정확히 가산)
  if(!skill){const p0=Math.min(.99,weakChance(u,null,null));let w=Math.random()<p0;const t=pickTarget(u,foes,w?'lowest':null);if(t){if(!w){const m=Math.max(0,buffVal(t,'mark'));if(m>0&&Math.random()<m/(1-p0))w=true;}await hitOne(u,t,{mult:1},{weak:w});}}
  else{skill.cd=skill.cdMax;await runSkill(u,skill);}
+ if(u.rp&&u.hp>0&&!b.done)await rpEnd(u,b); // v4.41 레이드 6~7단계 패턴(추가 행동)
  // 내 턴 종료: 이번 행동에 새로 걸린 버프는 유지, 나머지는 1턴 소모 (perm = 전투 끝까지)
  if(u.hp>0){u.buffs=u.buffs.map(x=>x.fresh?{...x,fresh:false}:x.perm?x:{...x,t:x.t-1}).filter(x=>x.t>0);}
  u.acted=true;u._amp=0;u._woodNow=false;
