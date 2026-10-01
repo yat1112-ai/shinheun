@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.38)</title>
+<title>신흔 DIVINE TRACE (v4.39)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1477,6 +1477,15 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .ppanel .psame{margin:0;text-align:center;font-size:11px;color:var(--muted)}.ppanel .psame.ok{color:#7fe08a}
 .ppanel .pre2 .btn{white-space:nowrap}
 .it .pn{position:absolute;right:2px;top:12px;font-size:10px}
+/* v4.39 장비 탭 프리셋 칩(모험·레이드·준비중) */
+.chv .gpre{flex:none;display:flex;gap:4px;padding:6px 10px 0}
+.chv .gpre button{flex:1 1 0;min-width:0;height:28px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chv .gpre button.on{color:#fff;background:rgba(214,32,63,.22);box-shadow:inset 0 0 0 1px var(--red)}
+.chv .gpre button.off{opacity:.45}
+.chv .gbtns .btn{font-size:11px;letter-spacing:-.3px}
+.hp .bf{display:flex;gap:4px;margin-bottom:6px}
+.hp .bf button{flex:1 1 0;height:30px;font-size:12px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.hp .bf button.on{color:#fff;box-shadow:inset 0 0 0 1px #F2C96F;background:rgba(242,201,111,.1)}
 .enh-big{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:4px 0}
 .enh-big b{font-family:var(--bb);font-weight:400;font-size:34px;color:#F2C96F}
 .enh-big span{font-size:15px;color:var(--silver)}
@@ -1494,7 +1503,7 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 </head>
 <body>
 <div id="stage"><div id="app" role="application" aria-label="신흔"></div></div>
-<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "avatar_aren": "art/avatar_aren.webp", "avatar_clea": "art/avatar_clea.webp", "avatar_eir": "art/avatar_eir.webp", "avatar_jin": "art/avatar_jin.webp", "avatar_riana": "art/avatar_riana.webp", "bg_1_1": "art/bg_1_1.webp", "bg_1_10": "art/bg_1_10.webp", "bg_1_2": "art/bg_1_2.webp", "bg_1_3": "art/bg_1_3.webp", "bg_1_4": "art/bg_1_4.webp", "bg_1_5": "art/bg_1_5.webp", "bg_1_6": "art/bg_1_6.webp", "bg_1_7": "art/bg_1_7.webp", "bg_1_8": "art/bg_1_8.webp", "bg_1_9": "art/bg_1_9.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch1_hound": "art/ch1_hound.webp", "ch1_moth": "art/ch1_moth.webp", "ch1_nightclaw": "art/ch1_nightclaw.webp", "ch1_shade": "art/ch1_shade.webp", "ch1_sootmane": "art/ch1_sootmane.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "lobby_l_bg": "art/lobby_l_bg.webp", "lobby_l_fg": "art/lobby_l_fg.webp", "lobby_l_jin": "art/lobby_l_jin.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
+<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "avatar_aren": "art/avatar_aren.webp", "avatar_clea": "art/avatar_clea.webp", "avatar_eir": "art/avatar_eir.webp", "avatar_jin": "art/avatar_jin.webp", "avatar_riana": "art/avatar_riana.webp", "bg_1_1": "art/bg_1_1.webp", "bg_1_10": "art/bg_1_10.webp", "bg_1_2": "art/bg_1_2.webp", "bg_1_3": "art/bg_1_3.webp", "bg_1_4": "art/bg_1_4.webp", "bg_1_5": "art/bg_1_5.webp", "bg_1_6": "art/bg_1_6.webp", "bg_1_7": "art/bg_1_7.webp", "bg_1_8": "art/bg_1_8.webp", "bg_1_9": "art/bg_1_9.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch1_hound": "art/ch1_hound.webp", "ch1_moth": "art/ch1_moth.webp", "ch1_nightclaw": "art/ch1_nightclaw.webp", "ch1_shade": "art/ch1_shade.webp", "ch1_sootmane": "art/ch1_sootmane.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_p_arm_l": "art/eir_p_arm_l.webp", "eir_p_arm_r": "art/eir_p_arm_r.webp", "eir_p_belt": "art/eir_p_belt.webp", "eir_p_body": "art/eir_p_body.webp", "eir_p_hair_back": "art/eir_p_hair_back.webp", "eir_p_hair_front": "art/eir_p_hair_front.webp", "eir_p_head": "art/eir_p_head.webp", "eir_p_legs": "art/eir_p_legs.webp", "eir_p_preview": "art/eir_p_preview.webp", "eir_p_scarf": "art/eir_p_scarf.webp", "eir_p_veil": "art/eir_p_veil.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "lobby_l_bg": "art/lobby_l_bg.webp", "lobby_l_fg": "art/lobby_l_fg.webp", "lobby_l_jin": "art/lobby_l_jin.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
 <script>/* ===== 신흔 사운드 (전부 코드 합성 · 음원 파일 없음) =====
    SFX.play(name, opt) : 효과음 / BGM.play(kind) : 배경음 루프 / 설정 state.snd={sfx,bgm,vol}
    음원 파일이 생기면 이 파일의 해당 함수만 파일 재생으로 바꾸면 됨 */
@@ -1563,7 +1572,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.38—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.39—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1806,7 +1815,7 @@ function dustHtml(n=14){let h='';for(let i=0;i<n;i++){const x=Math.random()*100,
 
 /* ---------- 저장 ---------- */
 const SAVE_KEY='shinheun-v1';
-const defaultState=()=>({gold:0,xp:0,cleared:{},party:['jin','eir','aren','riana','clea'],levels:{},speed:1,auto:true,fx:true,motion:true,after:'stop',chapter:1,name:'',msg:'',lobby:'jin',avatar:'jin',plv:1,pxp:0,sk:{},items:[],iseq:1,bag:{cap:300},gear:{},mats:{},icu:{al:0,as:70},ts:0}); /* v4.18 장비: items=[{i,s,t,m,b,x,l}] gear={히어로id:[id×4]} */
+const defaultState=()=>({gold:0,xp:0,cleared:{},party:['jin','eir','aren','riana','clea'],levels:{},speed:1,auto:true,fx:true,motion:true,after:'stop',chapter:1,name:'',msg:'',lobby:'jin',avatar:'jin',plv:1,pxp:0,sk:{},items:[],iseq:1,bag:{cap:300},gear:{},presets:{},presetV:2,mats:{},icu:{al:0,as:70},ts:0}); /* v4.18 장비: items=[{i,s,t,m,b,x,l}] gear={히어로id:[id×4]} */
 /* v4.1 프로필: 이름(8자, 비면 ALLY → 전투 HUD 좌측) · 상태 메시지(40자, 설정 프로필 카드에만) */
 const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const strCut=(t,n)=>[...String(t||'').trim()].slice(0,n).join('');
@@ -1825,6 +1834,20 @@ const arr=(v,n,d)=>{const a=Array.isArray(v)?v:(v&&typeof v==='object'?Object.va
 function fixSc(u){const sc=u.sc&&typeof u.sc==='object'?u.sc:(u.sc={});
  sc.s=arr(sc.s,5,0);sc.t=arr(sc.t,4,1);sc.mm=arr(sc.mm);sc.bm=arr(sc.bm);sc.xa=sc.xa?1:0;sc.xp=sc.xp?1:0;sc.xm=sc.xm?1:0; /* v4.32 보호 예외(일괄 판매 전용) */
  if(typeof sc.q!=='number'||isNaN(sc.q))sc.q=typeof u.ct==='number'?u.ct:55;if(typeof sc.bn!=='number'||isNaN(sc.bn))sc.bn=9;return sc;}
+/* v4.39 장비 구조 개편(T-085): 착용칸(state.gear) 폐지 → 프리셋 [모험, 레이드, 준비중(off)] 만이 장비를 끼는 방법. 멱등(presetV=2), 원본은 legacyGear/legacyPresets 에 보존 + localStorage 1회 백업 */
+const PRE_NAMES=['모험','레이드','준비중'];
+function normPre(a){const src=arr(a),r=PRE_NAMES.map((n,i)=>i===2?{n,g:[0,0,0,0],off:1}:{n,g:[0,0,0,0]});for(let i=0;i<3;i++){const q=src[i];if(q&&typeof q==='object')r[i].g=arr(q.g,4,0).map(x=>x||0);}return r;}
+function migPre(o,have,mig){
+ if(!mig){for(const h of Object.keys(o.presets))o.presets[h]=normPre(o.presets[h]);return;}
+ try{if((Object.keys(o.gear||{}).length||Object.keys(o.presets||{}).length)&&!localStorage.getItem('shinheun-preV2-backup'))localStorage.setItem('shinheun-preV2-backup',JSON.stringify(o));}catch(e){}
+ const clone=v=>JSON.parse(JSON.stringify(v==null?null:v));
+ o.legacyGear=clone(o.gear)||{};o.legacyPresets=clone(o.presets)||{};
+ const hs=[];for(const h of [...Object.keys(o.gear||{}),...Object.keys(o.presets||{})])if(!hs.includes(h))hs.push(h);
+ const used=[new Set(),new Set()],np={}; // 같은 콘텐츠 안 중복 금지: 먼저 처리된 캐릭터가 차지
+ for(const h of hs){const gear=arr((o.gear||{})[h],4,0),old=arr((o.presets||{})[h]),og=i=>old[i]&&typeof old[i]==='object'?arr(old[i].g,4,0):[0,0,0,0];
+  const adv=gear.some(Boolean)?gear:og(0),raid=og(2),off=og(1),cl=(g,u)=>g.map(x=>{if(!x||!have.has(x)||u.has(x))return 0;u.add(x);return x;});
+  np[h]=normPre([{g:cl(adv,used[0])},{g:cl(raid,used[1])},{g:off}]);}
+ o.presets=np;o.presetV=2;}
 function fixState(s){const d=defaultState(),o={...d,...s};
  for(const k of ['cleared','levels','sk','gear','mats','icu','bag'])if(!o[k]||typeof o[k]!=='object'||Array.isArray(o[k]))o[k]={...d[k]};
  if(o.bag.cap===undefined)o.bag.cap=d.bag.cap;o.bag.tmp=arr(o.bag.tmp);
@@ -1833,8 +1856,11 @@ function fixState(s){const d=defaultState(),o={...d,...s};
  for(const it of o.items){it.m=arr(it.m);it.b=arr(it.b).filter(Array.isArray);}
  o.bag.tmp=o.bag.tmp.filter(it=>it&&typeof it==='object');for(const it of o.bag.tmp){it.m=arr(it.m);it.b=arr(it.b).filter(Array.isArray);}
  for(const h of Object.keys(o.gear))o.gear[h]=arr(o.gear[h],4,0);
- if(o.presets&&typeof o.presets==='object')for(const h of Object.keys(o.presets)){const p=o.presets[h]=arr(o.presets[h]);p.forEach(q=>{if(q&&typeof q==='object')q.g=arr(q.g,4,0);});}
- {const have=new Set([...o.items,...o.bag.tmp].map(it=>it.i));for(const h of Object.keys(o.presets||{}))if(Array.isArray(o.presets[h]))o.presets[h].forEach(q=>{if(q&&Array.isArray(q.g))q.g=q.g.map(x=>x&&!have.has(x)?0:x);});} /* v4.35 없는 장비 id 는 프리셋 슬롯에서 0 (프리셋 자체는 삭제 안 함) */
+ if(!o.presets||typeof o.presets!=='object'||Array.isArray(o.presets))o.presets={};
+ for(const h of Object.keys(o.presets)){const p=o.presets[h]=arr(o.presets[h]);p.forEach(q=>{if(q&&typeof q==='object')q.g=arr(q.g,4,0);});}
+ const have=new Set([...o.items,...o.bag.tmp].map(it=>it.i));
+ migPre(o,have,!(s&&s.presetV>=2));
+ for(const h of Object.keys(o.presets))o.presets[h].forEach(q=>{q.g=q.g.map(x=>x&&!have.has(x)?0:x);}); /* v4.35 없는 장비 id 는 프리셋 슬롯에서 0 (프리셋 자체는 삭제 안 함) */
  if(o.icu.al!==undefined||o.icu.sc)fixSc(o.icu);
  return o;}
 function load(){try{const s=JSON.parse(localStorage.getItem(acctKey())||'null');if(s)state=fixState(s);}catch(e){console.error('load',e);}}
@@ -2055,7 +2081,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.38</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.39</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2332,9 +2358,9 @@ const raidOpen=()=>!!state.cleared[RAID_CFG.open];
 const recRaids=id=>RAIDS.filter(r=>r.rec.includes(id)).map(r=>r.name);
 /* v4.21 6성 세트 효과(임시): 같은 세트 6성 2개 = 계열 능력치 +8%, 4개 = 고유 효과(전투 훅은 mkHero 의 set4 → hitOne·healUnit·runSkill) */
 const SET2={atk:{atk:.08},hp:{hp:.08},def:{def:.08},spd:{spd:4},grace:{hp:.08},insight:{crit:.05,weak:.05}};
-function setCnt(id){const c={};for(const it of gearOf(id)){if(it&&it.s===6&&it.z)c[it.z]=(c[it.z]||0)+1;}return c;}
-const setFour=id=>{const c=setCnt(id);return Object.keys(c).find(k=>c[k]>=4)||null;};
-function setLine(id){const c=setCnt(id),act=Object.keys(c).filter(k=>c[k]>=2).map(k=>`${ITEM_CFG.sets[k]} ${c[k]>=4?4:2}세트`),r=REC[id];return `<div class="gsum"><span class="k">세트 효과</span>${act.join(' · ')||'활성 세트 없음'}<span class="k">추천 세트 · 레이드</span>${r?ITEM_CFG.sets[r.set]+' · '+recRaids(id).join(', '):'-'}</div>`;}
+function setCnt(id,cx){const c={};for(const it of gearOf(id,cx)){if(it&&it.s===6&&it.z)c[it.z]=(c[it.z]||0)+1;}return c;}
+const setFour=(id,cx)=>{const c=setCnt(id,cx);return Object.keys(c).find(k=>c[k]>=4)||null;};
+function setLine(id){const r=REC[id],act=cx=>{const c=setCnt(id,cx);return Object.keys(c).filter(k=>c[k]>=2).map(k=>`${ITEM_CFG.sets[k]} ${c[k]>=4?4:2}세트`).join(' · ')||'없음';};return `<div class="gsum"><span class="k">세트 효과 · 모험</span>${act('adv')}<span class="k">세트 효과 · 레이드</span>${act('raid')}<span class="k">추천 세트 · 레이드</span>${r?ITEM_CFG.sets[r.set]+' · '+recRaids(id).join(', '):'-'}</div>`;}
 /* 캐릭터별 추천(임시): set=추천 세트, slotW=부위 적합 가중(무기·인장·갑옷·장화), main=슬롯별 추천 주옵(앞쪽일수록 우선), sub=용도별 추천 부옵 */
 const REC={
  jin:{set:'insight',slotW:[1,.9,.8,1],main:[['atk'],['atk','crit'],['hp','def'],['spd']],sub:{normal:['spd','atk','crit','weak'],boss:['atk','weak','spd','crit'],raid:['spd','hp','def','atk']}},
@@ -2345,7 +2371,15 @@ const REC={
 };
 const iStat=k=>ITEM_CFG.stat[k];
 const itemById=id=>(state.items||[]).find(o=>o&&o.i===id);
-const wornBy=id=>{const g=state.gear||{};for(const h in g)if(Array.isArray(g[h])&&g[h].includes(id))return h;return null;};
+/* v4.39 장비 사용처 = 프리셋(모험·레이드). 같은 콘텐츠(ctx) 안에서는 한 장비를 한 캐릭터만, 콘텐츠 간 공유는 허용. 준비중 칸은 보관용(보호·계산 제외) */
+const CTX_N={adv:'모험',raid:'레이드'};let ctxOv=null;
+const CTX=()=>ctxOv||((page==='raid'||(battle&&battle.stage&&battle.stage.raid&&(page==='battle'||page==='result')))?'raid':'adv'); // 지금 화면·전투가 쓰는 콘텐츠
+const cxIdx=c=>(c||CTX())==='raid'?1:0;
+const usedIn=(id,c)=>{for(const h of Object.keys(state.presets||{})){const p=state.presets[h];if(Array.isArray(p)&&p[cxIdx(c)]&&Array.isArray(p[cxIdx(c)].g)&&p[cxIdx(c)].g.includes(id))return h;}return null;};
+const wornBy=id=>usedIn(id,'adv')||usedIn(id,'raid'); // 어느 쪽이든 사용 중이면 그 캐릭터(보호·필터용)
+const useList=id=>['adv','raid'].map(c=>[c,usedIn(id,c)]).filter(x=>x[1]);
+const useTxt=id=>useList(id).map(([c,h])=>`${CTX_N[c]}: ${heroNm(h)}`).join(' · ');
+const useShort=id=>{const l=useList(id);return l.length?`${CTX_N[l[0][0]]}:${heroNm(l[0][1])}`+(l.length>1?'+':''):'';};
 const heroNm=id=>(HEROES.find(h=>h.id===id)||{}).name||'???';
 const mainVal=it=>{const v=it.m[1]*(1+ITEM_CFG.enhStep*(it.x||0)/3);return it.m[0]==='spd'?Math.round(v):v;}; // 강화 1레벨당 주옵 +1/30 (3레벨=+10%)
 const matN=k=>(state.mats&&state.mats[k])||0;
@@ -2384,10 +2418,10 @@ function dropItems(st){const got=[];let full=0,sold=0,sg=0,tmp=0,dis=0,n=st.raid
  if(rn)addMat('rune',rn);if(tk)addMat('tix',tk);
  return {got,full,stone:sn,rune:rn,tix:tk,sold,sg,tmp,dis,lock:got.filter(i=>i.l).length};}
 /* v4.20 보호 규칙·자동정리·임시 보관함 */
-const inPreset=id=>Object.values(state.presets||{}).some(a=>Array.isArray(a)&&a.some(p=>p&&Array.isArray(p.g)&&p.g.includes(id)));
-const presetWho=id=>{const r=[];for(const h of Object.keys(state.presets||{})){const a=state.presets[h];if(Array.isArray(a))a.forEach(p=>{if(p&&Array.isArray(p.g)&&p.g.includes(id))r.push(`${heroNm(h)} ${p.n}`);});}return r.length>2?r.slice(0,2).join(', ')+` 외 ${r.length-2}`:r.join(', ');}; /* v4.35 이 장비를 담은 프리셋 요약 */
+const inPreset=id=>!!wornBy(id); /* v4.39 모험·레이드 프리셋에 든 장비 = 보호 대상(준비중 칸은 제외) */
+const presetWho=id=>useTxt(id);
 const badItem=it=>!it||!Array.isArray(it.m)||!it.m.length||!Array.isArray(it.b)||!(it.s>=1&&it.s<=6)||!(it.t>=0&&it.t<4)||!ITEM_CFG.stat[it.m[0]]; /* v4.30 이상 장비: 판매 대상에서 제외(삭제 안 함) */
-const isProtected=it=>!!(badItem(it)||it.l||it.f||(it.x||0)>0||wornBy(it.i)); /* v4.35 프리셋 등록은 더 이상 판매 보호 사유가 아님 */
+const isProtected=it=>!!(badItem(it)||it.l||it.f||(it.x||0)>0||wornBy(it.i)); /* v4.39 모험·레이드 프리셋 장비 보호(T-085) */
 const cleanable=(it,sc)=>!!icu().ac&&!isProtected(it)&&sellMatch(it,sc); /* v4.27 자동판매 = 판매 설정(sellMatch) */
 function flushTmp(){const t=state.bag.tmp;if(!t||!t.length)return 0;let n=0;while(t.length&&state.items.length<state.bag.cap){state.items.push(t.shift());n++;}return n;}
 const bagFull=()=>state.items.length>=Math.ceil(state.bag.cap*ITEM_CFG.warnPct);
@@ -2413,46 +2447,32 @@ function relockDialog(){const p=relockPlan();
  const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>자동잠금 재평가</span><small>기준 ${p.thr}점</small></div><p class="note">가방 ${state.items.length}개 중<br><b>잠금 ${p.lock.length}개</b> · <b>자동잠금 해제 ${p.unlock.length}개</b> 예정이에요.<br>직접 잠근 장비·착용 장비는 그대로 두고 판매하지 않아요.</p><div class="row"><button class="btn primary" data-ok ${p.lock.length||p.unlock.length?'':'disabled'}>적용</button><button class="btn ghost" data-hx>취소</button></div></div></div>`);
  $('#app').appendChild(d);
  d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}if(e.target.closest('[data-ok]')){p.lock.forEach(it=>it.l=2);p.unlock.forEach(it=>it.l=0);save();d.remove();render();toast('재평가 완료');}});}
-const gearOf=id=>((state.gear||{})[id]||[0,0,0,0]).map(i=>i?itemById(i)||null:null);
-function gearBonus(id){const E={atk:0,hp:0,def:0,spd:0,crit:0,weak:0};for(const it of gearOf(id)){if(!it)continue;E[it.m[0]]+=mainVal(it);for(const [k,v] of it.b)E[k]+=v;}
- for(const [k,n] of Object.entries(setCnt(id)))if(n>=2)for(const [s,v] of Object.entries(SET2[k]||{}))E[s]+=v; // v4.21 6성 2세트
+const cxOf=i=>i===1?'raid':'adv';
+const presetsOf=hid=>{state.presets=state.presets||{};const a=state.presets[hid];if(!Array.isArray(a)||a.length!==3||a.some(q=>!q||!Array.isArray(q.g)||q.g.length!==4))state.presets[hid]=normPre(a);return state.presets[hid];};
+const gearIds=(hid,c)=>presetsOf(hid)[cxIdx(c)].g; /* 해당 콘텐츠 프리셋의 4슬롯 = 그 콘텐츠에서 실제로 끼는 장비 */
+const gearOf=(id,c)=>gearIds(id,c).map(i=>i?itemById(i)||null:null);
+function gearBonus(id,c){const E={atk:0,hp:0,def:0,spd:0,crit:0,weak:0};for(const it of gearOf(id,c)){if(!it)continue;E[it.m[0]]+=mainVal(it);for(const [k,v] of it.b)E[k]+=v;}
+ for(const [k,n] of Object.entries(setCnt(id,c)))if(n>=2)for(const [s,v] of Object.entries(SET2[k]||{}))E[s]+=v; // v4.21 6성 2세트
  return E;}
-async function equipItem(hid,iid){const it=itemById(iid);if(!it)return false;const w=wornBy(iid);if(w===hid)return true;
- if(w&&!await gameConfirm(`${heroNm(w)}이(가) 착용 중이에요. ${heroNm(hid)}에게 옮길까요?`))return false;
- state.gear=state.gear||{};if(w)state.gear[w][it.t]=0;(state.gear[hid]=state.gear[hid]||[0,0,0,0])[it.t]=iid;save();return true;}
-const unequip=(hid,t)=>{if(state.gear&&state.gear[hid]){state.gear[hid][t]=0;save();}};
-/* v4.20 프리셋(캐릭터당 3: 일반/보스/레이드, 이름 변경 가능)·추천 자동장착 */
-const PRESET_N=['일반','보스','레이드'];let preSel=0;
-const presetsOf=hid=>{state.presets=state.presets||{};return state.presets[hid]=state.presets[hid]||PRESET_N.map(n=>({n,g:[0,0,0,0]}));};
-function savePreset(hid,i){const g=(state.gear&&state.gear[hid]||[0,0,0,0]).slice();presetsOf(hid)[i].g=g;save();}
-function applyPreset(hid,i){const g=presetsOf(hid)[i].g;let ok=0,skip=0,gone=0,other=0;state.gear=state.gear||{};const cur=state.gear[hid]=state.gear[hid]||[0,0,0,0];
- for(let t=0;t<4;t++){const id=g[t];if(!id)continue;const it=itemById(id);if(!it){skip++;gone++;continue;}const w=wornBy(id);if(w&&w!==hid){skip++;other++;continue;}cur[t]=id;ok++;}
- if(ok)save();return {ok,skip,gone,other};}
-/* v4.35 프리셋 패널: 칩(선택만) + 4슬롯 아이콘 카드 + 착용 중과 비교 + 라벨 분명한 버튼 */
-function presetPanel(id,edit){const ps=presetsOf(id),i=Math.min(preSel,ps.length-1),p=ps[i],cur=(state.gear&&state.gear[id])||[0,0,0,0];
- const px=t=>edit?`<button class="px" data-px="${t}">✕ 비우기</button>`:'';
- const slot=t=>{const sl=ITEM_CFG.slots[t],x=p.g[t],it=x?itemById(x):null,w=it?wornBy(x):null;
-  if(!x)return `<div class="ps em"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small>비어 있음</small></div>`;
-  if(!it)return `<div class="ps dim${edit?' ed':''}"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small class="why">판매됨 · 사라진 장비</small>${px(t)}</div>`;
-  const other=w&&w!==id;
-  return `<div class="ps${other?' dim':''}${edit?' ed':''}" ${edit?`data-vi="${x}"`:''} style="--c:${ITEM_CFG.col[it.s-1]}"><span class="gi">${sl.ic}</span><b>${sl.n} <i>${'★'.repeat(it.s)}</i> <em>+${it.x||0}</em></b><small>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</small>${other?`<small class="why">${heroNm(w)} 착용 중</small>`:''}${px(t)}</div>`;};
- const same=[0,1,2,3].every(t=>(p.g[t]||0)===(cur[t]||0));
- return `<div class="ppanel"><div class="pre"><span class="k">프리셋</span>${ps.map((q,j)=>`<button class="${j===i?'on':''}" data-pa="${j}">${esc(q.n)}</button>`).join('')}</div>
-  <div class="pslots">${[0,1,2,3].map(slot).join('')}</div>
-  <p class="note psame ${same?'ok':''}">${same?'✔ 지금 착용과 같음':'지금 착용과 다름'}</p>
-  <div class="pre2"><button class="btn primary" data-pap>이 프리셋 착용</button><button class="btn ghost" data-ps>현재 착용을 저장</button><button class="btn ghost" data-pn>이름 변경</button></div></div>`;}
-function recEquip(hid){const r=REC[hid];if(!r)return 0;let n=0;state.gear=state.gear||{};const cur=state.gear[hid]=state.gear[hid]||[0,0,0,0];
- for(let t=0;t<4;t++){const key=o=>[o.s===6&&o.z===r.set?1:0,(m=>m<0?0:3-Math.min(m,2))(r.main[t].indexOf(o.m[0])),o.b.filter(b=>r.sub.normal.includes(b[0])).length,o.x||0,itemScore(o,hid,'normal')];
-  const c=state.items.filter(o=>o.t===t&&(!wornBy(o.i)||wornBy(o.i)===hid)).sort((a,b)=>{const ka=key(a),kb=key(b);for(let i=0;i<ka.length;i++)if(ka[i]!==kb[i])return kb[i]-ka[i];return 0;});
-  if(c[0]&&cur[t]!==c[0].i){cur[t]=c[0].i;n++;}}
+/* 장비 끼우기(프리셋 슬롯에 넣기): 같은 콘텐츠에서 다른 캐릭터가 쓰는 장비는 차단 + 안내 팝업 */
+async function equipItem(hid,iid,c){c=c||CTX();const it=itemById(iid);if(!it)return false;const w=usedIn(iid,c);if(w===hid)return true;
+ if(w){await gameAlert(`${CTX_N[c]}용으로 ${heroNm(w)}이(가) 사용 중이에요.\n먼저 ${heroNm(w)}의 ${CTX_N[c]} 프리셋에서 빼 주세요.`);return false;}
+ gearIds(hid,c)[it.t]=iid;save();return true;}
+const unequip=(hid,t,c)=>{gearIds(hid,c)[t]=0;save();};
+let preSel=0; /* 캐릭터창 장비 탭에서 보고 있는 프리셋: 0 모험 · 1 레이드 (2 준비중은 비활성) */
+/* 추천 장비 착용: 콘텐츠별 용도(모험=normal · 레이드=raid)로 4슬롯을 채움. 같은 콘텐츠에서 다른 캐릭터가 쓰는 장비는 제외 */
+function recEquip(hid,c){const r=REC[hid];if(!r)return 0;c=c||CTX();const use=c==='raid'?'raid':'normal',cur=gearIds(hid,c);let n=0;
+ for(let t=0;t<4;t++){const key=o=>[o.s===6&&o.z===r.set?1:0,(m=>m<0?0:3-Math.min(m,2))(r.main[t].indexOf(o.m[0])),o.b.filter(b=>r.sub[use].includes(b[0])).length,o.x||0,itemScore(o,hid,use)];
+  const l=state.items.filter(o=>o.t===t&&!badItem(o)&&(!usedIn(o.i,c)||usedIn(o.i,c)===hid)).sort((a,b)=>{const ka=key(a),kb=key(b);for(let i=0;i<ka.length;i++)if(ka[i]!==kb[i])return kb[i]-ka[i];return 0;});
+  if(l[0]&&cur[t]!==l[0].i){cur[t]=l[0].i;n++;}}
  if(n)save();return n;}
-async function sellItem(iid){const it=itemById(iid);if(!it)return false;if(it.l){toast('잠긴 장비는 팔 수 없어요');return false;}if(wornBy(iid)){toast('착용 중인 장비는 팔 수 없어요');return false;}
- const p=sellPrice(it),sn=sellStone(it);if(!await gameConfirm(`${ITEM_CFG.slots[it.t].n} ${'★'.repeat(it.s)} 을(를) ${fmt(p)}G${sn?` + 강화석 ${sn}개`:''} 에 팔까요?${inPreset(iid)?'\n(프리셋에 담긴 장비예요 · 프리셋 슬롯은 비워져요)':''}`))return false;
+async function sellItem(iid){const it=itemById(iid);if(!it)return false;if(it.l){toast('잠긴 장비는 팔 수 없어요');return false;}if(wornBy(iid)){toast(`사용 중인 장비는 팔 수 없어요 (${useShort(iid)})`);return false;}
+ const p=sellPrice(it),sn=sellStone(it);if(!await gameConfirm(`${ITEM_CFG.slots[it.t].n} ${'★'.repeat(it.s)} 을(를) ${fmt(p)}G${sn?` + 강화석 ${sn}개`:''} 에 팔까요?`))return false;
  unPreset(new Set([iid]));state.items=state.items.filter(o=>o.i!==iid);state.gold+=p;if(sn)addMat('stone',sn);save();return p;}
 /* v4.22 분해(6성→세트 파편)·반확정 제작·재련 */
 const fragKey=z=>'f_'+z;
 const fragTotal=()=>Object.keys(ITEM_CFG.sets).reduce((a,z)=>a+matN(fragKey(z)),0);
-async function disItem(iid){const it=itemById(iid);if(!it||it.s!==6||!it.z)return false;if(it.l){toast('잠긴 장비는 분해할 수 없어요');return false;}if(wornBy(iid)){toast('착용 중인 장비는 분해할 수 없어요');return false;}
+async function disItem(iid){const it=itemById(iid);if(!it||it.s!==6||!it.z)return false;if(it.l){toast('잠긴 장비는 분해할 수 없어요');return false;}if(wornBy(iid)){toast(`사용 중인 장비는 분해할 수 없어요 (${useShort(iid)})`);return false;}
  const n=(it.x||0)>=ITEM_CFG.maxX[5]?ITEM_CFG.fragMax:1,g=Math.round(enhSpent(it).g*ITEM_CFG.refund),sn=sellStone(it);
  if(!await gameConfirm(`${ITEM_CFG.sets[it.z]} ${ITEM_CFG.slots[it.t].n} ★6 +${it.x||0} 을(를) 분해할까요?\n${ITEM_CFG.sets[it.z]} 파편 +${n}${g?` · ${fmt(g)}G`:''}${sn?` · 강화석 ${sn}개`:''}`))return false;
  unPreset(new Set([iid]));state.items=state.items.filter(o=>o.i!==iid);addMat(fragKey(it.z),n);state.gold+=g;if(sn)addMat('stone',sn);save();return n;}
@@ -2491,15 +2511,15 @@ function reforgeDialog(iid){const it0=itemById(iid);if(!it0)return;let sel=0,can
    const used=[it.m[0],...it.b.map(x=>x[0])].filter(k=>k!==o[0]),k=pickOf(Object.keys(ITEM_CFG.stat).filter(z=>!used.includes(z))),n=o[2]||1;let v=0;
    for(let j=0;j<n;j++)v+=rollVal(k,6,R[0]+Math.random()*(R[1]-R[0]));cand=[k,k==='spd'?v:Math.round(v*10000)/10000,n];save();draw();return;}
   const r=e.target.closest('[data-rk]');if(r){const it=itemById(iid);if(r.dataset.rk==='new'&&it){it.b[sel]=cand;save();toast('새 결과로 교체했어요');}else toast('기존 결과를 유지했어요');d.remove();render();if(it)itemDetail(iid);}});}
-const itemCard=it=>{const sl=ITEM_CFG.slots[it.t],w=wornBy(it.i);return `<button class="it${it.i===bagSel?' sel':''}" data-iid="${it.i}" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><span class="st">${'★'.repeat(it.s)}</span><span class="mn">${iStat(it.m[0]).n}${fmtStat(it.m[0],mainVal(it))}</span><span class="en">+${it.x||0}</span><span class="sc">${bestScore(it).s}</span>${w?`<em class="w">${heroNm(w)}</em>`:''}${it.l?`<b class="lk">${it.l===2?'🔐':'🔒'}</b>`:it.f?'<b class="lk">⭐</b>':''}${inPreset(it.i)?'<b class="pn">📌</b>':''}</button>`;};
-function itemDetail(iid){const it=itemById(iid);if(!it)return;const sl=ITEM_CFG.slots[it.t],w=wornBy(iid);
+const itemCard=it=>{const sl=ITEM_CFG.slots[it.t],w=useShort(it.i);return `<button class="it${it.i===bagSel?' sel':''}" data-iid="${it.i}" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><span class="st">${'★'.repeat(it.s)}</span><span class="mn">${iStat(it.m[0]).n}${fmtStat(it.m[0],mainVal(it))}</span><span class="en">+${it.x||0}</span><span class="sc">${bestScore(it).s}</span>${w?`<em class="w">${w}</em>`:''}${it.l?`<b class="lk">${it.l===2?'🔐':'🔒'}</b>`:it.f?'<b class="lk">⭐</b>':''}</button>`;};
+function itemDetail(iid){const it=itemById(iid);if(!it)return;const sl=ITEM_CFG.slots[it.t],w=useTxt(iid);
  const d=el(`<div class="pause"><div class="box wide item-detail"><div class="h"><span style="color:${ITEM_CFG.col[it.s-1]}">${sl.ic} ${sl.n} ${'★'.repeat(it.s)}${it.z?` · ${ITEM_CFG.sets[it.z]}`:''}</span><small>+${it.x||0}</small></div>
   <div class="ln main"><span class="k">주옵션</span><b>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</b></div>
   <div class="subs">${it.b.length?it.b.map(([k,v])=>`<div class="ln"><span class="k">부옵션</span><b>${iStat(k).n} ${fmtStat(k,v)}</b></div>`).join(''):'<div class="ln"><span class="k">부옵션</span><b>없음</b></div>'}</div>
   <div class="ln"><span class="k">장비 점수</span><b>${USAGE.map(([u,n])=>{const b=bestScore(it,u);return `${n} ${b.s}`;}).join(' · ')}</b></div>
-  <p class="note">${(()=>{const b=bestScore(it);return `추천 캐릭터 ${heroNm(b.h)} (${USAGE.find(a=>a[0]===b.u)[1]}) · 점수 ${b.s}`;})()}<br>착용: ${w?heroNm(w):'없음'}<br>판매 ${fmt(sellPrice(it))}G${sellStone(it)?` + 강화석 ${sellStone(it)}`:''}${it.l===2?' · 자동잠금':''}</p>
+  <p class="note">${(()=>{const b=bestScore(it);return `추천 캐릭터 ${heroNm(b.h)} (${USAGE.find(a=>a[0]===b.u)[1]}) · 점수 ${b.s}`;})()}<br>사용 중: ${w||'없음'}<br>판매 ${fmt(sellPrice(it))}G${sellStone(it)?` + 강화석 ${sellStone(it)}`:''}${it.l===2?' · 자동잠금':''}</p>
   ${(it.x||0)<ITEM_CFG.maxX[it.s-1]?(()=>{const c=enhCost(it),nx=(it.x||0)+1,ok=matN('stone')>=c.st&&state.gold>=c.g;return `<div class="row enh"><button class="btn ${ok?'primary':'ghost'}" data-ia="enh">강화 +${nx} · 💎${c.st} · ${fmt(c.g)}G</button></div><p class="note">보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G${nx%3===0?` · +${nx} 에서 부옵션 ${it.b.length<4&&it.s<6?'추가':'상승'}`:''}</p>`;})():'<p class="note">최대 강화 (+'+(it.x||0)+')</p>'}
-  <div class="row"><button class="btn primary" data-ia="eq">착용</button><button class="btn ghost" data-ia="lock">${it.l?'잠금 해제':'잠금'}</button><button class="btn ghost" data-ia="fav">${it.f?'⭐ 해제':'⭐ 즐겨찾기'}</button><button class="btn ghost" data-ia="sell">판매</button></div>
+  <div class="row"><button class="btn primary" data-ia="eq">프리셋에 착용</button><button class="btn ghost" data-ia="lock">${it.l?'잠금 해제':'잠금'}</button><button class="btn ghost" data-ia="fav">${it.f?'⭐ 해제':'⭐ 즐겨찾기'}</button><button class="btn ghost" data-ia="sell">판매</button></div>
   ${it.s===6&&it.z?`<div class="row"><button class="btn ghost" data-ia="dis">분해</button>${(it.x||0)>=ITEM_CFG.maxX[5]&&it.b.length?'<button class="btn ghost" data-ia="ref">재련</button>':''}</div>`:''}
   <div class="row"><button class="btn ghost" data-ia="x">닫기</button></div></div></div>`);
  $('#app').appendChild(d);
@@ -2512,61 +2532,51 @@ function itemDetail(iid){const it=itemById(iid);if(!it)return;const sl=ITEM_CFG.
   if(k==='dis'){const n=await disItem(iid);if(n!==false){d.remove();render();toast(`${ITEM_CFG.sets[it.z]} 파편 +${n}`);}return;}
   if(k==='ref'){d.remove();reforgeDialog(iid);return;}
   if(k==='eq'){d.remove();heroPicker(iid);}});}
-function heroPicker(iid){const it=itemById(iid);if(!it)return;
- const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>누구에게 착용할까요?</span></div>${HEROES.filter(h=>owned(h.id)).map(h=>{const c=gearOf(h.id)[it.t];return `<button class="btn ghost pk" data-h="${h.id}"><b>${h.name}</b><em>${c?ITEM_CFG.slots[it.t].n+' '+'★'.repeat(c.s):'비어 있음'}</em></button>`;}).join('')}<div class="row"><button class="btn ghost" data-hx>취소</button></div></div></div>`);
+function heroPicker(iid){const it=itemById(iid);if(!it)return;let cx='adv';
+ const d=el(`<div class="pause"><div class="box wide hp"></div></div>`),box=$('.box',d);
+ const draw=()=>{box.innerHTML=`<div class="h"><span>누구의 프리셋에 착용할까요?</span></div><div class="bf">${['adv','raid'].map(c=>`<button class="${c===cx?'on':''}" data-cx="${c}">${CTX_N[c]}</button>`).join('')}</div>${HEROES.filter(h=>owned(h.id)).map(h=>{const c=gearOf(h.id,cx)[it.t],u=usedIn(iid,cx);return `<button class="btn ghost pk" data-h="${h.id}"><b>${h.name}</b><em>${u===h.id?'착용 중':u?heroNm(u)+' 사용 중':c?ITEM_CFG.slots[it.t].n+' '+'★'.repeat(c.s):'비어 있음'}</em></button>`;}).join('')}<div class="row"><button class="btn ghost" data-hx>취소</button></div>`;};
+ $('#app').appendChild(d);draw();
+ d.addEventListener('click',async e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}const k=e.target.closest('[data-cx]');if(k){cx=k.dataset.cx;draw();return;}
+  const h=e.target.closest('[data-h]');if(h&&await equipItem(h.dataset.h,iid,cx)){d.remove();render();toast(`${heroNm(h.dataset.h)} ${CTX_N[cx]} 프리셋에 착용`);}});}
+function gearPicker(hid,t,cx){cx=cx||CTX();const list=state.items.filter(o=>o.t===t&&!badItem(o)).sort((a,b)=>b.s-a.s||b.i-a.i);
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>${ITEM_CFG.slots[t].n} 선택</span><small>${heroNm(hid)} · ${CTX_N[cx]}</small></div><div class="scroll pk-list">${list.map(o=>{const w=usedIn(o.i,cx),u=useShort(o.i);return `<button class="btn ghost pk" data-p="${o.i}" style="--c:${ITEM_CFG.col[o.s-1]}"><b>${'★'.repeat(o.s)}</b><span>${itemLine(o)}</span>${u?`<em>${w===hid?'(현재) ':''}${u}</em>`:''}</button>`;}).join('')||'<p class="note">이 부위 장비가 없어요. 모험에서 얻어보세요.</p>'}</div><div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
  $('#app').appendChild(d);
- d.addEventListener('click',async e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}const h=e.target.closest('[data-h]');if(h&&await equipItem(h.dataset.h,iid)){render();toast(`${heroNm(h.dataset.h)} 착용`);}});}
-function gearPicker(hid,t){const list=state.items.filter(o=>o.t===t).sort((a,b)=>b.s-a.s||b.i-a.i);
- const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>${ITEM_CFG.slots[t].n} 선택</span><small>${heroNm(hid)}</small></div><div class="scroll pk-list">${list.map(o=>{const w=wornBy(o.i);return `<button class="btn ghost pk" data-p="${o.i}" style="--c:${ITEM_CFG.col[o.s-1]}"><b>${'★'.repeat(o.s)}</b><span>${itemLine(o)}</span>${w?`<em>${heroNm(w)}${w===hid?' (현재)':''}</em>`:''}</button>`;}).join('')||'<p class="note">이 부위 장비가 없어요. 모험에서 얻어보세요.</p>'}</div><div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
- $('#app').appendChild(d);
- d.addEventListener('click',async e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}const p=e.target.closest('[data-p]');if(p&&await equipItem(hid,Number(p.dataset.p))){render();toast('착용했어요');}});}
-function gearHtml(id){const g=gearOf(id),E=gearBonus(id);
+ d.addEventListener('click',async e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}const p=e.target.closest('[data-p]');if(p&&await equipItem(hid,Number(p.dataset.p),cx)){d.remove();render();toast('착용했어요');}});}
+/* v4.39 캐릭터창 장비 탭(T-085): 프리셋 칩(모험·레이드·준비중[비활성]) + 선택 프리셋의 4슬롯 카드 + 추천 장비 착용·일괄 강화·일괄 해제·장비 관리. 합계는 선택 프리셋 기준 */
+function gearCards(id,cx){cx=cx||cxOf(preSel);const g=gearOf(id,cx),E=gearBonus(id,cx);
  const sum=Object.keys(ITEM_CFG.stat).filter(k=>E[k]).map(k=>iStat(k).n+fmtStat(k,E[k])).join(' · ')||'착용한 장비 없음';
- return `<div class="gear">${ITEM_CFG.slots.map((sl,t)=>{const it=g[t];return `<div class="gs" ${it?`style="--c:${ITEM_CFG.col[it.s-1]}"`:''}><span class="gi">${sl.ic}</span><div class="gt"><b>${sl.n}${it?` <i>${'★'.repeat(it.s)}</i>`:''}</b><span class="${it?'':'em'}">${it?itemLine(it):'비어 있음'}</span></div>${it?`<button class="btn ghost" data-gu="${t}">해제</button>`:''}<button class="btn ghost" data-gp="${t}">${it?'교체':'착용'}</button></div>`;}).join('')}<div class="gsum"><span class="k">장비 합계</span>${sum}</div>${setLine(id)}
-  ${presetPanel(id)}
-  <div class="pre2"><button class="btn ghost" data-ge>추천 자동장착</button></div>
-  <button class="btn ghost" data-go="bag">가방 열기</button></div>`;}
-/* v4.26 캐릭터창 장비 탭: 4슬롯 카드(누르면 착용·교체) + 추천 장착·일괄 해제·장비 관리(가방). 합계·세트·프리셋은 기존 함수 재사용 */
-function gearCards(id){const g=gearOf(id),E=gearBonus(id);
- const sum=Object.keys(ITEM_CFG.stat).filter(k=>E[k]).map(k=>iStat(k).n+fmtStat(k,E[k])).join(' · ')||'착용한 장비 없음';
- return `<div class="gcards">${ITEM_CFG.slots.map((sl,t)=>{const it=g[t];return `<button class="gc${it?'':' empty'}" ${it?`data-gn="${t}"`:`data-gp="${t}"`} ${it?`style="--c:${ITEM_CFG.col[it.s-1]}"`:''}><span class="gi">${sl.ic}</span><b>${sl.n}${it?` <i>${'★'.repeat(it.s)}</i>`:''}</b>${it?`<span class="gen">+${it.x||0}</span><span class="gmn">${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><small>${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</small><span class="gtap">눌러서 강화</span>`:'<small>비어 있음 · 눌러서 착용</small>'}${it?`<span class="gx" data-gu="${t}">해제</span>`:''}</button>`;}).join('')}</div>
-  <div class="gbtns"><button class="btn ghost" data-gbe>일괄 강화</button><button class="btn ghost" data-ge>추천 장착</button><button class="btn ghost" data-gua>일괄 해제</button><button class="btn ghost" data-go="bag">장비 관리</button></div>
+ return `<div class="gpre"><button class="${cx==='adv'?'on':''}" data-pa="0">모험</button><button class="${cx==='raid'?'on':''}" data-pa="1">레이드</button><button class="off" data-pa="2">준비중</button></div><div class="gcards">${ITEM_CFG.slots.map((sl,t)=>{const it=g[t];return `<button class="gc${it?'':' empty'}" ${it?`data-gn="${t}"`:`data-gp="${t}"`} ${it?`style="--c:${ITEM_CFG.col[it.s-1]}"`:''}><span class="gi">${sl.ic}</span><b>${sl.n}${it?` <i>${'★'.repeat(it.s)}</i>`:''}</b>${it?`<span class="gen">+${it.x||0}</span><span class="gmn">${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><small>${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</small><span class="gtap">눌러서 강화</span>`:'<small>비어 있음 · 눌러서 착용</small>'}${it?`<span class="gx" data-gu="${t}">해제</span>`:''}</button>`;}).join('')}</div>
+  <div class="gbtns"><button class="btn ghost" data-gbe>일괄 강화</button><button class="btn ghost" data-ge>추천 장비 착용</button><button class="btn ghost" data-gua>일괄 해제</button><button class="btn ghost" data-go="bag">장비 관리</button></div>
   <div class="gear"><div class="gsum"><span class="k">장비 합계</span>${sum}</div></div>`;}
 /* v4.33 장비 탭: 슬롯 카드 → 강화 팝업(enhanceItem 재사용), 일괄 강화(목표 레벨까지 enhanceItem 반복) */
-function enhPop(hid,t){const it=gearOf(hid)[t];if(!it)return;const sl=ITEM_CFG.slots[t],x=it.x||0,mx=ITEM_CFG.maxX[it.s-1],full=x>=mx,c=enhCost(it),nx=x+1,ok=matN('stone')>=c.st&&state.gold>=c.g;
- const d=el(`<div class="pause"><div class="box wide item-detail"><div class="h"><span style="color:${ITEM_CFG.col[it.s-1]}">${sl.ic} ${sl.n} ${'★'.repeat(it.s)}${it.z?` · ${ITEM_CFG.sets[it.z]}`:''}</span><small>${heroNm(hid)}</small></div>
+function enhPop(hid,t,cx){cx=cx||CTX();const it=gearOf(hid,cx)[t];if(!it)return;const sl=ITEM_CFG.slots[t],x=it.x||0,mx=ITEM_CFG.maxX[it.s-1],full=x>=mx,c=enhCost(it),nx=x+1,ok=matN('stone')>=c.st&&state.gold>=c.g;
+ const d=el(`<div class="pause"><div class="box wide item-detail"><div class="h"><span style="color:${ITEM_CFG.col[it.s-1]}">${sl.ic} ${sl.n} ${'★'.repeat(it.s)}${it.z?` · ${ITEM_CFG.sets[it.z]}`:''}</span><small>${heroNm(hid)} · ${CTX_N[cx]}</small></div>
   <div class="enh-big"><b>+${x}</b>${full?'<span>최대 강화</span>':`<span>→ +${nx}</span>`}</div>
   <div class="ln main"><span class="k">주옵션</span><b>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</b></div>
   ${it.b.map(([k,v])=>`<div class="ln"><span class="k">부옵션</span><b>${iStat(k).n} ${fmtStat(k,v)}</b></div>`).join('')||'<div class="ln"><span class="k">부옵션</span><b>없음</b></div>'}
   ${full?'':`<p class="note">다음 단계 비용 💎${c.st} · ${fmt(c.g)}G (보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G)${nx%3===0?`<br>+${nx} 에서 부옵션 ${it.b.length<4&&it.s<6?'추가':'상승'} 예정`:`<br>부옵션 변화는 +${Math.ceil(nx/3)*3} 에서`}</p>`}
   <div class="row enh">${full?'':`<button class="btn ${ok?'primary':'ghost'}" data-ea="enh">강화 +${nx}</button>`}<button class="btn ghost" data-ea="x">닫기</button></div>
-  <p class="note">착용 교체는 「장비 관리」(가방)에서 해요.</p></div></div>`);
+  <p class="note">착용 교체는 「장비 관리」(가방)에서 해요 (${CTX_N[cx]} 프리셋 기준).</p></div></div>`);
  $('#app').appendChild(d);
  d.addEventListener('click',e=>{if(e.target===d){d.remove();return;}const a=e.target.closest('[data-ea]');if(!a)return;if(a.dataset.ea==='x'){d.remove();return;}
-  const m=enhanceItem(it.i);if(m){d.remove();render();enhPop(hid,t);toast(m);}});}
+  const m=enhanceItem(it.i);if(m){d.remove();render();enhPop(hid,t,cx);toast(m);}});}
 let enhBulkT=6;
-function enhPlan(hid,T){let st=matN('stone'),gd=state.gold,stop=false,tS=0,tG=0;const rows=gearOf(hid).map((it,t)=>{if(!it)return null;const mx=ITEM_CFG.maxX[it.s-1],tg=Math.min(T,mx),x0=it.x||0;let x=x0;
+function enhPlan(hid,T,cx){let st=matN('stone'),gd=state.gold,stop=false,tS=0,tG=0;const rows=gearOf(hid,cx).map((it,t)=>{if(!it)return null;const mx=ITEM_CFG.maxX[it.s-1],tg=Math.min(T,mx),x0=it.x||0;let x=x0;
   while(x<tg&&!stop){const c=enhAt(it.s,x);if(st<c.st||gd<c.g){stop=true;break;}st-=c.st;gd-=c.g;tS+=c.st;tG+=c.g;x++;}
   return {it,t,x0,x,tg};}).filter(Boolean);
  return {rows,tS,tG,short:stop};}
-function bulkEnhPop(hid){const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화</span><small>${heroNm(hid)}</small></div><div class="be-t"></div><div class="be-p"></div><div class="row"><button class="btn primary" data-be="go">강화하기</button><button class="btn ghost" data-be="x">닫기</button></div></div></div>`);
- const draw=()=>{const P0=enhPlan(hid,enhBulkT),n=P0.rows.reduce((a,r)=>a+(r.x-r.x0),0);
+function bulkEnhPop(hid,cx){cx=cx||CTX();const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화</span><small>${heroNm(hid)} · ${CTX_N[cx]}</small></div><div class="be-t"></div><div class="be-p"></div><div class="row"><button class="btn primary" data-be="go">강화하기</button><button class="btn ghost" data-be="x">닫기</button></div></div></div>`);
+ const draw=()=>{const P0=enhPlan(hid,enhBulkT,cx),n=P0.rows.reduce((a,r)=>a+(r.x-r.x0),0);
   $('.be-t',d).innerHTML=[3,6,9,12,15].map(v=>`<button class="${v===enhBulkT?'on':''}" data-bt="${v}">+${v}</button>`).join('');
-  $('.be-p',d).innerHTML=P0.rows.length?`${P0.rows.map(r=>`<div class="ln"><span class="k">${ITEM_CFG.slots[r.t].ic} ${ITEM_CFG.slots[r.t].n} ${'★'.repeat(r.it.s)}</span><b>+${r.x0} → +${r.x}${r.tg<enhBulkT?` <small>(최대 +${r.tg})</small>`:''}</b></div>`).join('')}<p class="note">총 💎${fmt(P0.tS)} · ${fmt(P0.tG)}G · 보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G${P0.short?'<br>재료가 부족해서 가능한 만큼만 진행해요.':''}</p>`:'<p class="note">착용한 장비가 없어요.</p>';
+  $('.be-p',d).innerHTML=P0.rows.length?`${P0.rows.map(r=>`<div class="ln"><span class="k">${ITEM_CFG.slots[r.t].ic} ${ITEM_CFG.slots[r.t].n} ${'★'.repeat(r.it.s)}</span><b>+${r.x0} → +${r.x}${r.tg<enhBulkT?` <small>(최대 +${r.tg})</small>`:''}</b></div>`).join('')}<p class="note">총 💎${fmt(P0.tS)} · ${fmt(P0.tG)}G · 보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G${P0.short?'<br>재료가 부족해서 가능한 만큼만 진행해요.':''}</p>`:'<p class="note">이 프리셋에 장비가 없어요.</p>';
   d.dataset.n=n;};
  $('#app').appendChild(d);draw();
  d.addEventListener('click',e=>{if(e.target===d){d.remove();return;}const bt=e.target.closest('[data-bt]');if(bt){enhBulkT=Number(bt.dataset.bt);draw();return;}const b=e.target.closest('[data-be]');if(!b)return;if(b.dataset.be==='x'){d.remove();return;}
-  const P0=enhPlan(hid,enhBulkT);let n=0;const done=[];for(const r of P0.rows){let k=0;while(k<r.x-r.x0&&enhanceItem(r.it.i)){k++;n++;}if(k)done.push(`${ITEM_CFG.slots[r.t].n} +${r.x0}→+${r.x0+k}`);}
+  const P0=enhPlan(hid,enhBulkT,cx);let n=0;const done=[];for(const r of P0.rows){let k=0;while(k<r.x-r.x0&&enhanceItem(r.it.i)){k++;n++;}if(k)done.push(`${ITEM_CFG.slots[r.t].n} +${r.x0}→+${r.x0+k}`);}
   d.remove();render();if(!n){toast('강화할 수 없어요 (재료 부족 또는 이미 목표 이상)');return;}
   const r2=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화 결과</span></div><p class="note">${n}회 강화했어요<br>${done.join('<br>')}</p><div class="row"><button class="btn primary" data-be="x">확인</button></div></div></div>`);$('#app').appendChild(r2);r2.addEventListener('click',ev=>{if(ev.target===r2||ev.target.closest('[data-be]'))r2.remove();});});}
-/* v4.29 세트 효과·프리셋은 캐릭터창 「상세」 시트로 이동(장비 탭은 스크롤 없이 한 화면) */
-function gearExtra(id){return `<div class="gear">${wornPanel(id)}${setLine(id)}${presetPanel(id,1)}</div>`;}
-/* v4.37 세트·프리셋 탭 맨 위 「현재 착용」 4슬롯: 카드를 누르면 장비 팝업(강화·교체), 슬롯별 해제·전체 해제 */
-function wornPanel(id){const g=gearOf(id),has=g.some(Boolean);
- const slot=t=>{const sl=ITEM_CFG.slots[t],it=g[t];
-  if(!it)return `<div class="ps em" data-gp="${t}"><span class="gi">${sl.ic}</span><b>${sl.n}</b><small>비어 있음 · 눌러서 착용</small></div>`;
-  return `<div class="ps ed" data-vi="${it.i}" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="gi">${sl.ic}</span><b>${sl.n} <i>${'★'.repeat(it.s)}</i> <em>+${it.x||0}</em></b><small>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</small><button class="px" data-gu="${t}">해제</button></div>`;};
- return `<div class="ppanel wpanel"><div class="pre"><span class="k">현재 착용</span><button class="btn ghost" data-gua ${has?'':'disabled'}>전체 해제</button></div><div class="pslots">${[0,1,2,3].map(slot).join('')}</div></div>`;}
+/* v4.39 상세 시트 「세트·레이드」: 세트 효과(모험·레이드)·추천 세트·레이드 정보만 (프리셋 편집은 장비 탭으로 일원화) */
+function gearExtra(id){return `<div class="gear">${setLine(id)}</div>`;}
 /* v4.26 캐릭터창 편성 팝업: 현재 캐릭터를 파티에 넣고 빼기 (viewParty 와 같은 규칙: 3~5명, 순서 = 넣은 순서) */
 function partyPop(id){
  const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>편성</span><small>${state.party.length} / 5</small></div><div class="pp-slots">${[0,1,2,3,4].map(i=>{const p=state.party[i];return `<div class="pps${p===id?' me':''}">${p?`<img src="${A[p]}" alt=""><b>${i+1}</b><span>${heroNm(p)}</span>`:`<em>${i+1}</em><span>비어 있음</span>`}</div>`;}).join('')}</div><p class="note">${state.party.includes(id)?`${heroNm(id)}은(는) ${state.party.indexOf(id)+1}번으로 편성 중이에요.`:`${heroNm(id)}은(는) 편성되어 있지 않아요.`} 3~5명, 순서는 넣은 순서예요.</p><div class="row"><button class="btn primary" data-pt>${state.party.includes(id)?'편성에서 빼기':'편성에 넣기'}</button><button class="btn ghost" data-go="party">편성창</button><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
@@ -2584,13 +2594,13 @@ function bagMatch(o,F){if(F.s&&o.s!==F.s)return false;if(F.t>=0&&o.t!==F.t)retur
  if(F.l&&(F.l===1)!==!!o.l)return false;if(F.q||F.r){const sc=bestScore(o).s;if(F.q&&sc<F.q)return false;if(F.r&&sc<icu().as)return false;}return true;}
 /* v4.27 일괄 판매: 판매 설정(sellMatch)에 맞고 보호 규칙(잠금·착용·프리셋·즐겨찾기·강화)에 걸리지 않는 1~5성 장비. 6성은 분해 설정(자동 분해·상세창 분해)을 따로 유지 */
 /* v4.32 일괄 판매 전용 보호 판정(자동판매 cleanable 은 isProtected 그대로): 이상·착용·즐겨찾기·강화는 항상 제외, 자동잠금(l=2)·수동잠금·프리셋은 판매 설정 스위치(xa·xm·xp)로 예외 허용 */
-function sellGuard(it){const c=icu().sc;if(badItem(it))return '이상한 장비';if(wornBy(it.i))return '착용';if(it.f)return '즐겨찾기';if((it.x||0)>0)return '강화';
+function sellGuard(it){const c=icu().sc;if(badItem(it))return '이상한 장비';if(wornBy(it.i))return useShort(it.i);if(it.f)return '즐겨찾기';if((it.x||0)>0)return '강화';
  if(it.l===2){if(!c.xa)return '자동잠금';}else if(it.l&&!c.xm)return '수동잠금';return '';} /* v4.35 프리셋은 보호 아님 */
 function bulkPlan(){const sell=state.items.filter(o=>!sellGuard(o)&&sellMatch(o)),inc={a:0,m:0,p:0};
  sell.forEach(o=>{if(o.l===2)inc.a++;else if(o.l)inc.m++;if(inPreset(o.i))inc.p++;});
  return {sell,inc,gold:sell.reduce((a,o)=>a+sellPrice(o),0),stone:sell.reduce((a,o)=>a+sellStone(o),0)};}
 const unPreset=ids=>{for(const a of Object.values(state.presets||{}))if(Array.isArray(a))a.forEach(p=>{if(p&&Array.isArray(p.g))p.g=arr(p.g,4,0).map(x=>ids.has(x)?0:x);});}; /* v4.32 판매된 장비를 프리셋 슬롯에서 0 으로 정리(길이 4 유지) */
-const incHtml=inc=>{const t=[inc.a?`자동잠금 ${inc.a}개`:'',inc.m?`수동잠금 ${inc.m}개`:''].filter(Boolean);const pp=inc.p?`<p class="note">📌 프리셋에 담긴 장비 ${inc.p}개 포함 · 판매하면 그 프리셋 슬롯은 비워져요.</p>`:'';return (t.length?`<p class="note" style="color:#ff5a4d;font-weight:700">⚠ 보호 장비 포함: ${t.join(' · ')}<br>판매하면 되돌릴 수 없어요.</p>`:'')+pp;};
+const incHtml=inc=>{const t=[inc.a?`자동잠금 ${inc.a}개`:'',inc.m?`수동잠금 ${inc.m}개`:''].filter(Boolean);const pp='';return (t.length?`<p class="note" style="color:#ff5a4d;font-weight:700">⚠ 보호 장비 포함: ${t.join(' · ')}<br>판매하면 되돌릴 수 없어요.</p>`:'')+pp;};
 /* v4.28 제외 사유 집계(표시 전용): 장비 1개당 우선순위 사유 1개만 센다 (보호→6성→성급→부위→주옵→부옵 개수→부옵 종류→점수) */
 function sellWhy(){const c=icu().sc,r={},add=k=>{r[k]=(r[k]||0)+1;};let ok=0;
  state.items.forEach(it=>{
@@ -2602,7 +2612,7 @@ function sellWhy(){const c=icu().sc,r={},add=k=>{r[k]=(r[k]||0)+1;};let ok=0;
  return {ok,total:state.items.length,txt:Object.keys(r).map(k=>`${k} ${r[k]}`).join(' · ')};}
 const sellWhyHtml=()=>{const w=sellWhy();return `전체 ${w.total}개 중 판매 대상 <b>${w.ok}</b>${w.txt?`<br>제외: ${w.txt}`:''}`;};
 function bulkDialog(){const p=bulkPlan(),n=p.sell.length;
- const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 판매</span></div><p class="note">판매 설정 · ${sellSummary()}<br>착용·즐겨찾기·강화한 장비와 6성은 항상 제외, 잠금은 판매 설정 스위치에 따라요 (프리셋 장비는 판매돼요).</p><p class="note why">${sellWhyHtml()}</p>${incHtml(p.inc)}<div class="bulk-n"><b>${n}개</b> 판매 → <b>+${fmt(p.gold)}G</b>${p.stone?` · 💎+${p.stone}`:''}</div>
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 판매</span></div><p class="note">판매 설정 · ${sellSummary()}<br>모험·레이드 프리셋에 든 장비·즐겨찾기·강화한 장비와 6성은 항상 제외, 잠금은 판매 설정 스위치에 따라요 (준비중 칸 장비는 판매돼요).</p><p class="note why">${sellWhyHtml()}</p>${incHtml(p.inc)}<div class="bulk-n"><b>${n}개</b> 판매 → <b>+${fmt(p.gold)}G</b>${p.stone?` · 💎+${p.stone}`:''}</div>
   <div class="row"><button class="btn ${n?'primary':'ghost'}" data-bs ${n?'':'disabled'}>판매하기</button><button class="btn ghost" data-sc>판매 설정</button></div><div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
  $('#app').appendChild(d);
  d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}
@@ -2626,7 +2636,7 @@ function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcf
   <div class="sc-b"><span class="k">부옵션 종류 <small>고른 옵션이 없는 장비만 판매 · 비우면 무시</small></span><div class="bf">${statK.map(k=>btn(c.bm.includes(k),`data-sx="${k}"`,ITEM_CFG.stat[k].n)).join('')}</div></div>
   <div class="sc-b"><span class="k">획득 즉시 자동 판매 <small>자동사냥·전투 중 얻은 장비에 같은 기준 적용</small></span><div class="bf">${btn(!icu().ac,'data-auto="0"','OFF')}${btn(icu().ac,'data-auto="1"','ON')}</div></div>
   <div class="sc-b"><span class="k">보호 예외 <small>일괄 판매에만 적용 · 자동 판매는 항상 보호 유지</small></span><div class="bf">${btn(c.xa,'data-xx="xa"','🔐 자동잠금도 판매')}${btn(c.xm,'data-xx="xm"','🔒 수동잠금도 판매')}</div></div>
-  <p class="note">착용·즐겨찾기·강화한 장비와 6성은 항상 제외 · 지금 기준 <b>${p.sell.length}개</b> · +${fmt(p.gold)}G</p><p class="note why" id="sc-why">${sellWhyHtml()}</p>${incHtml(p.inc)}
+  <p class="note">프리셋(모험·레이드) 사용·즐겨찾기·강화한 장비와 6성은 항상 제외 · 지금 기준 <b>${p.sell.length}개</b> · +${fmt(p.gold)}G</p><p class="note why" id="sc-why">${sellWhyHtml()}</p>${incHtml(p.inc)}
   <div class="row"><button class="btn ghost" data-sv ${p.sell.length?'':'disabled'}>판매 대상 보기</button><button class="btn ghost" data-rl>자동잠금 재평가</button></div>
   <div class="row"><button class="btn ${p.sell.length?'primary':'ghost'}" data-bk ${p.sell.length?'':'disabled'}>일괄 판매</button><button class="btn ghost" data-hx>닫기</button></div>`;};
  const tg=(a,v)=>{const i=a.indexOf(v);if(i<0)a.push(v);else a.splice(i,1);};
@@ -2663,7 +2673,7 @@ function bagFilterDialog(){const d=el(`<div class="pause"><div class="box wide b
  const draw=()=>{const n=state.items.filter(o=>bagMatch(o,bagF)).length;
   box.innerHTML=`<div class="h"><span>필터</span><small>${n}개</small></div>
   <div class="fs-l">성급</div>${bagChips([[0,'전체'],[1,'1★'],[2,'2★'],[3,'3★'],[4,'4★'],[5,'5★'],[6,'6★']],bagF.s,'s')}
-  <div class="fs-l">착용 · 정렬</div><div class="bf2">${bagChips([[0,'전체'],[1,'착용'],[2,'미착용']],bagF.w,'w')}${bagChips([['new','획득순'],['star','성급순'],['score','점수순']],bagSort,'o')}</div>
+  <div class="fs-l">사용 중 · 정렬</div><div class="bf2">${bagChips([[0,'전체'],[1,'사용 중'],[2,'미사용']],bagF.w,'w')}${bagChips([['new','획득순'],['star','성급순'],['score','점수순']],bagSort,'o')}</div>
   <div class="fs-l">세트 · 주옵 · 부옵</div><div class="bf sel">${sel('z',bagF.z,[['','세트 전체'],...Object.keys(ITEM_CFG.sets).map(z=>[z,ITEM_CFG.sets[z]])])}${sel('m',bagF.m,[['','주옵 전체'],...statOpts])}${sel('b',bagF.b,[['','부옵 전체'],...statOpts])}</div>
   <div class="fs-l">강화 · 점수 · 잠금</div><div class="bf sel">${sel('e',bagF.e,ENH_F)}${sel('q',bagF.q,SC_F.map(v=>[v,v?v+'점 이상':'점수 전체']))}${sel('l',bagF.l,[[0,'잠금 전체'],[1,'잠금'],[2,'미잠금']])}<button class="${bagF.r?'on':''}" data-f="r" data-v="${bagF.r?0:1}">추천</button></div>
   <div class="row"><button class="btn ghost" data-fr>초기화</button><button class="btn primary" data-hx>적용 · ${n}개 보기</button></div>`;};
@@ -2675,8 +2685,8 @@ function bagFilterDialog(){const d=el(`<div class="pause"><div class="box wide b
 let bagSel=null,bagMat=false;
 /* v4.27 선택 장비 요약 카드: 이름·성급·강화·주옵·부옵·세트·점수·착용·잠금/즐겨찾기 */
 function sumCard(it){if(!it)return '<div class="bsum empty">장비를 누르면 요약이 나와요 · 같은 장비를 한 번 더 누르면 상세</div>';
- const sl=ITEM_CFG.slots[it.t],w=wornBy(it.i),b=bestScore(it);
- return `<div class="bsum" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><div class="bi"><b>${it.z?`[${ITEM_CFG.sets[it.z]}] `:''}${sl.n} <i>${'★'.repeat(it.s)}</i> +${it.x||0}</b><span class="m">주옵 ${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><span class="sb">${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</span><span class="sc2">추천 캐릭터 ${heroNm(b.h)} · 점수 ${b.s}</span><span class="sc2">착용: ${w?heroNm(w):'없음'}${presetWho(it.i)?` · 📌 ${presetWho(it.i)}`:''}</span></div><div class="bq"><button data-q="lock">${it.l?(it.l===2?'🔐':'🔒'):'🔓'}</button><button data-q="fav">${it.f?'⭐':'☆'}</button><button data-q="detail">상세</button></div></div>`;}
+ const sl=ITEM_CFG.slots[it.t],w=useTxt(it.i),b=bestScore(it);
+ return `<div class="bsum" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><div class="bi"><b>${it.z?`[${ITEM_CFG.sets[it.z]}] `:''}${sl.n} <i>${'★'.repeat(it.s)}</i> +${it.x||0}</b><span class="m">주옵 ${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><span class="sb">${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</span><span class="sc2">추천 캐릭터 ${heroNm(b.h)} · 점수 ${b.s}</span><span class="sc2">사용 중: ${w||'없음'}</span></div><div class="bq"><button data-q="lock">${it.l?(it.l===2?'🔐':'🔒'):'🔓'}</button><button data-q="fav">${it.f?'⭐':'☆'}</button><button data-q="detail">상세</button></div></div>`;}
 function viewBag(){
  const cap=state.bag.cap,fl=flushTmp(),tn=(state.bag.tmp||[]).length;if(fl){save();setTimeout(()=>toast(`임시 보관함 ${fl}개를 가방으로 옮겼어요`),0);}
  const svIds=sellView?new Set(bulkPlan().sell.map(o=>o.i)):null;
@@ -2710,7 +2720,7 @@ function dropHtml(b){const d=b.drops;if(!d||!d.got.length&&!d.full&&!d.stone&&!d
  return `<div class="drops"><span class="k">EQUIP</span>${d.got.map(it=>`<span class="dc" style="--c:${ITEM_CFG.col[it.s-1]}">${ITEM_CFG.slots[it.t].ic}${'★'.repeat(it.s)}${it.l===2?'🔐':''}</span>`).join('')}${d.stone?`<span class="dc" style="--c:#7cc8ff">💎+${d.stone}</span>`:''}${d.rune?`<span class="dc" style="--c:#FF9A4D">🔶+${d.rune}</span>`:''}${d.tix?`<span class="dc" style="--c:#F2C14E">🎫+${d.tix}</span>`:''}${d.dis?`<span class="dc" style="--c:#FF6B5A">🧩+${d.dis}</span>`:''}${d.full?`<span class="dc warn">가방 가득 ×${d.full}</span>`:''}${bagFull()?'<span class="dc warn">가방 95%↑</span>':''}<div class="sum">${eqSum(d.got.length,d.lock,d.sold,d.sg,d.tmp)}${rep?`<br>누적(${b.repeat.runs}회) ${eqSum(e.n,e.lk,e.sd,e.sg,e.tm)} · 💎+${e.st}`:''}</div></div>`;}
 
 /* ---------- 캐릭터 도감 ---------- */
-function heroStats(h,noGear){const lv=heroLv(h.id),m=lvMult(lv),B=skBonus(),E=noGear?{atk:0,hp:0,def:0,spd:0,crit:0,weak:0}:gearBonus(h.id);return {lv,atk:Math.round(h.atk*m*(1+B.atk+E.atk)),hp:Math.round(h.hp*m*(1+B.hp+E.hp)),def:Math.round(h.def*(1+B.hp+E.def)),spd:h.spd+B.spd+E.spd,crit:CRIT.chance+E.crit,critM:CRIT.mult,weak:WEAK.chance+E.weak,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
+function heroStats(h,noGear,cx){const lv=heroLv(h.id),m=lvMult(lv),B=skBonus(),E=noGear?{atk:0,hp:0,def:0,spd:0,crit:0,weak:0}:gearBonus(h.id,cx);return {lv,atk:Math.round(h.atk*m*(1+B.atk+E.atk)),hp:Math.round(h.hp*m*(1+B.hp+E.hp)),def:Math.round(h.def*(1+B.hp+E.def)),spd:h.spd+B.spd+E.spd,crit:CRIT.chance+E.crit,critM:CRIT.mult,weak:WEAK.chance+E.weak,weakM:WEAK.mult,xp:(state.heroXp||{})[h.id]||0,need:xpForLv(lv)};}
 const owned=id=>!!HEROES.find(h=>h.id===id); // 현재는 5명 전원 보유. 소환 시스템이 생기면 state.owned 기준으로 변경
 /* v3.6 도감 = 아이콘 그리드(탭: 영웅만 활성) → 아이콘을 누르면 캐릭터 창(viewCharacter) */
 function viewHeroes(){
@@ -2767,13 +2777,14 @@ function heroDetail(id){const I=heroInfo(id),{cuts,cutHtml}=I;
 /* ---------- 캐릭터 창 (v3.6) : 큰 일러스트 + 탭 + 하단 썸네일 ---------- */
 let charId=null,charTab='gear',chSheet=null;
 const CH_TABS=[['skill','⚔ 스킬'],['gear','🛡 장비']]; /* v4.29: 탭은 스킬·장비 두 개, 나머지는 하단 「상세」 시트 */
-const CH_SHEET=[['sk','스킬 상세'],['lore','설정'],['syn','시너지'],['cut','컷 보기'],['pre','세트·프리셋']];
+const CH_SHEET=[['sk','스킬 상세'],['lore','설정'],['syn','시너지'],['cut','컷 보기'],['pre','세트·레이드']];
 /* v4.26 상단 능력치 패널: 현재 heroStats(장비 보너스 포함) + 장비로 오른 양(+N) */
 function chStatPanel(I){const {h,st}=I,s0=heroStats(h,true),ps=PASSIVE[h.id],critT=st.crit+(ps&&ps.v.crit||0),weakT=st.weak+(ps&&ps.v.weak||0),dc=st.crit-s0.crit,dw=st.weak-s0.weak;
  const r=(k,v,d,u)=>`<div><span class="k">${k}</span><b>${v}</b>${d>0.00001?`<i>+${u?P(d):fmt(Math.round(d))}</i>`:''}</div>`;
  const pt=state.party.indexOf(h.id);
  return `<div class="ch-st"><div class="chips">${r('공격',fmt(st.atk),st.atk-s0.atk)}${r('방어',fmt(st.def),st.def-s0.def)}${r('체력',fmt(st.hp),st.hp-s0.hp)}${r('속도',st.spd,st.spd-s0.spd)}${r('치명',P(critT),dc,1)}${r('약점',P(weakT),dw,1)}</div><small>치명 ×${CRIT.mult} · 약점 ×${WEAK.mult} · 금색 +N = 장비 보너스</small><button class="btn ${pt>=0?'primary':'ghost'} ch-pt" data-pty>${pt>=0?`편성 중 · ${pt+1}번`:'편성'}</button></div>`;}
-function viewCharacter(){
+function viewCharacter(){if(preSel>1)preSel=0;ctxOv=cxOf(preSel);try{return viewCharacter0();}finally{ctxOv=null;}} // v4.39 능력치 칩·장비 합계 = 선택한 프리셋 기준
+function viewCharacter0(){
  const ids=HEROES.filter(h=>owned(h.id)).map(h=>h.id);if(!ids.includes(charId))charId=ids[0];
  const n=ids.length,idx=ids.indexOf(charId),I=heroInfo(charId),{cuts,cutHtml}=I;
  const no='No.'+String(HEROES.findIndex(x=>x.id===charId)+1).padStart(2,'0');
@@ -2782,7 +2793,7 @@ function viewCharacter(){
  const cur={name:I.h.name,atk:I.st.atk,def:I.st.def,hp:I.st.hp,sup:supCoef(I.st.atk,I.h.atk)};
  /* v4.29 스킬 탭: 스킬 2개 카드(이름·쿨타임·한 줄 설명), 카드를 누르면 전체 설명 펼침 */
  const skCard=(sk,sp)=>{const ds=descSkill(sk,cur);return `<button class="skc${sp?' sp':''}" data-skx><span class="sk ${sp?'sp':''}">${skIcon(sk,I.h,sp?'s2':'s1')}</span><span class="tx"><b>${sk.name} <small>${sp?'★ 특수':'일반'} · 쿨 ${sk.cd}턴</small></b><span class="d1">${ds[0]||''}</span><span class="dm">${ds.slice(1).map(t=>`<span>${t}</span>`).join('')}</span></span></button>`;};
- const body=t=>({skill:`<div class="skcards">${skCard(I.h.s1,false)}${skCard(I.h.s2,true)}</div><p class="skhint">카드를 누르면 전체 설명이 펼쳐져요 · 고유 패시브·계산 기준은 「상세 › 스킬 상세」</p>`,gear:gearCards(charId)})[t];
+ const body=t=>({skill:`<div class="skcards">${skCard(I.h.s1,false)}${skCard(I.h.s2,true)}</div><p class="skhint">카드를 누르면 전체 설명이 펼쳐져요 · 고유 패시브·계산 기준은 「상세 › 스킬 상세」</p>`,gear:gearCards(charId,cxOf(preSel))})[t];
  const shBody=t=>({sk:I.skills+I.passive+I.calc,lore:I.lore,syn:I.syn,pre:gearExtra(charId),
   cut:`<div class="ch-cuts">${cuts.map(([k,l],i)=>`<button class="${i===gi?'on':''}" data-ci="${i}"><span class="ct"><img src="${cutSrc(k)}" alt=""></span><span class="l">${l}</span></button>`).join('')}</div>`})[t];
  if(chSheet&&!CH_SHEET.some(([k])=>k===chSheet))chSheet=null;
@@ -2797,7 +2808,7 @@ function viewCharacter(){
    </div>
    <div class="ch-tabs">${CH_TABS.map(([k,l])=>`<button class="${k===charTab?'on':''}" data-tab="${k}">${l}</button>`).join('')}</div>
    <div class="ch-body${charTab==='gear'?' gt':''}">${body(charTab)}</div>
-   <button class="ch-more" data-shopen>☰ 상세 <small>설정 · 시너지 · 컷 보기 · 스킬 상세 · 프리셋</small></button>
+   <button class="ch-more" data-shopen>☰ 상세 <small>설정 · 시너지 · 컷 보기 · 스킬 상세 · 세트</small></button>
   </div>
   <div class="ch-thumbs">${n>1?'<button class="tn" data-d="-1">‹</button>':''}${ids.map(i=>`<button class="${i===charId?'on':''}" data-cid="${i}"><img src="${A[i]}" alt=""></button>`).join('')}${n>1?'<button class="tn" data-d="1">›</button>':''}</div>
  </section>`);
@@ -2817,20 +2828,17 @@ function viewCharacter(){
   const skx=e.target.closest('[data-skx]');if(skx){skx.classList.toggle('open');return;}
   const d=e.target.closest('[data-d]');if(d){move(Number(d.dataset.d));return;}
   const c=e.target.closest('[data-cid]');if(c){if(c.dataset.cid!==charId){charId=c.dataset.cid;render();}return;}
-  const gu=e.target.closest('[data-gu]');if(gu){unequip(charId,Number(gu.dataset.gu));render();toast('해제했어요');return;}
-  const px=e.target.closest('[data-px]');if(px){const t=Number(px.dataset.px),p=presetsOf(charId)[preSel];p.g[t]=0;save();render();toast(`「${p.n}」 프리셋 ${ITEM_CFG.slots[t].n} 칸을 비웠어요`);return;}
-  const gp=e.target.closest('[data-gp]');if(gp){gearPicker(charId,Number(gp.dataset.gp));return;}
+  const cx=cxOf(preSel),cn=CTX_N[cx];
+  const gu=e.target.closest('[data-gu]');if(gu){unequip(charId,Number(gu.dataset.gu),cx);render();toast('해제했어요');return;}
+  const gp=e.target.closest('[data-gp]');if(gp){gearPicker(charId,Number(gp.dataset.gp),cx);return;}
   const vi=e.target.closest('[data-vi]');if(vi){itemDetail(Number(vi.dataset.vi));return;}
-  const gn=e.target.closest('[data-gn]');if(gn){enhPop(charId,Number(gn.dataset.gn));return;}
-  if(e.target.closest('[data-gbe]')){bulkEnhPop(charId);return;}
-  if(e.target.closest('[data-gua]')){if(!gearOf(charId).some(Boolean)){toast('착용한 장비가 없어요');return;}if(!await gameConfirm(`${heroNm(charId)}의 장비를 모두 해제할까요?`))return;for(let t=0;t<4;t++)unequip(charId,t);render();toast('일괄 해제했어요');return;}
+  const gn=e.target.closest('[data-gn]');if(gn){enhPop(charId,Number(gn.dataset.gn),cx);return;}
+  if(e.target.closest('[data-gbe]')){bulkEnhPop(charId,cx);return;}
+  if(e.target.closest('[data-gua]')){if(!gearOf(charId,cx).some(Boolean)){toast(`${cn} 프리셋이 비어 있어요`);return;}if(!await gameConfirm(`${heroNm(charId)}의 ${cn} 프리셋 장비를 모두 해제할까요?`))return;for(let t=0;t<4;t++)gearIds(charId,cx)[t]=0;save();render();toast('일괄 해제했어요');return;}
   if(e.target.closest('[data-pty]')){partyPop(charId);return;}
   if(e.target.closest('[data-bk]')){chSheet=null;go(charBack);return;}
-  const pa=e.target.closest('[data-pa]');if(pa){preSel=Number(pa.dataset.pa);render();return;}
-  if(e.target.closest('[data-pap]')){const r=applyPreset(charId,preSel);render();toast(r.ok||r.skip?`프리셋 착용 ${r.ok}개${r.skip?` · ${r.skip}칸은 못 끼움(${[r.gone?`사라진 장비 ${r.gone}`:'',r.other?`다른 캐릭터 착용 ${r.other}`:''].filter(Boolean).join(', ')})`:''}`:'이 프리셋은 비어 있어요 · 「현재 착용을 저장」');return;}
-  if(e.target.closest('[data-ps]')){savePreset(charId,preSel);render();toast(`「${presetsOf(charId)[preSel].n}」 프리셋에 현재 착용을 저장`);return;}
-  if(e.target.closest('[data-pn]')){const p=presetsOf(charId)[preSel],v=await gamePrompt('프리셋 이름 (6자 이내)',p.n,6);if(v!==null&&v.trim()){p.n=strCut(v.trim(),6);save();render();}return;}
-  if(e.target.closest('[data-ge]')){if(!await gameConfirm(`${heroNm(charId)}에게 추천 장비(세트→주옵→부옵→강화→역할 순)를 자동 장착할까요?\n다른 캐릭터가 끼고 있는 장비는 건드리지 않아요.`))return;const n=recEquip(charId);render();toast(n?`추천 자동장착 ${n}칸 변경`:'바꿀 장비가 없어요');return;}
+  const pa=e.target.closest('[data-pa]');if(pa){const v=Number(pa.dataset.pa);if(v>1){toast('준비중이에요');return;}preSel=v;render();return;}
+  if(e.target.closest('[data-ge]')){const has=gearOf(charId,cx).some(Boolean);if(!await gameConfirm(`${heroNm(charId)}의 ${cn} 프리셋에 추천 장비(세트→주옵→부옵→강화 순, ${cx==='raid'?'레이드':'모험'} 용도)를 착용할까요?${has?'\n이미 장비가 있는 칸은 추천 장비로 바뀌어요.':''}\n${cn}에서 다른 캐릭터가 쓰는 장비는 제외해요.`))return;const n=recEquip(charId,cx);render();toast(n?`${cn} 추천 장비 ${n}칸 변경`:'바꿀 장비가 없어요');return;}
   const ci=e.target.closest('[data-ci]');if(ci){showCut(Number(ci.dataset.ci));cutViewer(I,gi,showCut);return;}
   const b=e.target.closest('[data-go]');if(b){chSheet=null;go(b.dataset.go);}});
  requestAnimationFrame(()=>{const st=$('.ch-thumbs',s),o=$('.ch-thumbs .on',s);if(st&&o)st.scrollLeft=o.offsetLeft-(st.clientWidth-o.offsetWidth)/2;});
@@ -2896,7 +2904,7 @@ function viewRaid(){const open=raidOpen(),tk=matN('tix'),cost=RAID_CFG.cost,my=p
  return s;}
 
 /* ---------- 전투 준비 ---------- */
-function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id)),B=skBonus(),E=gearBonus(id),f4=setFour(id);return {side:'ally',i,id,name:h.name,en:h.en,set4:f4,atk:Math.round(h.atk*m*(1+B.atk+E.atk)),max:Math.round(h.hp*m*(1+B.hp+E.hp)),hp:Math.round(h.hp*m*(1+B.hp+E.hp)),spd:h.spd+B.spd+E.spd+(f4==='spd'?8:0),def:Math.round(h.def*(1+B.hp+E.def+(f4==='def'?.1:0))),ecrit:E.crit,eweak:E.weak,s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:Math.max(1,h.s2.cd-(f4==='spd'?1:0)),cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
+function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id)),B=skBonus(),E=gearBonus(id),f4=setFour(id); /* 장비 = startBattle 이 정한 콘텐츠(ctxOv) 프리셋 */return {side:'ally',i,id,name:h.name,en:h.en,set4:f4,atk:Math.round(h.atk*m*(1+B.atk+E.atk)),max:Math.round(h.hp*m*(1+B.hp+E.hp)),hp:Math.round(h.hp*m*(1+B.hp+E.hp)),spd:h.spd+B.spd+E.spd+(f4==='spd'?8:0),def:Math.round(h.def*(1+B.hp+E.def+(f4==='def'?.1:0))),ecrit:E.crit,eweak:E.weak,s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:Math.max(1,h.s2.cd-(f4==='spd'?1:0)),cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
 function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,img:f.img||key,tint:f.tint||'',name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
 /* v3.8 전투력 (표시 전용 · 전투 계산에는 안 씀) — 아군·적 같은 식
    전투력 = √(공격 기대치 × 생존 기대치) × 10, 파티/적 편성 = 합계 (란체스터식: 합계 비율로 우열 비교)
@@ -2906,9 +2914,9 @@ function powerOf(u){const hp=u.max||u.hp,crit=u.crit!=null?u.crit:CRIT.chance,we
  const skv=sk=>{if(!sk)return 0;let v=0;for(const e of sk.fx)v+=e.t==='dmg'?(e.mult*(e.hits||1)+(e.defMult?e.defMult*u.def/u.atk:0))*(e.to==='all'||e.to==='foes'?2:1):.75;return Math.max(0,v-1)/sk.cd;};
  const off=u.atk*(1+crit*(CRIT.mult-1)+weak*(WEAK.mult-1))*(1+skv(u.s1)+skv(u.s2))*u.spd/100,dur=hp*(1+u.def/100);
  return Math.round(Math.sqrt(off*dur)*10*(u.ps?1.15:1));}
-function heroPower(id){const h=HEROES.find(x=>x.id===id);if(!h)return 0;const st=heroStats(h),ps=PASSIVE[id];
+function heroPower(id,cx){const h=HEROES.find(x=>x.id===id);if(!h)return 0;const st=heroStats(h,false,cx),ps=PASSIVE[id];
  return powerOf({atk:st.atk,max:st.hp,def:st.def,spd:st.spd,s1:h.s1,s2:h.s2,crit:st.crit+(ps&&ps.v.crit||0),weak:st.weak+(ps&&ps.v.weak||0),ps:!!ps});}
-const partyPower=ids=>ids.reduce((n,id)=>n+heroPower(id),0);
+const partyPower=(ids,cx)=>ids.reduce((n,id)=>n+heroPower(id,cx),0); // v4.39 cx 생략 시 지금 화면의 콘텐츠(모험 기본, 레이드 화면·레이드 전투는 레이드)
 const stagePower=st=>st.foes.reduce((n,k,i)=>n+powerOf(mkFoe(k,i,st.lv)),0);
 const pwCls=(me,foe)=>me>=foe*1.1?'up':me<=foe*.9?'down':'even'; // 10% 이상 차이: 초록(유리)/빨강(불리), 그 사이 노랑
 const RESUME_KEY='shinheun-resume';
@@ -2927,7 +2935,8 @@ function startBattle(stageIndex,keepRepeat=false){
  if(battle&&!battle.done)battle.done=true; // 진행 중이던 이전 전투 루프는 여기서 끝냄
  if(!raid)state.chapter=st.ch;
  if(!raid&&!state.cleared[st.no]&&state.speed>4-1){state.speed=2;save();} // 미클리어 스테이지는 최대 x2
- battle={stage:st,stageIndex:raid?-1:stageIndex,round:0,allies:state.party.map(mkHero),syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
+ let al;ctxOv=raid&&st.raid?'raid':'adv';try{al=state.party.map(mkHero);}finally{ctxOv=null;} // v4.39 일반 스테이지=모험 프리셋, 레이드=레이드 프리셋 장비로 능력치 계산
+ battle={stage:st,stageIndex:raid?-1:stageIndex,round:0,allies:al,syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
  skBattleStart(battle.allies);battle.st0=state;for(const u of [...battle.allies,...battle.foes])u.bt=battle; // 유닛이 어느 전투 소속인지(이전 전투의 늦은 타격이 새 전투에 들어가지 않게)
  if(bg){battle.hunt=true;battle.last=performance.now();saveResume();paintHunt();setTimeout(loop,600/rate());return;}
  page='battle';render();
