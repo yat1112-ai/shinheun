@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.39)</title>
+<title>신흔 DIVINE TRACE (v4.40)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -110,6 +110,10 @@ img{-webkit-user-drag:none;user-select:none}
 .adv-foot{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px}
 .adv-foot .btn.off{opacity:.5}
 .screen.raid .stage-row .no{font-size:17px}
+.raid-lv{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+.raid-lv button{flex:1 0 17%;min-width:0;padding:8px 0;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.4);color:#fff;font-weight:700;border-radius:4px}
+.raid-lv button.on{border-color:#e8c36a;color:#e8c36a}.raid-lv button.lk{opacity:.55}
+.raid-det{margin:0 12px;padding:10px;text-align:center}.raid-det .nm{font-size:16px;font-weight:700}.raid-det .en{font-size:12px;margin:4px 0}.raid-det .btn{width:100%;margin-top:8px}
 
 /* ---- 전투: HUD ---- */
 .hud{height:44px;display:grid;grid-template-columns:minmax(0,1fr) 26px minmax(0,1fr);align-items:center;gap:8px;padding:6px 12px 7px}
@@ -1503,7 +1507,7 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 </head>
 <body>
 <div id="stage"><div id="app" role="application" aria-label="신흔"></div></div>
-<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "avatar_aren": "art/avatar_aren.webp", "avatar_clea": "art/avatar_clea.webp", "avatar_eir": "art/avatar_eir.webp", "avatar_jin": "art/avatar_jin.webp", "avatar_riana": "art/avatar_riana.webp", "bg_1_1": "art/bg_1_1.webp", "bg_1_10": "art/bg_1_10.webp", "bg_1_2": "art/bg_1_2.webp", "bg_1_3": "art/bg_1_3.webp", "bg_1_4": "art/bg_1_4.webp", "bg_1_5": "art/bg_1_5.webp", "bg_1_6": "art/bg_1_6.webp", "bg_1_7": "art/bg_1_7.webp", "bg_1_8": "art/bg_1_8.webp", "bg_1_9": "art/bg_1_9.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch1_hound": "art/ch1_hound.webp", "ch1_moth": "art/ch1_moth.webp", "ch1_nightclaw": "art/ch1_nightclaw.webp", "ch1_shade": "art/ch1_shade.webp", "ch1_sootmane": "art/ch1_sootmane.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_p_arm_l": "art/eir_p_arm_l.webp", "eir_p_arm_r": "art/eir_p_arm_r.webp", "eir_p_belt": "art/eir_p_belt.webp", "eir_p_body": "art/eir_p_body.webp", "eir_p_hair_back": "art/eir_p_hair_back.webp", "eir_p_hair_front": "art/eir_p_hair_front.webp", "eir_p_head": "art/eir_p_head.webp", "eir_p_legs": "art/eir_p_legs.webp", "eir_p_preview": "art/eir_p_preview.webp", "eir_p_scarf": "art/eir_p_scarf.webp", "eir_p_veil": "art/eir_p_veil.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "lobby_l_bg": "art/lobby_l_bg.webp", "lobby_l_fg": "art/lobby_l_fg.webp", "lobby_l_jin": "art/lobby_l_jin.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
+<script>window.SH_ASSETS={"aren": "art/aren.webp", "aren_down": "art/aren_down.webp", "aren_hit": "art/aren_hit.webp", "aren_hurt": "art/aren_hurt.webp", "aren_l_body": "art/aren_l_body.webp", "aren_l_hair": "art/aren_l_hair.webp", "aren_skill": "art/aren_skill.webp", "avatar_aren": "art/avatar_aren.webp", "avatar_clea": "art/avatar_clea.webp", "avatar_eir": "art/avatar_eir.webp", "avatar_jin": "art/avatar_jin.webp", "avatar_riana": "art/avatar_riana.webp", "bg_1_1": "art/bg_1_1.webp", "bg_1_10": "art/bg_1_10.webp", "bg_1_2": "art/bg_1_2.webp", "bg_1_3": "art/bg_1_3.webp", "bg_1_4": "art/bg_1_4.webp", "bg_1_5": "art/bg_1_5.webp", "bg_1_6": "art/bg_1_6.webp", "bg_1_7": "art/bg_1_7.webp", "bg_1_8": "art/bg_1_8.webp", "bg_1_9": "art/bg_1_9.webp", "bg_2_1": "art/bg_2_1.webp", "bg_2_2": "art/bg_2_2.webp", "bg_2_3": "art/bg_2_3.webp", "bg_2_4": "art/bg_2_4.webp", "bg_2_5": "art/bg_2_5.webp", "bg_2_6": "art/bg_2_6.webp", "bg_2_7": "art/bg_2_7.webp", "bg_battle": "art/bg_battle.webp", "bg_ch1": "art/bg_ch1.webp", "bg_ch2": "art/bg_ch2.webp", "bg_ch3": "art/bg_ch3.webp", "bg_ch4": "art/bg_ch4.webp", "bg_ch5": "art/bg_ch5.webp", "bg_lobby": "art/bg_lobby.webp", "ch1_hound": "art/ch1_hound.webp", "ch1_moth": "art/ch1_moth.webp", "ch1_nightclaw": "art/ch1_nightclaw.webp", "ch1_shade": "art/ch1_shade.webp", "ch1_sootmane": "art/ch1_sootmane.webp", "ch2_boar": "art/ch2_boar.webp", "ch2_lizard": "art/ch2_lizard.webp", "ch2_nestmother": "art/ch2_nestmother.webp", "ch2_roadbreaker": "art/ch2_roadbreaker.webp", "ch2_spider": "art/ch2_spider.webp", "clea": "art/clea.webp", "clea_down": "art/clea_down.webp", "clea_hit": "art/clea_hit.webp", "clea_hurt": "art/clea_hurt.webp", "clea_l_body": "art/clea_l_body.webp", "clea_l_hair": "art/clea_l_hair.webp", "clea_l_scarf": "art/clea_l_scarf.webp", "clea_skill": "art/clea_skill.webp", "eir": "art/eir.webp", "eir_down": "art/eir_down.webp", "eir_hit": "art/eir_hit.webp", "eir_hurt": "art/eir_hurt.webp", "eir_l_body": "art/eir_l_body.webp", "eir_l_hair": "art/eir_l_hair.webp", "eir_l_scarf": "art/eir_l_scarf.webp", "eir_skill": "art/eir_skill.webp", "jin": "art/jin.webp", "jin_down": "art/jin_down.webp", "jin_hit": "art/jin_hit.webp", "jin_hurt": "art/jin_hurt.webp", "jin_l_body": "art/jin_l_body.webp", "jin_l_hair": "art/jin_l_hair.webp", "jin_l_scarf": "art/jin_l_scarf.webp", "jin_skill": "art/jin_skill.webp", "lobby_bg_jin": "art/lobby_bg_jin.webp", "lobby_frames": "art/lobby_frames.webp", "lobby_l_bg": "art/lobby_l_bg.webp", "lobby_l_fg": "art/lobby_l_fg.webp", "lobby_l_jin": "art/lobby_l_jin.webp", "riana": "art/riana.webp", "riana_down": "art/riana_down.webp", "riana_hit": "art/riana_hit.webp", "riana_hurt": "art/riana_hurt.webp", "riana_l_body": "art/riana_l_body.webp", "riana_l_hair": "art/riana_l_hair.webp", "riana_l_scarf": "art/riana_l_scarf.webp", "riana_skill": "art/riana_skill.webp", "vareon": "art/vareon.webp", "wolf": "art/wolf.webp", "wraith": "art/wraith.webp", "sk_aren_s1": "art/sk_aren_s1.webp", "sk_aren_s2": "art/sk_aren_s2.webp", "sk_clea_s1": "art/sk_clea_s1.webp", "sk_clea_s2": "art/sk_clea_s2.webp", "sk_eir_s1": "art/sk_eir_s1.webp", "sk_eir_s2": "art/sk_eir_s2.webp", "sk_jin_s1": "art/sk_jin_s1.webp", "sk_jin_s2": "art/sk_jin_s2.webp", "sk_riana_s1": "art/sk_riana_s1.webp", "sk_riana_s2": "art/sk_riana_s2.webp"};</script>
 <script>/* ===== 신흔 사운드 (전부 코드 합성 · 음원 파일 없음) =====
    SFX.play(name, opt) : 효과음 / BGM.play(kind) : 배경음 루프 / 설정 state.snd={sfx,bgm,vol}
    음원 파일이 생기면 이 파일의 해당 함수만 파일 재생으로 바꾸면 됨 */
@@ -1572,7 +1576,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.39—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.40—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1851,6 +1855,7 @@ function migPre(o,have,mig){
 function fixState(s){const d=defaultState(),o={...d,...s};
  for(const k of ['cleared','levels','sk','gear','mats','icu','bag'])if(!o[k]||typeof o[k]!=='object'||Array.isArray(o[k]))o[k]={...d[k]};
  if(o.bag.cap===undefined)o.bag.cap=d.bag.cap;o.bag.tmp=arr(o.bag.tmp);
+ if(!o.raidProg||typeof o.raidProg!=='object'||Array.isArray(o.raidProg))o.raidProg={}; /* v4.40 레이드 종류별 최고 클리어 단계 */
  o.party=arr(o.party);if(!o.party.length)o.party=d.party.slice();
  o.items=arr(o.items).filter(it=>it&&typeof it==='object');
  for(const it of o.items){it.m=arr(it.m);it.b=arr(it.b).filter(Array.isArray);}
@@ -2081,7 +2086,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.39</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.40</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2280,6 +2285,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   </div>
   <div class="setsec">기타</div>
   <div class="setbox">${tog('motion','모션 효과',state.motion,'끄면 카드·컷인·로비 시차 움직임 최소화')}<button class="setrow" id="s-tilt"><span><b>센서 상태 · ${tiltStatus()}</b><small>로비 기울기 시차 · 눌러서 다시 시도</small></span><em>↻</em></button>${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
+   <button class="setrow" id="s-raidlog"><span><b>레이드 드랍 기록 복사</b><small>최근 ${readRaidLog().length}건 · 단계·드랍 장비·부옵 롤 JSON 을 클립보드로 복사</small></span><em>⧉</em></button>
    <button class="setrow" id="s-errlog"><span><b>최근 오류 보기</b><small>문제가 생기면 눌러서 복사한 뒤 알려 주세요 (${errList().length}개)</small></span><em>›</em></button>
    <button class="setrow danger" id="s-reset"><span><b>진행도 초기화</b><small>이 기기와 클라우드 저장을 모두 지움 (되돌릴 수 없음)</small></span><em>!</em></button>
    <button class="setrow" id="s-rigv"><span><b>개발: 에이르 리그 미리보기</b><small>스켈레탈 재생기 시험 · idle/hit/attack/skill</small></span><em>›</em></button></div>`:''}
@@ -2309,6 +2315,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   if(e.target.closest('#s-switch')){toast('claude.ai에서 계정을 바꾼 뒤 이 화면으로 돌아와 동기화');return;}
   if(e.target.closest('#s-google')){if(cloud.ref){try{await firebase.auth().signOut();}catch(x){}cloud.ref=null;}await googleLogin();return;}
   if(e.target.closest('#s-logout')){await googleLogout();return;}
+  if(e.target.closest('#s-raidlog')){const rep=JSON.stringify(readRaidLog());const ok=()=>gameDlg('레이드 드랍 기록을 복사했어요. 붙여 넣어서 전달해 주세요',{noCancel:1});if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(rep).then(ok,()=>gameDlg('복사해서 보내 주세요',{area:rep,noCancel:1}));else gameDlg('복사해서 보내 주세요',{area:rep,noCancel:1});return;}
   if(e.target.closest('#s-code')){saveCodeDialog();return;}
   if(e.target.closest('#s-reset')){if(!await gameConfirm('진행도를 모두 지울까요? 되돌릴 수 없어요.'))return;state=defaultState();state.ts=Date.now();try{localStorage.removeItem(RESUME_KEY);}catch(x){}save();try{if(cloud.ref)await cloud.ref.set(JSON.parse(JSON.stringify(state)));}catch(x){}render();toast('초기화 완료');return;}
   const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
@@ -2343,7 +2350,16 @@ const ITEM_CFG={
 };
 const USAGE=[['normal','일반'],['boss','보스'],['raid','레이드']];
 /* v4.21 레이드(임시 수치·임시 이미지): 「신흔의 잔향체」6종 = 세트별 6성 드랍. 이미지는 기존 몬스터 재활용(temp:true), 새 이미지가 오면 art 키만 채우면 교체 */
-const RAID_CFG={lv:40,open:'2-10',cost:3,tix:{5:1,10:2},drop:[1,2],rune:[0,2],gold:2000,xp:1000}; // lv=1단계 고정 / open=개방 스테이지 / cost=입장권 / tix=x-5·x-10 보스 지급 / drop=6성 장비 수 / rune=재련석
+const RAID_CFG={lv:40,open:'2-10',cost:3,tix:{5:1,10:2},drop:[1,2],rune:[0,2],gold:2000,xp:1000, // lv=1단계 고정 / open=개방 스테이지 / cost=입장권 / tix=x-5·x-10 보스 지급 / drop=6성 장비 수 / rune=재련석
+ /* v4.40 단계표(수치만 바꿔도 됨): m=보스 HP·ATK 배율(def·spd 는 (m-1)/2 만큼만 상승) · hi=상위 부옵 안내 문구 · ud=부옵 롤 u 분포 [[확률,하한,상한],..] (배율=0.30+0.20u, 주옵 고정) · pat=특수 패턴 슬롯(6~7단계, 다음 작업) · lock=잠금(8~10단계 특수 레이드 캐릭터 필요) */
+ stages:[{m:1,hi:'없음',ud:[[1,0,.5]]},{m:1.25,hi:'없음',ud:[[1,0,.5]]},{m:1.55,hi:'없음',ud:[[1,0,.5]]},{m:1.95,hi:'없음',ud:[[1,0,.5]]},{m:2.45,hi:'없음',ud:[[1,0,.5]]},
+  {m:3,hi:'극소수',ud:[[.98,0,.5],[.02,.5,.8]],pat:null},{m:3.7,hi:'소수',ud:[[.94,0,.5],[.06,.5,.8]],pat:null}, /* 시뮬(tests/raid_sub_sim.js): 초안(6단계 5%·7단계 15%+상한 .55)은 7단계 장비 64%가 상위 부옵 보유로 과함 → 2%/6%, 기본 구간 상한 .5, 최대 배율 0.46 */
+  {m:4.5,lock:1,pat:null},{m:5.5,lock:1,pat:null},{m:7,lock:1,pat:null}]};
+const raidSt=n=>RAID_CFG.stages[n-1]||RAID_CFG.stages[0];
+const raidBest=set=>{const p=state.raidProg;return Math.max(0,Math.min(7,(p&&p[set])|0));}; // 레이드 종류별 최고 클리어 단계(기록 없음 = 0 → 1단계만 열림)
+const raidUnlocked=(set,n)=>n>=1&&n<=10&&!raidSt(n).lock&&n<=raidBest(set)+1;
+const rollU=ud=>{let x=Math.random();for(const [p,lo,hi] of ud){if(x<p)return lo+Math.random()*(hi-lo);x-=p;}const l=ud[ud.length-1];return l[1]+Math.random()*(l[2]-l[1]);};
+let raidSel=null,raidN=1; // 레이드 화면 선택(종류·단계)
 const RAIDS=[
  {set:'atk',name:'붉은 잔향체',img:'wolf',tint:'saturate(2.4) hue-rotate(-20deg) brightness(.95)',w:170,h:163,rec:['aren'],st:{atk:146,hp:2300,spd:94,def:30}},
  {set:'hp',name:'뿌리내린 잔향체',img:'ch2_boar',tint:'hue-rotate(60deg) saturate(1.4)',w:225,h:126,rec:['clea'],st:{atk:132,hp:2600,spd:84,def:30}},
@@ -2353,7 +2369,7 @@ const RAIDS=[
  {set:'insight',name:'그림자 잔향체',img:'vareon',tint:'hue-rotate(250deg) saturate(1.3) brightness(.9)',w:170,h:190,rec:['jin','riana'],st:{atk:146,hp:2200,spd:92,def:30}},
 ].map(r=>({...r,temp:true,art:null,key:'raid_'+r.set}));
 RAIDS.forEach(r=>{FOES[r.key]={name:r.name,img:r.art||r.img,tint:r.tint,boss:true,...r.st,w:r.w,h:r.h,s1:{name:'잔향의 파동',cd:3,fx:[{t:'dmg',to:'all',mult:1.1,hits:1,pattern:'burst'}]}};});
-const raidStage=r=>({ch:2,no:'RAID',name:r.name,en:'ECHO RAID',foes:[r.key],bg:'bg_ch2',lv:RAID_CFG.lv,gold:RAID_CFG.gold,xp:RAID_CFG.xp,boss:true,raid:r.set});
+const raidStage=(r,n=1)=>({ch:2,no:'RAID '+n,name:r.name+' · '+n+'단계',en:'ECHO RAID',foes:[r.key],bg:'bg_ch2',lv:RAID_CFG.lv,gold:RAID_CFG.gold,xp:RAID_CFG.xp,boss:true,raid:r.set,rs:n,rm:raidSt(n).m});
 const raidOpen=()=>!!state.cleared[RAID_CFG.open];
 const recRaids=id=>RAIDS.filter(r=>r.rec.includes(id)).map(r=>r.name);
 /* v4.21 6성 세트 효과(임시): 같은 세트 6성 2개 = 계열 능력치 +8%, 4개 = 고유 효과(전투 훅은 mkHero 의 set4 → hitOne·healUnit·runSkill) */
@@ -2401,13 +2417,18 @@ const sellPrice=it=>Math.round(ITEM_CFG.sell[it.s-1]*(1+ITEM_CFG.sellEnh*(it.x||
 const sellStone=it=>Math.round(enhSpent(it).st*ITEM_CFG.refund);
 const pickOf=a=>a[Math.floor(Math.random()*a.length)];
 const rollVal=(k,s,r)=>{const b=ITEM_CFG.base[s-1],u=(k==='spd'?b*ITEM_CFG.spdMul:(ITEM_CFG.kindMul[k]||1)*b)*r;return k==='spd'?Math.max(1,Math.round(u)):Math.round(u*10000)/10000;};
-function mkItem(s,t){const mk=pickOf(ITEM_CFG.slots[t].main),pool=Object.keys(ITEM_CFG.stat).filter(k=>k!==mk),R=s===6?ITEM_CFG.subR6:ITEM_CFG.subR,b=[];
- for(let j=0;j<ITEM_CFG.subN[s-1];j++){const k=pool.splice(Math.floor(Math.random()*pool.length),1)[0];b.push([k,rollVal(k,s,R[0]+Math.random()*(R[1]-R[0])),1]);}
+function mkItem(s,t,ud,us){const mk=pickOf(ITEM_CFG.slots[t].main),pool=Object.keys(ITEM_CFG.stat).filter(k=>k!==mk),R=s===6?ITEM_CFG.subR6:ITEM_CFG.subR,b=[]; // v4.40 ud=레이드 단계 부옵 롤 분포(없으면 기존 균등), us=롤 u 를 모아 줄 배열(기록용)
+ for(let j=0;j<ITEM_CFG.subN[s-1];j++){const k=pool.splice(Math.floor(Math.random()*pool.length),1)[0],u=ud?rollU(ud):Math.random();if(us)us.push(u);b.push([k,rollVal(k,s,R[0]+u*(R[1]-R[0])),1]);}
  return {i:state.iseq++,s,t,m:[mk,rollVal(mk,s,1)],b,x:0,l:0};}
+/* v4.40 레이드 드랍 기록: 게임 저장과 분리된 키, 최근 300건 링 버퍼 */
+const RAIDLOG_KEY='shinheun-raidlog',RAIDLOG_MAX=300;
+const readRaidLog=()=>{try{const a=JSON.parse(localStorage.getItem(RAIDLOG_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}};
+function raidLogAdd(st,win,lg){try{const a=readRaidLog();a.push({t:new Date().toISOString(),set:st.raid,stage:st.rs||1,win:!!win,drops:win?lg||[]:[]});while(a.length>RAIDLOG_MAX)a.shift();localStorage.setItem(RAIDLOG_KEY,JSON.stringify(a));}catch(e){}}
 function rollStar(ch){const w=ITEM_CFG.drop[ch]||ITEM_CFG.drop[5];let x=Math.random()*w.reduce((a,c)=>a+c,0);for(let i=0;i<6;i++){x-=w[i];if(x<0)return i+1;}return 1;}
 /* v4.20 획득 시 흐름: 자동잠금 판정 → (잠기지 않은 것 중) 자동정리 조건이면 즉시 판매 → 가방(가득이면 임시 보관함, 그것도 가득이면 폐기) */
-function dropItems(st){const got=[];let full=0,sold=0,sg=0,tmp=0,dis=0,n=st.raid?RAID_CFG.drop[0]+Math.floor(Math.random()*(RAID_CFG.drop[1]-RAID_CFG.drop[0]+1)):ITEM_CFG.cnt[0]+Math.floor(Math.random()*(ITEM_CFG.cnt[1]-ITEM_CFG.cnt[0]+1))+(st.boss?ITEM_CFG.boss:0);flushTmp();
- for(let j=0;j<n;j++){const it=mkItem(st.raid?6:rollStar(st.ch),Math.floor(Math.random()*4));if(st.raid)it.z=st.raid;const sc=bestScore(it).s;if(icu().al&&sc>=icu().as)it.l=2;
+function dropItems(st){const got=[];let full=0,sold=0,sg=0,tmp=0,dis=0,n=st.raid?RAID_CFG.drop[0]+Math.floor(Math.random()*(RAID_CFG.drop[1]-RAID_CFG.drop[0]+1)):ITEM_CFG.cnt[0]+Math.floor(Math.random()*(ITEM_CFG.cnt[1]-ITEM_CFG.cnt[0]+1))+(st.boss?ITEM_CFG.boss:0);flushTmp();const lg=[];
+ for(let j=0;j<n;j++){const us=[],it=mkItem(st.raid?6:rollStar(st.ch),Math.floor(Math.random()*4),st.raid?raidSt(st.rs||1).ud:null,us);if(st.raid)it.z=st.raid;const sc=bestScore(it).s;if(icu().al&&sc>=icu().as)it.l=2;
+  if(st.raid)lg.push({slot:ITEM_CFG.slots[it.t].n,main:[it.m[0],it.m[1]],subs:it.b.map((o,q)=>[o[0],o[1],Math.round(us[q]*1000)/1000]),score:sc});
   if(it.s===6&&it.z&&icu().ad&&!isProtected(it)){addMat(fragKey(it.z),1);dis++;continue;} // v4.22 6성 자동분해(기본 OFF, 잠금·자동잠금 제외)
   if(cleanable(it,sc)){const p=sellPrice(it);state.gold+=p;sold++;sg+=p;continue;}
   if(state.items.length<state.bag.cap){state.items.push(it);got.push(it);}
@@ -2416,7 +2437,7 @@ function dropItems(st){const got=[];let full=0,sold=0,sg=0,tmp=0,dis=0,n=st.raid
  const sn=st.raid?0:st.boss?ITEM_CFG.stoneBoss:ITEM_CFG.stoneDrop[0]+Math.floor(Math.random()*(ITEM_CFG.stoneDrop[1]-ITEM_CFG.stoneDrop[0]+1));if(sn)addMat('stone',sn);
  const rn=st.raid?RAID_CFG.rune[0]+Math.floor(Math.random()*(RAID_CFG.rune[1]-RAID_CFG.rune[0]+1)):0,tk=!st.raid&&st.boss?(RAID_CFG.tix[String(st.no).split('-')[1]]||0):0; // v4.21 재련석(레이드)·입장권(x-5 1 · x-10 2)
  if(rn)addMat('rune',rn);if(tk)addMat('tix',tk);
- return {got,full,stone:sn,rune:rn,tix:tk,sold,sg,tmp,dis,lock:got.filter(i=>i.l).length};}
+ return {got,full,stone:sn,rune:rn,tix:tk,sold,sg,tmp,dis,lock:got.filter(i=>i.l).length,lg};}
 /* v4.20 보호 규칙·자동정리·임시 보관함 */
 const inPreset=id=>!!wornBy(id); /* v4.39 모험·레이드 프리셋에 든 장비 = 보호 대상(준비중 칸은 제외) */
 const presetWho=id=>useTxt(id);
@@ -2893,19 +2914,30 @@ function viewAdventure(){
 }
 
 /* ---------- 레이드 (v4.21) ---------- */
-function viewRaid(){const open=raidOpen(),tk=matN('tix'),cost=RAID_CFG.cost,my=partyPower(state.party);
+function viewRaid(){const open=raidOpen(),tk=matN('tix'),cost=RAID_CFG.cost,my=partyPower(state.party),sel=open&&raidSel?RAIDS.find(r=>r.set===raidSel):null,fp=sel?stagePower(raidStage(sel,raidN)):0; // v4.40 종류 선택 → 단계 선택(1~10)
  const s=el(`<section class="screen adv raid">
   <div class="topbar"><div class="left"><span class="stage-no">RAID</span><span class="stage-name">신흔의 잔향체</span></div><div class="right"><span class="turn mats">🎫${tk}</span><span class="turn mats">🔶${matN('rune')}</span></div></div>
-  <p class="party-note">${open?`입장권 ${cost}개로 도전해요. 이기면 해당 세트 6성 장비와 재련석을 얻어요. 입장권은 x-5 보스 🎫1 · x-10 보스 🎫2 (반복 지급).`:`${RAID_CFG.open} 클리어 후 개방돼요.`}</p>
-  <div class="stage-list">${RAIDS.map(r=>{const fp=stagePower(raidStage(r));return `<button class="stage-row cut-r boss ${open?'':'locked'}" data-r="${r.set}" ${open?'':'disabled'}><span class="no">${ITEM_CFG.sets[r.set]}</span><span><div class="nm">${r.name}</div><div class="en">LV.${RAID_CFG.lv} · 추천 ${r.rec.map(heroNm).join('·')}</div><div class="pw ${pwCls(my,fp)}">적 전투력 <b>${fmt(fp)}</b></div></span><span class="st">${tk>=cost?'ENTER':'🎫'+cost}</span></button>`;}).join('')}</div>
+  <p class="party-note">${!open?`${RAID_CFG.open} 클리어 후 개방돼요.`:sel?`단계를 고르고 입장권 ${cost}개로 도전해요. 이전 단계를 처음 이기면 다음 단계가 열려요. 획득량(6성 장비·재련석·골드·경험치)은 모든 단계 같아요.`:`레이드를 고르세요. 입장권은 x-5 보스 🎫1 · x-10 보스 🎫2 (반복 지급).`}</p>
+  ${sel?`<div class="stage-list"><div class="stage-row cut-r boss"><span class="no">${ITEM_CFG.sets[sel.set]}</span><span><div class="nm">${sel.name}</div><div class="en">최고 ${raidBest(sel.set)}단계 클리어 · 추천 ${sel.rec.map(heroNm).join('·')}</div></span><button class="btn ghost" data-rb>목록</button></div></div>
+  <div class="raid-lv">${RAID_CFG.stages.map((q,i)=>{const n=i+1,ok=raidUnlocked(sel.set,n);return `<button class="${raidN===n?'on':''} ${ok?'':'lk'}" data-n="${n}">${q.lock?'🔒':ok?'':'🔒'}${n}</button>`;}).join('')}</div>
+  <div class="raid-det panel">${raidSt(raidN).lock?`<div class="nm">${raidN}단계 🔒</div><div class="en">특수 레이드 캐릭터 필요 (준비중)</div>`:!raidUnlocked(sel.set,raidN)?`<div class="nm">${raidN}단계 🔒</div><div class="en">${raidN-1}단계를 먼저 이겨야 열려요</div>`:`<div class="nm">${raidN}단계 · LV.${RAID_CFG.lv}</div><div class="pw ${pwCls(my,fp)}">내 전투력 <b>${fmt(my)}</b> · 적 전투력 <b>${fmt(fp)}</b></div>
+   <div class="en">보상 6성 장비 ${RAID_CFG.drop[0]}~${RAID_CFG.drop[1]}개 · 🔶${RAID_CFG.rune[0]}~${RAID_CFG.rune[1]} · GOLD ${fmt(RAID_CFG.gold)} · XP ${fmt(RAID_CFG.xp)} (모든 단계 동일)</div>
+   <div class="en">부옵 상위 수치: ${raidSt(raidN).hi}</div>
+   <button class="btn primary cut-r" data-go-r ${tk>=cost?'':'disabled'}>${tk>=cost?'도전':'🎫'+cost+' 필요'}</button>`}</div>`
+  :`<div class="stage-list">${RAIDS.map(r=>`<button class="stage-row cut-r boss ${open?'':'locked'}" data-r="${r.set}" ${open?'':'disabled'}><span class="no">${ITEM_CFG.sets[r.set]}</span><span><div class="nm">${r.name}</div><div class="en">추천 ${r.rec.map(heroNm).join('·')}</div><div class="pw">최고 ${raidBest(r.set)}단계 클리어 · 다음 ${Math.min(7,raidBest(r.set)+1)}단계</div></span><span class="st">${raidBest(r.set)}/7</span></button>`).join('')}</div>`}
   <div class="adv-foot"><button class="btn ghost" data-go="adventure">모험</button><button class="btn ghost" data-go="party">편성</button><button class="btn ghost" data-go="bag">가방</button></div>
  </section>`);
- s.addEventListener('click',e=>{const r=e.target.closest('[data-r]');if(r&&!r.disabled){startRaid(r.dataset.r);return;}const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
+ s.addEventListener('click',e=>{const r=e.target.closest('[data-r]');if(r&&!r.disabled){raidSel=r.dataset.r;raidN=Math.min(7,raidBest(raidSel)+1);render();return;}
+  if(e.target.closest('[data-rb]')){raidSel=null;render();return;}
+  const n=e.target.closest('[data-n]');if(n){raidN=+n.dataset.n;render();return;}
+  if(e.target.closest('[data-go-r]')){if(raidSel)startRaid(raidSel,raidN);return;}
+  const b=e.target.closest('[data-go]');if(b)go(b.dataset.go);});
  return s;}
 
 /* ---------- 전투 준비 ---------- */
 function mkHero(id,i){const h=HEROES.find(x=>x.id===id),m=lvMult(heroLv(id)),B=skBonus(),E=gearBonus(id),f4=setFour(id); /* 장비 = startBattle 이 정한 콘텐츠(ctxOv) 프리셋 */return {side:'ally',i,id,name:h.name,en:h.en,set4:f4,atk:Math.round(h.atk*m*(1+B.atk+E.atk)),max:Math.round(h.hp*m*(1+B.hp+E.hp)),hp:Math.round(h.hp*m*(1+B.hp+E.hp)),spd:h.spd+B.spd+E.spd+(f4==='spd'?8:0),def:Math.round(h.def*(1+B.hp+E.def+(f4==='def'?.1:0))),ecrit:E.crit,eweak:E.weak,s1:{...h.s1,cdMax:h.s1.cd,cd:0},s2:{...h.s2,cdMax:Math.max(1,h.s2.cd-(f4==='spd'?1:0)),cd:0},art:h.art||null,buffs:[],dmg:0,heal:0,taken:0,maxHit:0};}
-function mkFoe(key,i,lv){const f=FOES[key],m=1+(lv-1)*.12;return {side:'enemy',i,key,img:f.img||key,tint:f.tint||'',name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m),max:Math.round(f.hp*m),hp:Math.round(f.hp*m),spd:f.spd,def:f.def,s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
+function mkFoe(key,i,lv,rm=1){const f=FOES[key],m=1+(lv-1)*.12,h=(rm-1)/2+1;return {side:'enemy',i,key,img:f.img||key,tint:f.tint||'',name:f.name,boss:!!f.boss,atk:Math.round(f.atk*m*rm),max:Math.round(f.hp*m*rm),hp:Math.round(f.hp*m*rm),spd:Math.round(f.spd*h),def:Math.round(f.def*h), // v4.40 rm=레이드 단계 배율(HP·ATK 전체, def·spd 절반 비율) · 일반 스테이지는 1
+s1:f.s1?{...f.s1,cdMax:f.s1.cd,cd:1}:null,buffs:[],w:f.w,h:f.h};}
 /* v3.8 전투력 (표시 전용 · 전투 계산에는 안 씀) — 아군·적 같은 식
    전투력 = √(공격 기대치 × 생존 기대치) × 10, 파티/적 편성 = 합계 (란체스터식: 합계 비율로 우열 비교)
    공격 기대치 = 공격력 × (1 + 치명·약점 기대 가산) × (1 + 스킬 가산) × 속도/100 · 생존 기대치 = 체력 × (1 + 방어/100)
@@ -2917,11 +2949,12 @@ function powerOf(u){const hp=u.max||u.hp,crit=u.crit!=null?u.crit:CRIT.chance,we
 function heroPower(id,cx){const h=HEROES.find(x=>x.id===id);if(!h)return 0;const st=heroStats(h,false,cx),ps=PASSIVE[id];
  return powerOf({atk:st.atk,max:st.hp,def:st.def,spd:st.spd,s1:h.s1,s2:h.s2,crit:st.crit+(ps&&ps.v.crit||0),weak:st.weak+(ps&&ps.v.weak||0),ps:!!ps});}
 const partyPower=(ids,cx)=>ids.reduce((n,id)=>n+heroPower(id,cx),0); // v4.39 cx 생략 시 지금 화면의 콘텐츠(모험 기본, 레이드 화면·레이드 전투는 레이드)
-const stagePower=st=>st.foes.reduce((n,k,i)=>n+powerOf(mkFoe(k,i,st.lv)),0);
+const stagePower=st=>st.foes.reduce((n,k,i)=>n+powerOf(mkFoe(k,i,st.lv,st.rm)),0);
 const pwCls=(me,foe)=>me>=foe*1.1?'up':me<=foe*.9?'down':'even'; // 10% 이상 차이: 초록(유리)/빨강(불리), 그 사이 노랑
 const RESUME_KEY='shinheun-resume';
-function startRaid(set){const r=RAIDS.find(x=>x.set===set);if(!r)return;if(!raidOpen()){toast(RAID_CFG.open+' 클리어 후 개방돼요');return;}
- if(matN('tix')<RAID_CFG.cost){toast(`입장권이 부족해요 (🎫${matN('tix')}/${RAID_CFG.cost})`);return;}addMat('tix',-RAID_CFG.cost);save();startBattle(raidStage(r));}
+function startRaid(set,n=1){const r=RAIDS.find(x=>x.set===set);if(!r)return;if(!raidOpen()){toast(RAID_CFG.open+' 클리어 후 개방돼요');return;}
+ if(raidSt(n).lock){toast('특수 레이드 캐릭터가 필요해요 (준비중)');return;}if(!raidUnlocked(set,n)){toast(`${n-1}단계를 먼저 클리어해야 해요`);return;}
+ if(matN('tix')<RAID_CFG.cost){toast(`입장권이 부족해요 (🎫${matN('tix')}/${RAID_CFG.cost})`);return;}addMat('tix',-RAID_CFG.cost);save();startBattle(raidStage(r,n));}
 function saveResume(){if(!battle||battle.stage.raid)return;try{localStorage.setItem(RESUME_KEY,JSON.stringify({i:battle.stageIndex,after:state.after,repeat:battle.repeat,t:Date.now()}));}catch(e){}}
 function clearResume(){try{localStorage.removeItem(RESUME_KEY);}catch(e){}}
 function tryResume(){try{const r=JSON.parse(localStorage.getItem(RESUME_KEY)||'null');if(!r||r.after==='stop'||Date.now()-r.t>15*60*1000||!STAGES[r.i])return false;state.after=r.after;startBattle(r.i);battle.repeat=r.repeat||battle.repeat;paintRepeat();toast('전투 이어서 진행 (자동 '+(r.after==='next'?'다음':'반복')+')');return true;}catch(e){return false;}}
@@ -2936,7 +2969,7 @@ function startBattle(stageIndex,keepRepeat=false){
  if(!raid)state.chapter=st.ch;
  if(!raid&&!state.cleared[st.no]&&state.speed>4-1){state.speed=2;save();} // 미클리어 스테이지는 최대 x2
  let al;ctxOv=raid&&st.raid?'raid':'adv';try{al=state.party.map(mkHero);}finally{ctxOv=null;} // v4.39 일반 스테이지=모험 프리셋, 레이드=레이드 프리셋 장비로 능력치 계산
- battle={stage:st,stageIndex:raid?-1:stageIndex,round:0,allies:al,syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
+ battle={stage:st,stageIndex:raid?-1:stageIndex,round:0,allies:al,syn:synergiesFor(state.party),foes:st.foes.map((k,i)=>mkFoe(k,i,st.lv,st.rm)),order:[],busy:false,done:false,paused:false,activeMs:0,last:0,totalDmg:0,target:null,repeat:keepRepeat&&battle?battle.repeat:{runs:0,wins:0,gold:0,xp:0}};
  skBattleStart(battle.allies);battle.st0=state;for(const u of [...battle.allies,...battle.foes])u.bt=battle; // 유닛이 어느 전투 소속인지(이전 전투의 늦은 타격이 새 전투에 들어가지 않게)
  if(bg){battle.hunt=true;battle.last=performance.now();saveResume();paintHunt();setTimeout(loop,600/rate());return;}
  page='battle';render();
@@ -3286,7 +3319,9 @@ function finish(win){const b=battle;b.done=true;b.win=win;SND.play(win?'win':'lo
   const ups=[];T('levelUp',()=>{for(const id of state.party){const lv=heroLv(id);const need=xpForLv(lv);const cur=(state.heroXp=state.heroXp||{})[id]||0;const nx=cur+xp;if(nx>=need){state.levels[id]=lv+1;state.heroXp[id]=nx-need;ups.push(id);}else state.heroXp[id]=nx;}});b.levelUps=ups;
   b.drops={got:[],full:0,stone:0,rune:0,tix:0,sold:0,sg:0,tmp:0,dis:0,lock:0};T('dropItems',()=>{b.drops=dropItems(st);});
   T('repeatEq',()=>{const d=b.drops,e=b.repeat.eq=b.repeat.eq||{n:0,lk:0,sd:0,sg:0,st:0,tm:0};e.fl=(e.fl||0)+d.full;e.n+=d.got.length;e.lk+=d.lock;e.sd+=d.sold;e.sg+=d.sg;e.st+=d.stone;e.tm+=d.tmp;});
+  if(st.raid)T('raidProg',()=>{const n=st.rs||1;state.raidProg=state.raidProg||{};if(n>(state.raidProg[st.raid]|0))state.raidProg[st.raid]=n;}); // v4.40 첫 승리 → 다음 단계 해금
   T('plGain',()=>plGain(Math.ceil(xp/2)));T('save',()=>save());}
+ if(st.raid)T('raidLog',()=>raidLogAdd(st,win,b.drops&&b.drops.lg));
  b.reward={gold,xp,first};
  const mode=st.raid?'stop':state.after; // 레이드는 자동 반복·다음 없음
  const toResult=()=>{try{clearResume();}catch(e){}setTimeout(()=>{try{showResult(b);}catch(e){logErr('showResult',e);}},900/rate());};
@@ -3318,7 +3353,7 @@ function viewResult(){
  </section>`);
  const paintRows=(tab)=>{const key={dmg:'dmg',heal:'heal',taken:'taken'}[tab];const list=[...b.allies].sort((x,y)=>(y[key]||0)-(x[key]||0));const tot=list.reduce((n,h)=>n+(h[key]||0),0)||1;$('#rows',s).innerHTML=list.map((h,i)=>`<div class="row ${i===0&&(h[key]||0)>0?'top':''}"><div class="face" style="${faceStyle(h.id,28)}"></div><div><span class="nm">${h.name}</span><div class="bar"><i style="width:${(h[key]||0)/tot*100}%"></i></div></div><span class="v">${fmt(h[key]||0)}</span><span class="p">${Math.round((h[key]||0)/tot*100)}%</span></div>`).join('');};
  paintRows('dmg');
- s.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){$$('[data-tab]',s).forEach(x=>x.classList.toggle('on',x===t));paintRows(t.dataset.tab);return;}const a=e.target.closest('[data-act]');if(a&&!a.disabled){if(a.dataset.act==='retry'){if(st.raid)startRaid(st.raid);else startBattle(b.stageIndex);}else startBattle(b.stageIndex+1);return;}const g=e.target.closest('[data-go]');if(g){battle=null;go(g.dataset.go);}});
+ s.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){$$('[data-tab]',s).forEach(x=>x.classList.toggle('on',x===t));paintRows(t.dataset.tab);return;}const a=e.target.closest('[data-act]');if(a&&!a.disabled){if(a.dataset.act==='retry'){if(st.raid)startRaid(st.raid,st.rs||1);else startBattle(b.stageIndex);}else startBattle(b.stageIndex+1);return;}const g=e.target.closest('[data-go]');if(g){battle=null;go(g.dataset.go);}});
  return s;
 }
 
