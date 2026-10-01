@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.32)</title>
+<title>신흔 DIVINE TRACE (v4.34)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1371,7 +1371,7 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .foe.tinted.dead .sprite{filter:grayscale(1)}
 
 /* ===== v4.29 캐릭터창 한 화면 구성: 낮은 상단(일러스트+2열 능력치 칩) · 스킬/장비 2탭(스크롤 없음) · 하단 「상세」 시트 ===== */
-.chv{position:relative}
+.chv{position:absolute}
 .chv .ch-top{height:clamp(150px,23vh,196px)}
 .chv .ch-top .hd.gal{flex:0 0 40%}
 .chv .ch-top .hd .nm .n{font-size:18px}
@@ -1415,6 +1415,33 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .chsheet .sh-tabs button{flex:none;padding:5px 9px;font-size:11.5px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
 .chsheet .sh-tabs button.on{color:#fff;box-shadow:inset 0 0 0 1px #F2C96F;background:rgba(242,201,111,.1)}
 .chsheet .sh-body{flex:1 1 auto;min-height:0;max-height:64vh;overflow:auto}
+/* v4.33 캐릭터창 고정 레이아웃: 상단·탭·하단 목록·상세 버튼은 고정 높이, 탭 내용은 같은 높이 박스 안에서만 스크롤 (vh·내용 길이 의존 제거) */
+.chv .chd{flex:1 1 0;min-height:0;overflow:hidden}
+.chv .ch-top{flex:none;height:196px}
+.chv .ch-tabs{flex:none;height:34px}
+.chv .ch-body{flex:1 1 0;height:0;min-height:0;overflow-x:hidden;overflow-y:auto}
+.chv .ch-more{position:relative;z-index:6;flex:none;height:36px;touch-action:manipulation}
+.chv .ch-thumbs{flex:none;height:56px;z-index:1}
+.chsheet .box.wide{height:520px;max-height:94%}
+.chsheet .sh-body{max-height:none}
+.chv .gcards .gc{min-height:92px}
+.chv .gcards .gc .gen{font-family:var(--bb);font-size:18px;line-height:1;color:#F2C96F}
+.chv .gcards .gc .gmn{font-size:11.5px;color:#fff}
+.chv .gcards .gc .gtap{font-size:9px;color:var(--muted)}
+.chv .gbtns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.chv .gbtns .btn{padding:0 2px;font-size:11.5px;white-space:nowrap}
+.enh-big{display:flex;align-items:baseline;justify-content:center;gap:10px;padding:4px 0}
+.enh-big b{font-family:var(--bb);font-weight:400;font-size:34px;color:#F2C96F}
+.enh-big span{font-size:15px;color:var(--silver)}
+.be-t{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.be-t button{height:32px;font-size:13px;color:var(--muted);background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--line)}
+.be-t button.on{color:#fff;background:rgba(242,201,111,.12);box-shadow:inset 0 0 0 1px #F2C96F}
+.be-p .ln{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:12px;padding:3px 0;border-bottom:1px solid var(--line)}
+.be-p .ln .k{font-size:11px;color:var(--muted)}
+.be-p .ln b{font-weight:400;color:#F2C96F;white-space:nowrap}
+.bsum{height:92px;min-height:92px}
+.bsum .bi{overflow:hidden}
+.bsum .bi .sc2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 </style>
 </head>
@@ -1489,7 +1516,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.32—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.34—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1966,7 +1993,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.32</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.34</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2334,7 +2361,7 @@ function itemDetail(iid){const it=itemById(iid);if(!it)return;const sl=ITEM_CFG.
   <div class="ln main"><span class="k">주옵션</span><b>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</b></div>
   <div class="subs">${it.b.length?it.b.map(([k,v])=>`<div class="ln"><span class="k">부옵션</span><b>${iStat(k).n} ${fmtStat(k,v)}</b></div>`).join(''):'<div class="ln"><span class="k">부옵션</span><b>없음</b></div>'}</div>
   <div class="ln"><span class="k">장비 점수</span><b>${USAGE.map(([u,n])=>{const b=bestScore(it,u);return `${n} ${b.s}`;}).join(' · ')}</b></div>
-  <p class="note">최고 ${(()=>{const b=bestScore(it);return `${b.s}점 · ${heroNm(b.h)} (${USAGE.find(a=>a[0]===b.u)[1]})`;})()}<br>${w?`착용 중 · ${heroNm(w)}`:'미착용'} · 판매 ${fmt(sellPrice(it))}G${sellStone(it)?` + 강화석 ${sellStone(it)}`:''}${it.l===2?' · 자동잠금':''}</p>
+  <p class="note">${(()=>{const b=bestScore(it);return `추천 캐릭터 ${heroNm(b.h)} (${USAGE.find(a=>a[0]===b.u)[1]}) · 점수 ${b.s}`;})()}<br>착용: ${w?heroNm(w):'없음'}<br>판매 ${fmt(sellPrice(it))}G${sellStone(it)?` + 강화석 ${sellStone(it)}`:''}${it.l===2?' · 자동잠금':''}</p>
   ${(it.x||0)<ITEM_CFG.maxX[it.s-1]?(()=>{const c=enhCost(it),nx=(it.x||0)+1,ok=matN('stone')>=c.st&&state.gold>=c.g;return `<div class="row enh"><button class="btn ${ok?'primary':'ghost'}" data-ia="enh">강화 +${nx} · 💎${c.st} · ${fmt(c.g)}G</button></div><p class="note">보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G${nx%3===0?` · +${nx} 에서 부옵션 ${it.b.length<4&&it.s<6?'추가':'상승'}`:''}</p>`;})():'<p class="note">최대 강화 (+'+(it.x||0)+')</p>'}
   <div class="row"><button class="btn primary" data-ia="eq">착용</button><button class="btn ghost" data-ia="lock">${it.l?'잠금 해제':'잠금'}</button><button class="btn ghost" data-ia="fav">${it.f?'⭐ 해제':'⭐ 즐겨찾기'}</button><button class="btn ghost" data-ia="sell">판매</button></div>
   ${it.s===6&&it.z?`<div class="row"><button class="btn ghost" data-ia="dis">분해</button>${(it.x||0)>=ITEM_CFG.maxX[5]&&it.b.length?'<button class="btn ghost" data-ia="ref">재련</button>':''}</div>`:''}
@@ -2366,9 +2393,36 @@ function gearHtml(id){const g=gearOf(id),E=gearBonus(id);
 /* v4.26 캐릭터창 장비 탭: 4슬롯 카드(누르면 착용·교체) + 추천 장착·일괄 해제·장비 관리(가방). 합계·세트·프리셋은 기존 함수 재사용 */
 function gearCards(id){const g=gearOf(id),E=gearBonus(id);
  const sum=Object.keys(ITEM_CFG.stat).filter(k=>E[k]).map(k=>iStat(k).n+fmtStat(k,E[k])).join(' · ')||'착용한 장비 없음';
- return `<div class="gcards">${ITEM_CFG.slots.map((sl,t)=>{const it=g[t];return `<button class="gc${it?'':' empty'}" data-gp="${t}" ${it?`style="--c:${ITEM_CFG.col[it.s-1]}"`:''}><span class="gi">${sl.ic}</span><b>${sl.n}${it?` <i>${'★'.repeat(it.s)}</i>${it.x?` <em>+${it.x}</em>`:''}`:''}</b><small>${it?itemLine(it):'비어 있음 · 눌러서 착용'}</small>${it?`<span class="gx" data-gu="${t}">해제</span>`:''}</button>`;}).join('')}</div>
-  <div class="gbtns"><button class="btn ghost" data-ge>추천 장착</button><button class="btn ghost" data-gua>일괄 해제</button><button class="btn ghost" data-go="bag">장비 관리</button></div>
+ return `<div class="gcards">${ITEM_CFG.slots.map((sl,t)=>{const it=g[t];return `<button class="gc${it?'':' empty'}" ${it?`data-gn="${t}"`:`data-gp="${t}"`} ${it?`style="--c:${ITEM_CFG.col[it.s-1]}"`:''}><span class="gi">${sl.ic}</span><b>${sl.n}${it?` <i>${'★'.repeat(it.s)}</i>`:''}</b>${it?`<span class="gen">+${it.x||0}</span><span class="gmn">${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><small>${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</small><span class="gtap">눌러서 강화</span>`:'<small>비어 있음 · 눌러서 착용</small>'}${it?`<span class="gx" data-gu="${t}">해제</span>`:''}</button>`;}).join('')}</div>
+  <div class="gbtns"><button class="btn ghost" data-gbe>일괄 강화</button><button class="btn ghost" data-ge>추천 장착</button><button class="btn ghost" data-gua>일괄 해제</button><button class="btn ghost" data-go="bag">장비 관리</button></div>
   <div class="gear"><div class="gsum"><span class="k">장비 합계</span>${sum}</div></div>`;}
+/* v4.33 장비 탭: 슬롯 카드 → 강화 팝업(enhanceItem 재사용), 일괄 강화(목표 레벨까지 enhanceItem 반복) */
+function enhPop(hid,t){const it=gearOf(hid)[t];if(!it)return;const sl=ITEM_CFG.slots[t],x=it.x||0,mx=ITEM_CFG.maxX[it.s-1],full=x>=mx,c=enhCost(it),nx=x+1,ok=matN('stone')>=c.st&&state.gold>=c.g;
+ const d=el(`<div class="pause"><div class="box wide item-detail"><div class="h"><span style="color:${ITEM_CFG.col[it.s-1]}">${sl.ic} ${sl.n} ${'★'.repeat(it.s)}${it.z?` · ${ITEM_CFG.sets[it.z]}`:''}</span><small>${heroNm(hid)}</small></div>
+  <div class="enh-big"><b>+${x}</b>${full?'<span>최대 강화</span>':`<span>→ +${nx}</span>`}</div>
+  <div class="ln main"><span class="k">주옵션</span><b>${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</b></div>
+  ${it.b.map(([k,v])=>`<div class="ln"><span class="k">부옵션</span><b>${iStat(k).n} ${fmtStat(k,v)}</b></div>`).join('')||'<div class="ln"><span class="k">부옵션</span><b>없음</b></div>'}
+  ${full?'':`<p class="note">다음 단계 비용 💎${c.st} · ${fmt(c.g)}G (보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G)${nx%3===0?`<br>+${nx} 에서 부옵션 ${it.b.length<4&&it.s<6?'추가':'상승'} 예정`:`<br>부옵션 변화는 +${Math.ceil(nx/3)*3} 에서`}</p>`}
+  <div class="row enh">${full?'':`<button class="btn ${ok?'primary':'ghost'}" data-ea="enh">강화 +${nx}</button>`}<button class="btn ghost" data-ea="x">닫기</button></div>
+  <p class="note">착용 교체는 「장비 관리」(가방)에서 해요.</p></div></div>`);
+ $('#app').appendChild(d);
+ d.addEventListener('click',e=>{if(e.target===d){d.remove();return;}const a=e.target.closest('[data-ea]');if(!a)return;if(a.dataset.ea==='x'){d.remove();return;}
+  const m=enhanceItem(it.i);if(m){d.remove();render();enhPop(hid,t);toast(m);}});}
+let enhBulkT=6;
+function enhPlan(hid,T){let st=matN('stone'),gd=state.gold,stop=false,tS=0,tG=0;const rows=gearOf(hid).map((it,t)=>{if(!it)return null;const mx=ITEM_CFG.maxX[it.s-1],tg=Math.min(T,mx),x0=it.x||0;let x=x0;
+  while(x<tg&&!stop){const c=enhAt(it.s,x);if(st<c.st||gd<c.g){stop=true;break;}st-=c.st;gd-=c.g;tS+=c.st;tG+=c.g;x++;}
+  return {it,t,x0,x,tg};}).filter(Boolean);
+ return {rows,tS,tG,short:stop};}
+function bulkEnhPop(hid){const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화</span><small>${heroNm(hid)}</small></div><div class="be-t"></div><div class="be-p"></div><div class="row"><button class="btn primary" data-be="go">강화하기</button><button class="btn ghost" data-be="x">닫기</button></div></div></div>`);
+ const draw=()=>{const P0=enhPlan(hid,enhBulkT),n=P0.rows.reduce((a,r)=>a+(r.x-r.x0),0);
+  $('.be-t',d).innerHTML=[3,6,9,12,15].map(v=>`<button class="${v===enhBulkT?'on':''}" data-bt="${v}">+${v}</button>`).join('');
+  $('.be-p',d).innerHTML=P0.rows.length?`${P0.rows.map(r=>`<div class="ln"><span class="k">${ITEM_CFG.slots[r.t].ic} ${ITEM_CFG.slots[r.t].n} ${'★'.repeat(r.it.s)}</span><b>+${r.x0} → +${r.x}${r.tg<enhBulkT?` <small>(최대 +${r.tg})</small>`:''}</b></div>`).join('')}<p class="note">총 💎${fmt(P0.tS)} · ${fmt(P0.tG)}G · 보유 💎${fmt(matN('stone'))} · ${fmt(state.gold)}G${P0.short?'<br>재료가 부족해서 가능한 만큼만 진행해요.':''}</p>`:'<p class="note">착용한 장비가 없어요.</p>';
+  d.dataset.n=n;};
+ $('#app').appendChild(d);draw();
+ d.addEventListener('click',e=>{if(e.target===d){d.remove();return;}const bt=e.target.closest('[data-bt]');if(bt){enhBulkT=Number(bt.dataset.bt);draw();return;}const b=e.target.closest('[data-be]');if(!b)return;if(b.dataset.be==='x'){d.remove();return;}
+  const P0=enhPlan(hid,enhBulkT);let n=0;const done=[];for(const r of P0.rows){let k=0;while(k<r.x-r.x0&&enhanceItem(r.it.i)){k++;n++;}if(k)done.push(`${ITEM_CFG.slots[r.t].n} +${r.x0}→+${r.x0+k}`);}
+  d.remove();render();if(!n){toast('강화할 수 없어요 (재료 부족 또는 이미 목표 이상)');return;}
+  const r2=el(`<div class="pause"><div class="box wide"><div class="h"><span>일괄 강화 결과</span></div><p class="note">${n}회 강화했어요<br>${done.join('<br>')}</p><div class="row"><button class="btn primary" data-be="x">확인</button></div></div></div>`);$('#app').appendChild(r2);r2.addEventListener('click',ev=>{if(ev.target===r2||ev.target.closest('[data-be]'))r2.remove();});});}
 /* v4.29 세트 효과·프리셋은 캐릭터창 「상세」 시트로 이동(장비 탭은 스크롤 없이 한 화면) */
 function gearExtra(id){return `<div class="gear">${setLine(id)}
   <div class="pre"><span class="k">프리셋</span>${presetsOf(id).map((p,i)=>`<button class="${i===preSel?'on':''}" data-pa="${i}">${esc(p.n)}</button>`).join('')}</div>
@@ -2482,7 +2536,7 @@ let bagSel=null,bagMat=false;
 /* v4.27 선택 장비 요약 카드: 이름·성급·강화·주옵·부옵·세트·점수·착용·잠금/즐겨찾기 */
 function sumCard(it){if(!it)return '<div class="bsum empty">장비를 누르면 요약이 나와요 · 같은 장비를 한 번 더 누르면 상세</div>';
  const sl=ITEM_CFG.slots[it.t],w=wornBy(it.i),b=bestScore(it);
- return `<div class="bsum" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><div class="bi"><b>${it.z?`[${ITEM_CFG.sets[it.z]}] `:''}${sl.n} <i>${'★'.repeat(it.s)}</i> +${it.x||0}</b><span class="m">주옵 ${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><span class="sb">${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</span><span class="sc2">점수 ${b.s} (${heroNm(b.h)}) · ${w?'착용 '+heroNm(w):'미착용'}</span></div><div class="bq"><button data-q="lock">${it.l?(it.l===2?'🔐':'🔒'):'🔓'}</button><button data-q="fav">${it.f?'⭐':'☆'}</button><button data-q="detail">상세</button></div></div>`;}
+ return `<div class="bsum" style="--c:${ITEM_CFG.col[it.s-1]}"><span class="ic">${sl.ic}</span><div class="bi"><b>${it.z?`[${ITEM_CFG.sets[it.z]}] `:''}${sl.n} <i>${'★'.repeat(it.s)}</i> +${it.x||0}</b><span class="m">주옵 ${iStat(it.m[0]).n} ${fmtStat(it.m[0],mainVal(it))}</span><span class="sb">${it.b.length?it.b.map(([k,v])=>iStat(k).n+fmtStat(k,v)).join(' · '):'부옵션 없음'}</span><span class="sc2">추천 캐릭터 ${heroNm(b.h)} · 점수 ${b.s}</span><span class="sc2">착용: ${w?heroNm(w):'없음'}</span></div><div class="bq"><button data-q="lock">${it.l?(it.l===2?'🔐':'🔒'):'🔓'}</button><button data-q="fav">${it.f?'⭐':'☆'}</button><button data-q="detail">상세</button></div></div>`;}
 function viewBag(){
  const cap=state.bag.cap,fl=flushTmp(),tn=(state.bag.tmp||[]).length;if(fl){save();setTimeout(()=>toast(`임시 보관함 ${fl}개를 가방으로 옮겼어요`),0);}
  const svIds=sellView?new Set(bulkPlan().sell.map(o=>o.i)):null;
@@ -2609,6 +2663,8 @@ function viewCharacter(){
  </section>`);
  if(chSheet)s.insertAdjacentHTML('beforeend',sheetHtml());
  const reSheet=()=>{const o=$('.chsheet',s);if(o)o.remove();if(chSheet)s.insertAdjacentHTML('beforeend',sheetHtml());};
+ /* v4.33 「☰ 상세」: 위임 클릭과 별개로 버튼에 직접 연결 → 겹침·위임 범위와 무관하게 항상 열림, 이미 열려 있으면 시트 유지 */
+ const mb=$('.ch-more',s);if(mb)mb.addEventListener('click',e=>{e.stopPropagation();chSheet=chSheet||'lore';reSheet();});
  const move=d=>{charId=ids[(idx+d+n)%n];render();};
  const showCut=i=>{gi=i;$('.gv',s).innerHTML=cutHtml(cuts[i][0]);$('.hd',s).classList.toggle('alt',i>0);$$('[data-ci]',s).forEach((b,j)=>b.classList.toggle('on',j===i));};
  let sx=null;const hd=$('.hd',s); // 좌우 스와이프로 이전·다음 캐릭터
@@ -2623,6 +2679,8 @@ function viewCharacter(){
   const c=e.target.closest('[data-cid]');if(c){if(c.dataset.cid!==charId){charId=c.dataset.cid;render();}return;}
   const gu=e.target.closest('[data-gu]');if(gu){unequip(charId,Number(gu.dataset.gu));render();toast('해제했어요');return;}
   const gp=e.target.closest('[data-gp]');if(gp){gearPicker(charId,Number(gp.dataset.gp));return;}
+  const gn=e.target.closest('[data-gn]');if(gn){enhPop(charId,Number(gn.dataset.gn));return;}
+  if(e.target.closest('[data-gbe]')){bulkEnhPop(charId);return;}
   if(e.target.closest('[data-gua]')){if(!gearOf(charId).some(Boolean)){toast('착용한 장비가 없어요');return;}if(!confirm(`${heroNm(charId)}의 장비를 모두 해제할까요?`))return;for(let t=0;t<4;t++)unequip(charId,t);render();toast('일괄 해제했어요');return;}
   if(e.target.closest('[data-pty]')){partyPop(charId);return;}
   if(e.target.closest('[data-bk]')){chSheet=null;go(charBack);return;}
