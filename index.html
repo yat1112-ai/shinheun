@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (v4.29)</title>
+<title>신흔 DIVINE TRACE (v4.31)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1489,7 +1489,7 @@ const SND=(()=>{
 document.addEventListener('pointerdown',()=>SND.unlock(),{once:true,capture:true});
 document.addEventListener('keydown',()=>SND.unlock(),{once:true,capture:true});
 
-/* ===== 신흔 DIVINE TRACE v4.29—게임 로직/화면 =====
+/* ===== 신흔 DIVINE TRACE v4.31—게임 로직/화면 =====
    화면: lobby → party → adventure → battle → result
    전투: 최대 5:5 자동 턴제, 속도 순 행동, 약점(15%, ×1.35)·치명(10%, ×1.5), 캐릭터당 스킬 2개(쿨다운)
    저장: localStorage 'shinheun-v1' + 클라우드(아티팩트 db / Firebase Google) · 최신 ts 우선                                                */
@@ -1746,7 +1746,23 @@ const acctKey=()=>cloud.uid?SAVE_KEY+':'+cloud.uid:SAVE_KEY;
 const hasProgress=o=>!!o&&(Object.keys(o.cleared||{}).length>0||(o.gold||0)>0||(o.xp||0)>0);
 function backupState(o){if(!hasProgress(o))return;try{localStorage.setItem(BAK_KEY,JSON.stringify({at:Date.now(),state:o}));}catch(e){}}
 function readBak(){try{const b=JSON.parse(localStorage.getItem(BAK_KEY)||'null');return b&&b.state&&b.state.party?b:null;}catch(e){return null;}}
-function load(){try{const s=JSON.parse(localStorage.getItem(acctKey())||'null');if(s)state={...defaultState(),...s};}catch(e){}}
+/* v4.30 로드 정규화: 클라우드(Firebase RTDB)는 빈 배열·null 을 저장/복원하지 않아 mm·bm·bag.tmp 등이 사라짐 → defaultState 병합 후 누락 필드만 채움(데이터 삭제 없음) */
+const arr=(v,n,d)=>{const a=Array.isArray(v)?v:(v&&typeof v==='object'?Object.values(v):[]);if(n===undefined)return a;const r=a.slice(0,n);while(r.length<n)r.push(d);return r;};
+function fixSc(u){const sc=u.sc&&typeof u.sc==='object'?u.sc:(u.sc={});
+ sc.s=arr(sc.s,5,0);sc.t=arr(sc.t,4,1);sc.mm=arr(sc.mm);sc.bm=arr(sc.bm);
+ if(typeof sc.q!=='number'||isNaN(sc.q))sc.q=typeof u.ct==='number'?u.ct:55;if(typeof sc.bn!=='number'||isNaN(sc.bn))sc.bn=9;return sc;}
+function fixState(s){const d=defaultState(),o={...d,...s};
+ for(const k of ['cleared','levels','sk','gear','mats','icu','bag'])if(!o[k]||typeof o[k]!=='object'||Array.isArray(o[k]))o[k]={...d[k]};
+ if(o.bag.cap===undefined)o.bag.cap=d.bag.cap;o.bag.tmp=arr(o.bag.tmp);
+ o.party=arr(o.party);if(!o.party.length)o.party=d.party.slice();
+ o.items=arr(o.items).filter(it=>it&&typeof it==='object');
+ for(const it of o.items){it.m=arr(it.m);it.b=arr(it.b).filter(Array.isArray);}
+ o.bag.tmp=o.bag.tmp.filter(it=>it&&typeof it==='object');for(const it of o.bag.tmp){it.m=arr(it.m);it.b=arr(it.b).filter(Array.isArray);}
+ for(const h of Object.keys(o.gear))o.gear[h]=arr(o.gear[h],4,0);
+ if(o.presets&&typeof o.presets==='object')for(const h of Object.keys(o.presets)){const p=o.presets[h]=arr(o.presets[h]);p.forEach(q=>{if(q&&typeof q==='object')q.g=arr(q.g,4,0);});}
+ if(o.icu.al!==undefined||o.icu.sc)fixSc(o.icu);
+ return o;}
+function load(){try{const s=JSON.parse(localStorage.getItem(acctKey())||'null');if(s)state=fixState(s);}catch(e){console.error('load',e);}}
 function save(){state.ts=Date.now();try{localStorage.setItem(acctKey(),JSON.stringify(state));}catch(e){}cloudPush();}
 /* ---------- 클라우드 저장 어댑터 ----------
    kind 'claude' : claude.ai 아티팩트 안 → 아티팩트 db (claude 계정별)
@@ -1779,7 +1795,7 @@ async function cloudMerge(){
   const prev=state,prevOwner=stateOwner;
   if(cand){
    if(prevOwner===null)backupState(prev);
-   state={...defaultState(),...cand};stateOwner=cloud.uid;
+   state=fixState(cand);stateOwner=cloud.uid;
    try{localStorage.setItem(acctKey(),JSON.stringify(state));}catch(e){}
    if(!remote||(state.ts||0)>(remote.ts||0))await cloud.ref.set(JSON.parse(JSON.stringify(state)));
    toast('계정 진행도 불러옴');
@@ -1793,7 +1809,7 @@ async function cloudMerge(){
   }
   if(page!=='battle')render();cloud.status='cloud';paintCloud();return;
  }
- if(remote&&(remote.ts||0)>(state.ts||0)){backupState(state);state={...defaultState(),...remote};try{localStorage.setItem(acctKey(),JSON.stringify(state));}catch(e){}if(page!=='battle')render();cloud.status='cloud';paintCloud();toast('클라우드 진행도 불러옴');}
+ if(remote&&(remote.ts||0)>(state.ts||0)){backupState(state);state=fixState(remote);try{localStorage.setItem(acctKey(),JSON.stringify(state));}catch(e){}if(page!=='battle')render();cloud.status='cloud';paintCloud();toast('클라우드 진행도 불러옴');}
  else if(!remote||(state.ts||0)>(remote.ts||0)){await cloud.ref.set(JSON.parse(JSON.stringify(state)));cloud.status='cloud';paintCloud();}
  else{cloud.status='cloud';paintCloud();}
 }
@@ -1833,7 +1849,7 @@ async function googleLogin(){
 async function googleLogout(){try{if(window.firebase)await firebase.auth().signOut();}catch(e){}cloud.ref=null;cloud.status='off';cloud.email=null;cloud.name='';cloud.uid=null;stateOwner=null;state=defaultState();load();render();toast('로그아웃 · 계정 진행도는 클라우드에 안전하게 보관됨');}
 /* ---------- 저장 코드 (웹 ↔ 앱 이어하기) ---------- */
 function exportCode(){try{return 'SH1.'+btoa(unescape(encodeURIComponent(JSON.stringify(state))));}catch(e){return '';}}
-function importCode(code){try{code=(code||'').trim();if(!code.startsWith('SH1.'))return false;const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));if(!o||typeof o!=='object'||!o.party)return false;state={...defaultState(),...o};save();render();return true;}catch(e){return false;}}
+function importCode(code){try{code=(code||'').trim();if(!code.startsWith('SH1.'))return false;const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));if(!o||typeof o!=='object'||!o.party)return false;state=fixState(o);save();render();return true;}catch(e){return false;}}
 function saveCodeDialog(){
  const code=exportCode();
  const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>저장 코드</span><small>${cloudLabel()}</small></div><p class="note">다른 기기(웹 ↔ 앱)로 진행도를 옮길 때 씁니다. 아래 코드를 복사해 다른 기기의 '가져오기'에 붙여넣으세요.</p><textarea class="code" readonly>${code}</textarea><div class="row"><button class="btn cut-r" data-a="copy">코드 복사</button></div><textarea class="code in" placeholder="여기에 다른 기기의 코드를 붙여넣기"></textarea><div class="row"><button class="btn primary cut-r" data-a="import">가져오기</button><button class="btn ghost" data-a="close">닫기</button></div></div></div>`);
@@ -1913,6 +1929,20 @@ function bgmFor(){if(page==='battle'&&battle)return battle.stage.boss?'boss':(CH
 function render(){const app=$('#app');app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,bag:viewBag,skills:viewSkills,settings:viewSettings,adventure:viewAdventure,raid:viewRaid,battle:viewBattle,result:viewResult}[page];app.appendChild(v());document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild;}
 function toast(msg){const t=el(`<div class="toast">${msg}</div>`);$('#app').appendChild(t);setTimeout(()=>t.remove(),1500);}
+/* v4.31 오류 수집: 최근 20개를 별도 키(게임 저장 state 와 분리)에 기록. 설정 > 「최근 오류 보기」에서 복사 */
+const ERR_KEY='shinheun-errlog';
+function errList(){try{const a=JSON.parse(localStorage.getItem(ERR_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+function logErr(where,e,quiet){try{const m=String(e&&e.message||e),a=errList();a.push({t:new Date().toISOString(),w:where,m,s:String(e&&e.stack||'').split('\n').slice(0,4).join(' | ').slice(0,400)});
+ localStorage.setItem(ERR_KEY,JSON.stringify(a.slice(-20)));console.error(where,e);
+ if(!quiet&&document.getElementById('app'))toast(`${where==='finish'?'보상 처리 오류':'오류'}: ${m.replace(/</g,'&lt;').slice(0,60)}`);}catch(x){}}
+window.addEventListener('error',ev=>logErr('window.onerror',ev.error||ev.message,true));
+window.addEventListener('unhandledrejection',ev=>logErr('unhandledrejection',ev.reason,true));
+function errReport(){const sc=(()=>{try{return icu().sc;}catch(e){return null;}})();
+ return JSON.stringify({ver:'v4.31',errors:errList(),summary:{items:(state.items||[]).length,tmp:((state.bag||{}).tmp||[]).length,bad:(state.items||[]).filter(it=>{try{return badItem(it);}catch(e){return true;}}).length,star6:(state.items||[]).filter(it=>it&&it.s===6).length,locked:(state.items||[]).filter(it=>it&&it.l).length,gold:state.gold,sc,presets:Object.fromEntries(Object.entries(state.presets||{}).map(([h,a])=>[h,Array.isArray(a)?a.map(p=>p&&p.g):a])),gear:state.gear,icu:{al:(state.icu||{}).al,as:(state.icu||{}).as,ac:(state.icu||{}).ac,ad:(state.icu||{}).ad}}},null,1);}
+function errDialog(){const L=errList().slice().reverse(),rep=errReport();
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>최근 오류</span><small>${L.length}개</small></div><div class="note" style="max-height:40vh;overflow:auto;text-align:left;font-size:12px">${L.length?L.map(o=>`<div style="margin-bottom:6px"><b>${o.t.slice(5,19).replace('T',' ')}</b> ${o.w}<br>${String(o.m).replace(/</g,'&lt;')}<br><small>${String(o.s).replace(/</g,'&lt;')}</small></div>`).join(''):'기록된 오류가 없어요'}</div><div class="row"><button class="btn primary" data-cp>복사</button><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
+ $('#app').appendChild(d);d.addEventListener('click',e=>{if(e.target===d||e.target.closest('[data-hx]')){d.remove();return;}
+  if(e.target.closest('[data-cp]')){const ok=()=>toast('복사했어요');if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(rep).then(ok,()=>prompt('복사해서 보내 주세요',rep));else prompt('복사해서 보내 주세요',rep);}});}
 
 /* ---------- 로비 ---------- */
 /* v4.2 로비 개편 (시안 ops/design/raw/lobby_mock_fold8.png · #app 390×624 = 폴드8 992×1586 과 같은 비율)
@@ -1936,7 +1966,7 @@ function viewLobby(){
   <div class="lb-hero" id="lb-hero">${bgJ?'':A[L+'_l_body']?`<div class="rig lb-rig"><img class="rl body" src="${A[L+'_l_body']}" alt="${LN}">${rigLayers(L,L)}<div class="wglow w-${L}" style="left:${RIG[L].watch.x*100}%;top:${RIG[L].watch.y*100}%"></div></div>`:`<img class="lb-art" src="${A[J]}" alt="진">`}${bgJ?'':dustHtml(10)}</div>
   <div class="lb-prof"><span class="lb-av">${avMine(56)}</span><span class="lb-pt"><b>${esc(state.name||'신흔 플레이어')}</b><span class="lb-lv">Lv. ${lv}<i><em style="width:${Math.min(100,xpc).toFixed(1)}%"></em></i></span></span><span class="lb-pw">⚔ ${fmt(partyPower(state.party))}</span></div>
   <div class="lb-cur"><span class="g"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><radialGradient id="cgG" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffe082"/><stop offset="1" stop-color="#c99a2e"/></radialGradient></defs><circle cx="12" cy="12" r="10.5" fill="url(#cgG)" stroke="#7a4d08" stroke-width="1.5"/><circle cx="12" cy="12" r="6.5" fill="none" stroke="#fff3c4" stroke-width="1.4" opacity=".9"/></svg></i><b>${kfmt(state.gold)}</b><button data-soon="충전">+</button></span><span class="c"><i><svg viewBox="0 0 24 24" width="14" height="14"><defs><linearGradient id="cgC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc8ff"/><stop offset="1" stop-color="#2f6fd6"/></linearGradient></defs><path d="M12 1.5 21 12 12 22.5 3 12Z" fill="url(#cgC)" stroke="#1c3a8a" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 1.5 15.5 12 12 22.5 8.5 12Z" fill="#fff" opacity=".35"/></svg></i><b>0</b><button data-soon="충전">+</button></span></div>
-  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.29</span>
+  <button class="cloud" id="cloud" data-s="${cloud.status}">${cloudLabel()}</button><span class="lb-ver">신흔 · v4.31</span>
   <nav class="lb-side l">${mi('☰','퀘스트','22%')}${mi('✦','이벤트','48%')}${mi('✉','메시지','74%')}</nav>
   <nav class="lb-side r">${mi('❖','도감','25%','heroes')}${mi('⚙','설정','52%','settings')}${mi('⋯','기타','77%')}</nav>
   <div class="lb-say" id="lb-say"></div>
@@ -2079,6 +2109,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   </div>
   <div class="setsec">기타</div>
   <div class="setbox">${tog('motion','모션 효과',state.motion,'끄면 카드·컷인·로비 시차 움직임 최소화')}<button class="setrow" id="s-tilt"><span><b>센서 상태 · ${tiltStatus()}</b><small>로비 기울기 시차 · 눌러서 다시 시도</small></span><em>↻</em></button>${tog('fx','스킬 이펙트',state.fx,'전투 하단 FX 버튼과 같음')}
+   <button class="setrow" id="s-errlog"><span><b>최근 오류 보기</b><small>문제가 생기면 눌러서 복사한 뒤 알려 주세요 (${errList().length}개)</small></span><em>›</em></button>
    <button class="setrow danger" id="s-reset"><span><b>진행도 초기화</b><small>이 기기와 클라우드 저장을 모두 지움 (되돌릴 수 없음)</small></span><em>!</em></button></div>
   <div class="party-foot"><button class="btn ghost" data-go="lobby">로비</button><button class="btn primary cut-r" data-go="adventure">모험으로</button></div>
  </section>`);
@@ -2093,11 +2124,12 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   const fs=e.target.closest('[data-fs]');if(fs){farmSel=Number(fs.dataset.fs);render();return;}
   if(e.target.closest('#s-farm')){const f=ITEM_CFG.farm[farmSel];icu().as=f.as;icu().cs=f.cs;icu().ct=f.ct;{const c=icu().sc;c.s=[1,2,3,4,5].map(n=>n<=f.cs?1:0);c.q=f.ct;}save();render();toast(`「${f.n}」 추천 설정을 적용했어요`);return;}
   if(e.target.closest('#s-relock')){relockDialog();return;}
+  if(e.target.closest('#s-errlog')){errDialog();return;}
   if(e.target.closest('#pf-save')){saveProfile(s);return;}
   if(e.target.closest('#s-tilt')){tiltRetry();toast('센서 다시 시도 중…');setTimeout(()=>{if(page==='settings')render();},1700);return;}
   const lp=e.target.closest('[data-lobby]');if(lp){state.lobby=lp.dataset.lobby;save();render();SND.play('toggle');toast('로비 캐릭터 · '+lp.textContent.trim());return;}
   if(e.target.closest('#s-bak')){backupFile();return;}
-  if(e.target.closest('#s-restore')){const b=readBak();if(b&&confirm('보관된 진행도로 되돌릴까요? (현재 진행도는 다시 보관됨)')){backupState(state);state={...defaultState(),...b.state};save();render();toast('진행도 복구됨');}return;}
+  if(e.target.closest('#s-restore')){const b=readBak();if(b&&confirm('보관된 진행도로 되돌릴까요? (현재 진행도는 다시 보관됨)')){backupState(state);state=fixState(b.state);save();render();toast('진행도 복구됨');}return;}
   if(e.target.closest('#s-sync')){toast('동기화 중…');await cloudInit();render();toast(cloud.status==='cloud'?'동기화 완료':'클라우드에 연결되지 않음');return;}
   if(e.target.closest('#s-switch')){toast('claude.ai에서 계정을 바꾼 뒤 이 화면으로 돌아와 동기화');return;}
   if(e.target.closest('#s-google')){if(cloud.ref){try{await firebase.auth().signOut();}catch(x){}cloud.ref=null;}await googleLogin();return;}
@@ -2163,8 +2195,8 @@ const REC={
  clea:{set:'def',slotW:[.6,.7,1,1],main:[['atk'],['atk'],['def','hp'],['def','hp','spd']],sub:{normal:['def','hp','spd','atk'],boss:['def','hp','atk','spd'],raid:['def','hp','spd','atk']}}
 };
 const iStat=k=>ITEM_CFG.stat[k];
-const itemById=id=>(state.items||[]).find(o=>o.i===id);
-const wornBy=id=>{const g=state.gear||{};for(const h in g)if((g[h]||[]).includes(id))return h;return null;};
+const itemById=id=>(state.items||[]).find(o=>o&&o.i===id);
+const wornBy=id=>{const g=state.gear||{};for(const h in g)if(Array.isArray(g[h])&&g[h].includes(id))return h;return null;};
 const heroNm=id=>(HEROES.find(h=>h.id===id)||{}).name||'???';
 const mainVal=it=>{const v=it.m[1]*(1+ITEM_CFG.enhStep*(it.x||0)/3);return it.m[0]==='spd'?Math.round(v):v;}; // 강화 1레벨당 주옵 +1/30 (3레벨=+10%)
 const matN=k=>(state.mats&&state.mats[k])||0;
@@ -2174,9 +2206,10 @@ const enhCost=it=>enhAt(it.s,it.x||0);
 const enhSpent=it=>{let st=0,g=0;for(let x=0;x<(it.x||0);x++){const c=enhAt(it.s,x);st+=c.st;g+=c.g;}return {st,g};};
 const icu=()=>{const u=state.icu=state.icu||{};if(u.al===undefined){u.al=0;u.as=70;}if(u.ac===undefined){u.ac=0;u.cs=3;u.ct=55;}if(u.ad===undefined)u.ad=0;
  if(!u.sc){u.sc={s:[1,2,3,4,5].map(n=>n<=u.cs?1:0),t:[1,1,1,1],q:u.ct,bn:9,mm:[],bm:[]};} /* v4.27 판매 설정 통합: 기존 cs/ct 에서 마이그레이션 */
+ const c=u.sc;if(!Array.isArray(c.s)||!Array.isArray(c.t)||!Array.isArray(c.mm)||!Array.isArray(c.bm)||typeof c.q!=='number'||typeof c.bn!=='number')fixSc(u); /* v4.30 누락 필드 보정 */
  return u;};
 /* v4.27 판매 설정(icu().sc) 단일 기준: s 성급(1~5) · t 부위 · q 점수 미만(0=무시) · bn 부옵 개수 이하(9=무제한) · mm 주옵 종류(빈=전체) · bm 부옵 종류(선택 옵션이 하나도 없으면 판매, 빈=무시). 일괄 판매·획득 즉시 자동판매가 같이 씀 */
-const sellMatch=(it,sc)=>{const c=icu().sc;if(it.s>5||!c.s[it.s-1]||!c.t[it.t])return false;if(c.mm.length&&!c.mm.includes(it.m[0]))return false;if(it.b.length>c.bn)return false;
+const sellMatch=(it,sc)=>{const c=icu().sc;if(badItem(it)||it.s>5||!c.s[it.s-1]||!c.t[it.t])return false;if(c.mm.length&&!c.mm.includes(it.m[0]))return false;if(it.b.length>c.bn)return false;
  if(c.bm.length&&it.b.some(o=>c.bm.includes(o[0])))return false;if(c.q&&(sc===undefined?bestScore(it).s:sc)>=c.q)return false;return true;};
 const sellSummary=()=>{const c=icu().sc,st=c.s.map((v,i)=>v?i+1:0).filter(Boolean);return (st.length?st.join('·')+'★':'성급 없음')+' · '+ITEM_CFG.slots.filter((_,t)=>c.t[t]).map(s=>s.n).join('/')+(c.q?` · ${c.q}점 미만`:'')+(c.bn<9?` · 부옵 ${c.bn}개 이하`:'')+(c.mm.length?` · 주옵 ${c.mm.map(k=>ITEM_CFG.stat[k].n).join('/')}`:'')+(c.bm.length?` · 부옵 ${c.bm.map(k=>ITEM_CFG.stat[k].n).join('/')} 없음`:'');};
 const fmtStat=(k,v)=>k==='spd'?'+'+v:'+'+(Math.round(v*1000)/10)+'%';
@@ -2202,8 +2235,9 @@ function dropItems(st){const got=[];let full=0,sold=0,sg=0,tmp=0,dis=0,n=st.raid
  if(rn)addMat('rune',rn);if(tk)addMat('tix',tk);
  return {got,full,stone:sn,rune:rn,tix:tk,sold,sg,tmp,dis,lock:got.filter(i=>i.l).length};}
 /* v4.20 보호 규칙·자동정리·임시 보관함 */
-const inPreset=id=>Object.values(state.presets||{}).some(a=>a.some(p=>p.g.includes(id)));
-const isProtected=it=>!!(it.l||it.f||(it.x||0)>0||wornBy(it.i)||inPreset(it.i));
+const inPreset=id=>Object.values(state.presets||{}).some(a=>Array.isArray(a)&&a.some(p=>p&&Array.isArray(p.g)&&p.g.includes(id)));
+const badItem=it=>!it||!Array.isArray(it.m)||!it.m.length||!Array.isArray(it.b)||!(it.s>=1&&it.s<=6)||!(it.t>=0&&it.t<4)||!ITEM_CFG.stat[it.m[0]]; /* v4.30 이상 장비: 판매 대상에서 제외(삭제 안 함) */
+const isProtected=it=>!!(badItem(it)||it.l||it.f||(it.x||0)>0||wornBy(it.i)||inPreset(it.i));
 const cleanable=(it,sc)=>!!icu().ac&&!isProtected(it)&&sellMatch(it,sc); /* v4.27 자동판매 = 판매 설정(sellMatch) */
 function flushTmp(){const t=state.bag.tmp;if(!t||!t.length)return 0;let n=0;while(t.length&&state.items.length<state.bag.cap){state.items.push(t.shift());n++;}return n;}
 const bagFull=()=>state.items.length>=Math.ceil(state.bag.cap*ITEM_CFG.warnPct);
@@ -2223,7 +2257,7 @@ function itemScore(it,hid,use){const r=REC[hid]||REC.jin,subs=r.sub[use]||r.sub.
  const mi=r.main[it.t].indexOf(it.m[0]),main=mi<0?0:mi===0?20:12;
  let hit=0,q=0;for(const o of it.b){const on=subs.includes(o[0]);if(on)hit++;q+=Math.max(0,Math.min(1,(o[1]/(maxRoll(o[0],it.s)*(o[2]||1))-.55)/.45))*(on?1:.4);}
  return Math.max(0,Math.min(100,Math.round(set+10*r.slotW[it.t]+main+20*Math.min(1,hit/3)+20*Math.min(1,q/4))));}
-function bestScore(it,use){let best={s:-1,h:'',u:''};for(const h of HEROES){if(!REC[h.id])continue;for(const [u] of USAGE){if(use&&u!==use)continue;const s=itemScore(it,h.id,u);if(s>best.s)best={s,h:h.id,u};}}return best;}
+function bestScore(it,use){let best={s:-1,h:'',u:''};if(badItem(it))return {s:0,h:'',u:''};for(const h of HEROES){if(!REC[h.id])continue;for(const [u] of USAGE){if(use&&u!==use)continue;const s=itemScore(it,h.id,u);if(s>best.s)best={s,h:h.id,u};}}return best;}
 function relockPlan(){const thr=icu().as,lock=[],unlock=[];for(const it of state.items){const sc=bestScore(it).s;if(!it.l&&sc>=thr)lock.push(it);else if(it.l===2&&sc<thr)unlock.push(it);}return {thr,lock,unlock};}
 function relockDialog(){const p=relockPlan();
  const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>자동잠금 재평가</span><small>기준 ${p.thr}점</small></div><p class="note">가방 ${state.items.length}개 중<br><b>잠금 ${p.lock.length}개</b> · <b>자동잠금 해제 ${p.unlock.length}개</b> 예정이에요.<br>직접 잠근 장비·착용 장비는 그대로 두고 판매하지 않아요.</p><div class="row"><button class="btn primary" data-ok ${p.lock.length||p.unlock.length?'':'disabled'}>적용</button><button class="btn ghost" data-hx>취소</button></div></div></div>`);
@@ -2359,7 +2393,7 @@ function bulkPlan(){const sell=state.items.filter(o=>!isProtected(o)&&sellMatch(
 /* v4.28 제외 사유 집계(표시 전용): 장비 1개당 우선순위 사유 1개만 센다 (보호→6성→성급→부위→주옵→부옵 개수→부옵 종류→점수) */
 function sellWhy(){const c=icu().sc,r={},add=k=>{r[k]=(r[k]||0)+1;};let ok=0;
  state.items.forEach(it=>{
-  if(it.l)add('잠금');else if(wornBy(it.i))add('착용');else if(inPreset(it.i))add('프리셋');else if(it.f)add('즐겨찾기');else if((it.x||0)>0)add('강화');
+  if(badItem(it))add('이상한 장비');else if(it.l)add('잠금');else if(wornBy(it.i))add('착용');else if(inPreset(it.i))add('프리셋');else if(it.f)add('즐겨찾기');else if((it.x||0)>0)add('강화');
   else if(it.s>5)add('6성');else if(!c.s[it.s-1])add('성급 설정 밖');else if(!c.t[it.t])add('부위 설정 밖');
   else if(c.mm.length&&!c.mm.includes(it.m[0]))add('주옵 종류');else if(it.b.length>c.bn)add(`부옵 ${c.bn}개 초과`);
   else if(c.bm.length&&it.b.some(o=>c.bm.includes(o[0])))add('부옵 종류');else if(c.q&&bestScore(it).s>=c.q)add('점수 기준 이상');else ok++;});
@@ -2379,7 +2413,8 @@ function bulkDialog(){const p=bulkPlan(),n=p.sell.length;
 /* v4.27 판매 설정 창: 바꾸는 즉시 저장(icu().sc). 슬라이더는 놓을 때 다시 그림 */
 function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcfg"></div></div>`),box=$('.box',d);$('#app').appendChild(d);
  const statK=Object.keys(ITEM_CFG.stat),btn=(on,at,l)=>`<button class="${on?'on':''}" ${at}>${l}</button>`;
- const draw=()=>{const c=icu().sc,p=bulkPlan();
+ const draw=()=>{try{draw0();}catch(e){console.error('sellDialog',e);box.innerHTML=`<div class="h"><span>판매 설정</span></div><p class="note">오류: ${String(e&&e.message||e).replace(/</g,'&lt;')}</p><div class="row"><button class="btn ghost" data-hx>닫기</button></div>`;}};
+ const draw0=()=>{const c=icu().sc,p=bulkPlan();
   box.innerHTML=`<div class="h"><span>판매 설정</span><small>일괄 판매 · 자동 판매 공통</small></div>
   <div class="sc-b"><span class="k">성급</span><div class="bf">${[1,2,3,4,5].map(n=>btn(c.s[n-1],`data-ss="${n-1}"`,n+'★')).join('')}</div></div>
   <div class="sc-b"><span class="k">부위</span><div class="bf">${ITEM_CFG.slots.map((sl,t)=>btn(c.t[t],`data-st="${t}"`,sl.n)).join('')}</div></div>
@@ -2408,6 +2443,12 @@ function sellDialog(){const d=el(`<div class="pause"><div class="box wide sellcf
  draw();}
 const bagChips=(arr,cur,key)=>`<div class="bf">${arr.map(([v,l])=>`<button class="${v===cur?'on':''}" data-f="${key}" data-v="${v}">${l}</button>`).join('')}</div>`;
 const bagFCount=()=>Object.keys(BAGF0).filter(k=>k!=='t'&&bagF[k]!==BAGF0[k]).length+(bagSort!=='new'?1:0);
+/* v4.30 가방 대화창 방어: draw 중 예외가 나면 빈 창 대신 오류 문구+닫기 버튼을 보여 줌(console.error 로 원인 기록) */
+function guardDlg(name,fn){return function(...a){const before=document.querySelectorAll('#app .pause').length;try{return fn.apply(this,a);}catch(e){console.error(name,e);
+ const ps=document.querySelectorAll('#app .pause');for(let i=before;i<ps.length;i++)ps[i].remove();
+ const d=el(`<div class="pause"><div class="box wide"><div class="h"><span>오류</span></div><p class="note">오류: ${String(e&&e.message||e).replace(/</g,'&lt;')}</p><div class="row"><button class="btn ghost" data-hx>닫기</button></div></div></div>`);
+ $('#app').appendChild(d);d.addEventListener('click',ev=>{if(ev.target===d||ev.target.closest('[data-hx]'))d.remove();});}};}
+relockDialog=guardDlg('relockDialog',relockDialog);bulkDialog=guardDlg('bulkDialog',bulkDialog);sellDialog=guardDlg('sellDialog',sellDialog);bagFilterDialog=guardDlg('bagFilterDialog',bagFilterDialog);
 const bagSortList=list=>bagSort==='star'?[...list].sort((a,b)=>b.s-a.s||b.i-a.i):bagSort==='score'?[...list].sort((a,b)=>bestScore(b).s-bestScore(a).s||b.i-a.i):[...list].reverse();
 /* v4.27 필터 시트: 가방 화면을 덜 차지하도록 버튼 한 줄 → 시트. 부위는 상단 탭이 담당 */
 function bagFilterDialog(){const d=el(`<div class="pause"><div class="box wide bag fsheet"></div></div>`),box=$('.box',d);$('#app').appendChild(d);
@@ -2988,7 +3029,11 @@ async function act(u){const b=battle;const foes=u.side==='ally'?b.foes:b.allies;
 }
 /* v4.25 사냥 중 계정·진행도가 바뀌면(로그인·로그아웃·클라우드 불러오기) 이전 진행도의 사냥은 새 계정에 적용하지 않고 종료 */
 function huntStale(b){if(!b.hunt||b.st0===state)return false;b.done=true;if(battle===b){battle=null;clearResume();paintHunt();}return true;}
-async function loop(){const b=battle;if(!b||b.done)return;if(b.paused){setTimeout(loop,200);return;}
+/* v4.31 전투 루프 최상위 보호: 예외로 조용히 멈추지 않고 로그+알림 후 다음 라운드로 진행, 반복 오류(8회)면 전투를 강제 종료 */
+async function loop(){const b=battle;try{await loop0();}catch(e){logErr('loop',e);if(!b||b.done||battle!==b)return;b.errN=(b.errN||0)+1;
+ if(b.errN>=8){try{finish(false);}catch(x){logErr('loop-finish',x);}return;}
+ setTimeout(()=>{if(battle===b&&!b.done)loop();},400);}}
+async function loop0(){const b=battle;if(!b||b.done)return;if(b.paused){setTimeout(loop,200);return;}
  if(huntStale(b))return;
  b.round++;
  // 쿨다운·버프는 라운드가 아니라 '각 캐릭터 자신의 턴' 기준으로 act() 안에서 처리. 행동 순서 = 속도(속도 버프 반영) 높은 순
@@ -2996,7 +3041,8 @@ async function loop(){const b=battle;if(!b||b.done)return;if(b.paused){setTimeou
  paintAll();
  while(b.order.length){if(b.done||battle!==b)return;if(b.paused){await sleep(200);continue;}
   const u=b.order[0];if(u.hp<=0){b.order.shift();paintOrder();continue;}
-  await act(u);if(battle!==b)return;
+  try{await act(u);}catch(e){logErr('act',e);u.acted=true;b.errN=(b.errN||0)+1;if(b.errN>=8){if(battle===b&&!b.done)finish(!alive(b.foes).length);return;}}
+  if(battle!==b)return;
   if(huntStale(b))return;
   b.order.shift();paintOrder();
   const t=performance.now();b.activeMs+=t-b.last;b.last=t;paintHud();
@@ -3008,17 +3054,27 @@ async function loop(){const b=battle;if(!b||b.done)return;if(b.paused){setTimeou
 function pauseMenu(){const b=battle;b.paused=true;const p=el(`<div class="pause"><div class="box panel" style="padding:12px"><div class="sm" style="font-size:20px;text-align:center;margin-bottom:6px">일시정지</div><button class="btn primary cut-r" id="p-resume">계속</button><button class="btn ghost" id="p-motion">모션 ${state.motion?'끄기':'켜기'}</button><button class="btn ghost" id="p-sfx">효과음 ${SND.cfg().sfx?'끄기':'켜기'}</button><button class="btn ghost" id="p-bgm">배경음 ${SND.cfg().bgm?'끄기':'켜기'}</button><button class="btn ghost" id="p-lobby">로비로</button></div></div>`);$('#app').appendChild(p);p.addEventListener('click',e=>{if(e.target.closest('#p-resume')){b.paused=false;b.last=performance.now();p.remove();}if(e.target.closest('#p-motion')){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);$('#p-motion',p).textContent=`모션 ${state.motion?'끄기':'켜기'}`;}if(e.target.closest('#p-sfx')){SND.set('sfx',!SND.cfg().sfx);$('#p-sfx',p).textContent=`효과음 ${SND.cfg().sfx?'끄기':'켜기'}`;SND.play('toggle');}if(e.target.closest('#p-bgm')){SND.set('bgm',!SND.cfg().bgm);$('#p-bgm',p).textContent=`배경음 ${SND.cfg().bgm?'끄기':'켜기'}`;}if(e.target.closest('#p-lobby')){b.done=true;battle=null;go('lobby');}});}
 function finish(win){const b=battle;b.done=true;b.win=win;SND.play(win?'win':'lose');
  const st=b.stage;let gold=0,xp=0,first=false;
- if(win){first=!st.raid&&!state.cleared[st.no];const EB=1+skBonus().eco;gold=Math.round(st.gold*(first?1.5:1)*EB);xp=Math.round(st.xp*EB);state.gold+=gold;if(!st.raid)state.cleared[st.no]=true;const ups=[];for(const id of state.party){const lv=heroLv(id);const need=xpForLv(lv);const cur=(state.heroXp=state.heroXp||{})[id]||0;const nx=cur+xp;if(nx>=need){state.levels[id]=lv+1;state.heroXp[id]=nx-need;ups.push(id);}else state.heroXp[id]=nx;}b.levelUps=ups;b.drops=dropItems(st);{const d=b.drops,e=b.repeat.eq=b.repeat.eq||{n:0,lk:0,sd:0,sg:0,st:0,tm:0};e.fl=(e.fl||0)+d.full;e.n+=d.got.length;e.lk+=d.lock;e.sd+=d.sold;e.sg+=d.sg;e.st+=d.stone;e.tm+=d.tmp;}plGain(Math.ceil(xp/2));save();}
+ /* v4.31 보상 처리 각 단계를 따로 try/catch: 한 곳이 예외를 던져도 반복 집계·다음 전투 예약·결과 표시는 반드시 실행 */
+ const T=(n,f)=>{try{f();}catch(e){logErr('finish',new Error(n+': '+(e&&e.message||e)));}};
+ if(win){first=!st.raid&&!state.cleared[st.no];let EB=1;T('skBonus',()=>{EB=1+skBonus().eco;});gold=Math.round(st.gold*(first?1.5:1)*EB);xp=Math.round(st.xp*EB);
+  T('gold',()=>{state.gold+=gold;if(!st.raid)state.cleared[st.no]=true;});
+  const ups=[];T('levelUp',()=>{for(const id of state.party){const lv=heroLv(id);const need=xpForLv(lv);const cur=(state.heroXp=state.heroXp||{})[id]||0;const nx=cur+xp;if(nx>=need){state.levels[id]=lv+1;state.heroXp[id]=nx-need;ups.push(id);}else state.heroXp[id]=nx;}});b.levelUps=ups;
+  b.drops={got:[],full:0,stone:0,rune:0,tix:0,sold:0,sg:0,tmp:0,dis:0,lock:0};T('dropItems',()=>{b.drops=dropItems(st);});
+  T('repeatEq',()=>{const d=b.drops,e=b.repeat.eq=b.repeat.eq||{n:0,lk:0,sd:0,sg:0,st:0,tm:0};e.fl=(e.fl||0)+d.full;e.n+=d.got.length;e.lk+=d.lock;e.sd+=d.sold;e.sg+=d.sg;e.st+=d.stone;e.tm+=d.tmp;});
+  T('plGain',()=>plGain(Math.ceil(xp/2)));T('save',()=>save());}
  b.reward={gold,xp,first};
  const mode=st.raid?'stop':state.after; // 레이드는 자동 반복·다음 없음
- if(mode!=='stop'){b.repeat.runs++;if(win){b.repeat.wins++;b.repeat.gold+=gold;b.repeat.xp+=xp;}paintRepeat();saveResume();
-  if(win){const ni=b.stageIndex+1;const cd=stageBanner('clear',st,mode==='repeat'?`반복 ${b.repeat.runs}회 · 누적 GOLD +${fmt(b.repeat.gold)}`:ni<STAGES.length?`다음 ▸ ${STAGES[ni].no} ${STAGES[ni].name}`:'마지막 스테이지');
-   b.next=true;paintHunt();
-   setTimeout(()=>{if(battle!==b)return;const m=state.after;b.next=false;
+ const toResult=()=>{try{clearResume();}catch(e){}setTimeout(()=>{try{showResult(b);}catch(e){logErr('showResult',e);}},900/rate());};
+ try{
+ if(mode!=='stop'){b.repeat.runs++;if(win){b.repeat.wins++;b.repeat.gold+=gold;b.repeat.xp+=xp;}T('paintRepeat',()=>paintRepeat());T('saveResume',()=>saveResume());
+  if(win){const ni=b.stageIndex+1;let cd=900;T('banner',()=>{cd=stageBanner('clear',st,mode==='repeat'?`반복 ${b.repeat.runs}회 · 누적 GOLD +${fmt(b.repeat.gold)}`:ni<STAGES.length?`다음 ▸ ${STAGES[ni].no} ${STAGES[ni].name}`:'마지막 스테이지');});
+   b.next=true;T('paintHunt',()=>paintHunt());
+   setTimeout(()=>{if(battle!==b)return;try{const m=state.after;b.next=false;
     if(m==='repeat')startBattle(b.stageIndex,true);
     else if(m==='next'&&ni<STAGES.length)startBattle(ni,true);
-    else{clearResume();showResult(b);}},Math.max(900/rate(),cd+100));return;}}
- clearResume();setTimeout(()=>showResult(b),900/rate());
+    else{clearResume();showResult(b);}}catch(e){logErr('finish-next',e);b.next=false;if(battle===b)toResult();}},Math.max(900/rate(),cd+100));return;}}
+ }catch(e){logErr('finish',e);}
+ toResult();
 }
 /* v4.25 전투가 끝났을 때: 전투 화면에 있으면 결과 화면, 로비·가방에 있으면 화면은 그대로 두고 로비 상태 영역에 종료 사유만 표시(누르면 결과) */
 function showResult(b){if(battle!==b)return;if(huntOn()){b.over=true;paintHunt();return;}page='result';render();}
