@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (TEST landscape lobby)</title>
+<title>신흔 DIVINE TRACE (TEST fixed lobby)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1517,7 +1517,7 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 #temp-fullscreen{top:auto!important;bottom:4px!important;right:max(8px,env(safe-area-inset-right))!important;min-height:40px!important;padding:6px 12px!important}
 #test-label{top:auto!important;bottom:12px!important;left:max(8px,env(safe-area-inset-left))!important;font-size:11px!important}
 #fullscreen-message{bottom:52px!important}
-#app.landscape-lobby{width:100%;height:100%;transform:none!important}
+#app.landscape-lobby{width:100%;height:100%;transform:var(--unused-transform)}
 .landscape-lobby .screen.lb>.lb-bg img{object-position:center 40%}
 .landscape-lobby .screen.lb>.lb-jn img{object-fit:contain;object-position:center bottom}
 .landscape-lobby .screen.lb>.lb-fg img{object-fit:cover;opacity:.65}
@@ -1538,12 +1538,10 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .landscape-lobby .screen.lb>.lb-adv{right:94px;bottom:64px;width:142px;height:143px}
 .landscape-lobby .screen.lb>.lb-say{left:calc(50% - 150px);bottom:72px;width:300px}
 .landscape-lobby .screen.lb>.lb-hunt{left:90px;right:auto;bottom:64px;max-width:240px}
-@media (orientation:landscape) and (max-height:390px){
-.landscape-lobby .screen.lb>.lb-side,.landscape-lobby .screen.lb>.lb-side.r{top:88px;height:132px}
-.landscape-lobby .lb-side .lb-mi{height:40px}
-.landscape-lobby .screen.lb>.lb-adv{right:90px;bottom:54px;transform:scale(.8);transform-origin:right bottom}
-}
-.landscape-lobby .screen.lb>.lb-tabs{width:auto!important}</style>
+
+.landscape-lobby .screen.lb>.lb-tabs{width:auto!important}
+#stage{inset:0!important;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);background-size:cover;background-position:center}#temp-fullscreen{display:none!important}#test-label{top:2px!important;bottom:auto!important;left:calc(env(safe-area-inset-left) + 4px)!important;font-size:9px!important;background:#0009;opacity:.7}.landscape-lobby .screen.lb>.lb-prof{top:20px} .landscape-lobby .screen.lb>.lb-cur{top:20px}.landscape-lobby .screen.lb>.lb-tabs{width:auto!important}#app.landscape-lobby{transform-origin:center}
+#stage{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr)}.landscape-lobby .screen.lb>.lb-tabs{left:0;right:0;bottom:0;padding:4px 12px;height:56px}.landscape-lobby .lb-tabs button{font-size:13px;min-height:44px}.landscape-lobby .lb-tabs button i{font-size:19px}</style>
 <style>#temp-fullscreen{position:fixed;right:max(10px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));z-index:99999;min-height:44px;padding:8px 14px;border:1px solid #b89a62;border-radius:8px;background:rgba(12,11,15,.88);color:#f4f2f6;font:600 14px sans-serif}
 #fullscreen-message{position:fixed;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));z-index:99999;color:#fff;background:#36151b;text-align:center;font:14px sans-serif}
 #fullscreen-message:empty{display:none}</style>
@@ -2055,7 +2053,7 @@ function skBonus(){const B={atk:0,hp:0,spd:0,eco:0,shield:0,first:0};for(const n
 function skBattleStart(us){const B=skBonus();for(const u of us){if(B.shield>0)addBuff(u,{k:'shield',v:Math.round(u.max*B.shield),t:3,src:'sk'});if(B.first>0)addBuff(u,{k:'atk',v:B.first,t:2,src:'sk'});}}
 
 /* ---------- 화면 스케일 ---------- */
-function fit(){const w=innerWidth,h=Math.max(1,innerHeight-48),app=$('#app'),land=page==='lobby'&&w>innerHeight;app.classList.toggle('landscape-lobby',land);app.style.width=land?w+'px':'390px';app.style.height=land?h+'px':'624px';app.style.transform=land?'none':`scale(${Math.min(w/390,h/624)})`;}
+function fit(){const w=innerWidth,h=innerHeight,app=$('#app'),land=page==='lobby'&&w>h;app.classList.toggle('landscape-lobby',land);const baseW=land?876:390,baseH=land?554:624;const probe=document.getElementById('safe-probe'),cs=probe?getComputedStyle(probe):null;const left=cs?parseFloat(cs.paddingLeft)||0:0,right=cs?parseFloat(cs.paddingRight)||0:0,top=cs?parseFloat(cs.paddingTop)||0:0,bottom=cs?parseFloat(cs.paddingBottom)||0:0;const s=Math.min((w-left-right)/baseW,(h-top-bottom)/baseH);$('#stage').style.backgroundImage=land?'url('+A.lobby_l_bg+')':'none';app.style.width=baseW+'px';app.style.height=baseH+'px';app.style.transform=`scale(${s})`;}
 addEventListener('resize',fit);
 
 /* ---------- 라우터 ---------- */
@@ -2284,7 +2282,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
   <div class="topbar"><div class="left"><span class="stage-no">SET</span><span class="stage-name">설정</span></div><div class="right"><span class="turn">v${(document.title.match(/v([\d.]+)/)||[])[1]||''}</span></div></div>
   <div class="pf-card"><span class="pf-av">${avMine(40)}</span><span class="pf-t"><b>${esc(pName())}</b><small>${state.msg?esc(strCut(state.msg,40)):'상태 메시지를 입력해 보세요'}</small></span></div>
   <div class="ch-tabs set-tabs">${[['prof','프로필'],['snd','사운드'],['etc','기타']].map(([k,n])=>`<button class="${setTab===k?'on':''}" data-stab="${k}">${n}</button>`).join('')}</div>
-  <div class="set-body">
+  <div class="set-body"><button class="setrow" id="settings-fullscreen"><span><b>전체화면</b><small>전체화면 시작 · 해제</small></span><em>⛶</em></button>
   ${setTab==='prof'?`<div class="setsec">프로필 편집</div>
   <div class="setbox">
    <label class="setrow pf-in"><span><b>이름</b><small>8자 이내 · 전투 화면 상단 ALLY 자리에 표시 (비우면 ALLY)</small></span><input id="pf-name" type="text" maxlength="8" value="${esc(state.name)}" placeholder="ALLY" autocomplete="off"></label>
@@ -3466,5 +3464,5 @@ refresh();
 document.addEventListener('fullscreenchange',refresh);
 refresh();
 })();</script>
-<div id="test-label" style="position:fixed;z-index:99998;color:#fff;pointer-events:none">TEST</div><script>function testSize(){document.getElementById("test-label").textContent="TEST · 로비 가로 1차 · "+innerWidth+"×"+innerHeight;}addEventListener("resize",testSize);testSize();</script></body>
+<div id="safe-probe" style="position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)"></div><div id="test-label" style="position:fixed;z-index:99998;color:#fff;pointer-events:none"></div><script>function testSize(){const c=getComputedStyle(document.getElementById('safe-probe'));document.getElementById('test-label').textContent='TEST 고정 · '+innerWidth+'×'+innerHeight+' · safe '+[c.paddingLeft,c.paddingTop,c.paddingRight,c.paddingBottom].join('/');}addEventListener('resize',testSize);document.addEventListener('fullscreenchange',testSize);testSize();document.addEventListener('click',e=>{if(e.target.closest('#settings-fullscreen'))document.getElementById('temp-fullscreen').click();});</script></body>
 </html>
