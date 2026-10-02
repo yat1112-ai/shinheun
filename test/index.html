@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0C0B0F">
 <meta name="color-scheme" content="only light">
 <meta name="supported-color-schemes" content="light">
-<title>신흔 DIVINE TRACE (TEST v4.45)</title>
+<title>신흔 DIVINE TRACE (TEST landscape lobby)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Song+Myung&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
 <style>
@@ -1512,7 +1512,38 @@ body.motion-off .lb-rig,body.motion-off .lb-art{animation:none}
 .bsum .bi{overflow:hidden}
 .bsum .bi .sc2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-</style>
+/* TEST: landscape lobby; other screens retain their existing layout. */
+#stage{bottom:48px}
+#temp-fullscreen{top:auto!important;bottom:4px!important;right:max(8px,env(safe-area-inset-right))!important;min-height:40px!important;padding:6px 12px!important}
+#test-label{top:auto!important;bottom:12px!important;left:max(8px,env(safe-area-inset-left))!important;font-size:11px!important}
+#fullscreen-message{bottom:52px!important}
+#app.landscape-lobby{width:100%;height:100%;transform:none!important}
+.landscape-lobby .screen.lb>.lb-bg img{object-position:center 40%}
+.landscape-lobby .screen.lb>.lb-jn img{object-fit:contain;object-position:center bottom}
+.landscape-lobby .screen.lb>.lb-fg img{object-fit:cover;opacity:.65}
+.landscape-lobby .screen.lb>.lb-hero,.landscape-lobby .screen.lb.bgj>.lb-hero{left:25%;right:25%;top:0;bottom:56px;height:auto}
+.landscape-lobby .lb-rig,.landscape-lobby .lb-art{height:100%;width:auto;max-width:100%}
+.landscape-lobby .screen.lb>.lb-prof{top:8px;left:max(12px,env(safe-area-inset-left))}
+.landscape-lobby .screen.lb>.lb-cur{top:12px;right:max(12px,env(safe-area-inset-right));gap:8px}
+.landscape-lobby .screen.lb>.cloud{top:46px;right:16px;font-size:11px}
+.landscape-lobby .screen.lb>.lb-ver{top:64px;right:16px}
+.landscape-lobby .screen.lb>.lb-side{top:100px;width:64px;height:156px}
+.landscape-lobby .screen.lb>.lb-side.l{left:max(12px,env(safe-area-inset-left))}
+.landscape-lobby .screen.lb>.lb-side.r{right:max(12px,env(safe-area-inset-right));top:100px}
+.landscape-lobby .lb-side::before,.landscape-lobby .lb-side::after,.landscape-lobby .lb-tabs::before{display:none}
+.landscape-lobby .lb-side .lb-mi{position:relative;top:auto;left:auto;right:auto;width:64px;height:48px;margin-bottom:4px;border:1px solid #b6955b66;border-radius:6px;background:#130d17dc}
+.landscape-lobby .lb-side .lb-mi i{font-size:18px}
+.landscape-lobby .lb-side .lb-mi b{font-size:12px}
+.landscape-lobby .screen.lb>.lb-tabs{height:52px;max-width:none;background:#100b12ed}
+.landscape-lobby .screen.lb>.lb-adv{right:94px;bottom:64px;width:142px;height:143px}
+.landscape-lobby .screen.lb>.lb-say{left:calc(50% - 150px);bottom:72px;width:300px}
+.landscape-lobby .screen.lb>.lb-hunt{left:90px;right:auto;bottom:64px;max-width:240px}
+@media (orientation:landscape) and (max-height:390px){
+.landscape-lobby .screen.lb>.lb-side,.landscape-lobby .screen.lb>.lb-side.r{top:88px;height:132px}
+.landscape-lobby .lb-side .lb-mi{height:40px}
+.landscape-lobby .screen.lb>.lb-adv{right:90px;bottom:54px;transform:scale(.8);transform-origin:right bottom}
+}
+.landscape-lobby .screen.lb>.lb-tabs{width:auto!important}</style>
 <style>#temp-fullscreen{position:fixed;right:max(10px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));z-index:99999;min-height:44px;padding:8px 14px;border:1px solid #b89a62;border-radius:8px;background:rgba(12,11,15,.88);color:#f4f2f6;font:600 14px sans-serif}
 #fullscreen-message{position:fixed;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));z-index:99999;color:#fff;background:#36151b;text-align:center;font:14px sans-serif}
 #fullscreen-message:empty{display:none}</style>
@@ -2024,7 +2055,7 @@ function skBonus(){const B={atk:0,hp:0,spd:0,eco:0,shield:0,first:0};for(const n
 function skBattleStart(us){const B=skBonus();for(const u of us){if(B.shield>0)addBuff(u,{k:'shield',v:Math.round(u.max*B.shield),t:3,src:'sk'});if(B.first>0)addBuff(u,{k:'atk',v:B.first,t:2,src:'sk'});}}
 
 /* ---------- 화면 스케일 ---------- */
-function fit(){const w=innerWidth,h=innerHeight,s=Math.min(w/390,h/624);$('#app').style.transform=`scale(${s})`;}
+function fit(){const w=innerWidth,h=Math.max(1,innerHeight-48),app=$('#app'),land=page==='lobby'&&w>innerHeight;app.classList.toggle('landscape-lobby',land);app.style.width=land?w+'px':'390px';app.style.height=land?h+'px':'624px';app.style.transform=land?'none':`scale(${Math.min(w/390,h/624)})`;}
 addEventListener('resize',fit);
 
 /* ---------- 라우터 ---------- */
@@ -2047,7 +2078,7 @@ function bgmFor(){if(page==='battle'&&battle)return battle.stage.boss?'boss':(CH
 /* v4.36 재렌더 시 스크롤 위치 보존 (같은 화면일 때만, 옵션·토글 변경으로 맨 위로 튕기는 현상 방지) */
 let scrKey='',scrNoKeep=false;
 function scrCollect(){const m={};$$('#app *').forEach((n,i)=>{if(n.scrollTop>0)m[i+n.className]=n.scrollTop;});return m;}
-function render(){const app=$('#app');const key=page+(page==='character'?':'+charId:'');const sv=(key===scrKey&&!scrNoKeep)?scrCollect():null;scrNoKeep=false;scrKey=key;app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,bag:viewBag,skills:viewSkills,settings:viewSettings,adventure:viewAdventure,raid:viewRaid,battle:viewBattle,result:viewResult}[page];app.appendChild(v());if(sv)$$('#app *').forEach((n,i)=>{const t=sv[i+n.className];if(t)n.scrollTop=t;});document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);}
+function render(){const app=$('#app');const key=page+(page==='character'?':'+charId:'');const sv=(key===scrKey&&!scrNoKeep)?scrCollect():null;scrNoKeep=false;scrKey=key;app.innerHTML='';const bk=bgmFor();if(bk)SND.bgm(bk);const v={lobby:viewLobby,party:viewParty,heroes:viewHeroes,character:viewCharacter,bag:viewBag,skills:viewSkills,settings:viewSettings,adventure:viewAdventure,raid:viewRaid,battle:viewBattle,result:viewResult}[page];app.appendChild(v());if(sv)$$('#app *').forEach((n,i)=>{const t=sv[i+n.className];if(t)n.scrollTop=t;});document.documentElement.style.setProperty('--rate',rate());document.body.classList.toggle('motion-off',!state.motion);document.body.classList.toggle('fx-off',!state.fx);fit();}
 function el(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild;}
 function toast(msg){const t=el(`<div class="toast">${msg}</div>`);$('#app').appendChild(t);setTimeout(()=>t.remove(),1500);}
 /* v4.36 인게임 팝업: 브라우저 alert/confirm/prompt 대체 (Promise) */
@@ -2139,7 +2170,7 @@ const tiltStatus=()=>!(window.DeviceOrientationEvent||window.DeviceMotionEvent)?
 function tiltRetry(){tiltGot=0;tiltB0=null;tiltA0=null;tiltFb=false;lobbyTilt(true);clearTimeout(tiltT);tiltT=setTimeout(()=>{if(!tiltGot)tiltFb=true;},1500);}
 addEventListener('resize',()=>{tiltB0=null;tiltA0=null;setTilt(0,0);});addEventListener('orientationchange',()=>{tiltB0=null;tiltA0=null;setTilt(0,0);});
 /* 로비 터치 효과: 룬 링(회전하는 점선 원 + 룬 글자) + 사방으로 흩어지는 빛 파편 */
-function lobbyFx(s,e){if(!state.motion)return;const r=s.getBoundingClientRect(),k=r.width/390,x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
+function lobbyFx(s,e){if(!state.motion)return;const r=s.getBoundingClientRect(),k=r.width/s.offsetWidth,x=(e.clientX-r.left)/k,y=(e.clientY-r.top)/k;
  let h='<i class="rr"></i><i class="r2"></i>';for(let i=0;i<8;i++){const a=i/8*Math.PI*2+Math.random()*.5,d=22+Math.random()*20;h+=`<i class="sh" style="--dx:${(Math.cos(a)*d).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--r:${(a*57.3+90).toFixed(0)}deg"></i>`;}
  const f=el(`<div class="lb-fx" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px">${h}</div>`);s.appendChild(f);setTimeout(()=>f.remove(),760);}
 /* v4.6 프로필 사진: 5인 얼굴 선택(state.avatar=id) 또는 기기 사진(128px 정사각 JPEG → 이 기기 localStorage 별도 키, 클라우드 state 에는 안 실음 → state.avatar='up') */
@@ -2299,7 +2330,7 @@ function viewSettings(){const c=SND.cfg();const acct=cloud.status==='cloud'||clo
  s.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='pf-name'||e.target.id==='pf-msg')){e.preventDefault();saveProfile(s);}});
  s.addEventListener('click',async e=>{const st=e.target.closest('[data-stab]');if(st){if(setTab!==st.dataset.stab){setTab=st.dataset.stab;scrNoKeep=true;render();}return;}
   const t=e.target.closest('[data-tog]');if(t){const k=t.dataset.tog;const c=SND.cfg();
-   if(k==='all'){const on=!(c.sfx||c.bgm);SND.set('sfx',on);SND.set('bgm',on);}else if(k==='sfx'||k==='bgm')SND.set(k,!c[k]);else if(k==='motion'){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);}else if(k==='fx'){state.fx=!state.fx;save();document.body.classList.toggle('fx-off',!state.fx);}else if(k==='alock'){icu().al=icu().al?0:1;save();}else if(k==='aclean'){icu().ac=icu().ac?0:1;save();}else if(k==='adis'){icu().ad=icu().ad?0:1;save();}
+   if(k==='all'){const on=!(c.sfx||c.bgm);SND.set('sfx',on);SND.set('bgm',on);}else if(k==='sfx'||k==='bgm')SND.set(k,!c[k]);else if(k==='motion'){state.motion=!state.motion;save();document.body.classList.toggle('motion-off',!state.motion);}else if(k==='fx'){state.fx=!state.fx;save();document.body.classList.toggle('fx-off',!state.fx);fit();}else if(k==='alock'){icu().al=icu().al?0:1;save();}else if(k==='aclean'){icu().ac=icu().ac?0:1;save();}else if(k==='adis'){icu().ad=icu().ad?0:1;save();}
    render();SND.play('toggle');return;}
   if(e.target.closest('#s-errlog')){errDialog();return;}
   if(e.target.closest('#s-rigv')){rigViewer();return;}
@@ -3435,5 +3466,5 @@ refresh();
 document.addEventListener('fullscreenchange',refresh);
 refresh();
 })();</script>
-<div id="test-label" style="position:fixed;left:8px;top:8px;z-index:99998;background:#36151be6;color:#fff;padding:7px;font:12px sans-serif;pointer-events:none">TEST · 로컬 저장 전용</div><script>const testLabel=document.getElementById("test-label");function testSize(){testLabel.textContent="TEST · 로컬 저장 전용 · "+innerWidth+"×"+innerHeight;}addEventListener("resize",testSize);testSize();</script></body>
+<div id="test-label" style="position:fixed;z-index:99998;color:#fff;pointer-events:none">TEST</div><script>function testSize(){document.getElementById("test-label").textContent="TEST · 로비 가로 1차 · "+innerWidth+"×"+innerHeight;}addEventListener("resize",testSize);testSize();</script></body>
 </html>
