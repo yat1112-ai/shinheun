@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">마을 노을 풍경 (임시 오리지널 SVG)</title>
+  <desc id="d">따뜻한 노을, 들꽃, 성당, 쉼터가 있는 마을. 임시 아트이며 최종 아트가 아닙니다.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b4a8a"/>
+      <stop offset="0.35" stop-color="#d9788a"/>
+      <stop offset="0.7" stop-color="#f6b26b"/>
+      <stop offset="1" stop-color="#ffe3a3"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff6cf"/>
+      <stop offset="0.5" stop-color="#ffd37a" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#ffb24d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8aa84f"/>
+      <stop offset="1" stop-color="#4f7a3a"/>
+    </linearGradient>
+  </defs>
+  <g id="sky">
+    <rect width="960" height="540" fill="url(#sky)"/>
+    <circle cx="660" cy="300" r="170" fill="url(#sun)"/>
+    <circle cx="660" cy="300" r="46" fill="#fff0bd"/>
+    <g fill="#fff" opacity="0.35">
+      <ellipse cx="170" cy="110" rx="90" ry="14"/>
+      <ellipse cx="260" cy="132" rx="70" ry="10"/>
+      <ellipse cx="760" cy="80" rx="100" ry="13"/>
+    </g>
+  </g>
+  <g id="far-hills">
+    <path d="M0 330 Q120 250 260 320 T520 300 T760 320 T960 290 V400 H0Z" fill="#b2668a" opacity="0.7"/>
+    <path d="M0 360 Q160 300 320 352 T640 340 T960 350 V420 H0Z" fill="#8c5a7a"/>
+  </g>
+  <g id="chapel">
+    <rect x="600" y="270" width="120" height="130" fill="#f2dcc0"/>
+    <polygon points="590,272 660,214 730,272" fill="#b5533c"/>
+    <rect x="722" y="222" width="38" height="178" fill="#ecd2b2"/>
+    <polygon points="716,226 741,176 766,226" fill="#a24733"/>
+    <rect x="739" y="150" width="4" height="30" fill="#6b4a2f"/>
+    <rect x="731" y="159" width="20" height="4" fill="#6b4a2f"/>
+    <path d="M647 400 V340 a13 13 0 0 1 26 0 V400Z" fill="#6b3f2a"/>
+    <circle cx="660" cy="298" r="13" fill="#ffd37a"/>
+    <path d="M734 250 a7 7 0 0 1 14 0 v16 h-14Z" fill="#ffd37a"/>
+  </g>
+  <g id="shelter">
+    <rect x="180" y="330" width="130" height="80" fill="#e8c79a"/>
+    <polygon points="165,334 245,274 325,334" fill="#c0693f"/>
+    <rect x="228" y="360" width="34" height="50" fill="#7a4a2c"/>
+    <rect x="195" y="352" width="24" height="22" fill="#ffd98a"/>
+    <rect x="272" y="352" width="24" height="22" fill="#ffd98a"/>
+    <rect x="285" y="285" width="14" height="30" fill="#8a5a3c"/>
+    <path d="M292 280 q-8 -14 4 -26 q-2 12 8 18" fill="none" stroke="#fff" stroke-opacity="0.5" stroke-width="5"/>
+    <circle cx="245" cy="318" r="9" fill="#ffd37a"/>
+  </g>
+  <g id="ground">
+    <path d="M0 400 Q240 380 480 398 T960 392 V540 H0Z" fill="url(#grass)"/>
+    <path d="M380 540 Q430 460 470 410 L520 410 Q500 470 560 540Z" fill="#e4c590" opacity="0.9"/>
+  </g>
+  <g id="trees" fill="#3f6b3a">
+    <rect x="86" y="318" width="10" height="80" fill="#5a3b28"/>
+    <circle cx="91" cy="305" r="42" fill="#5f8a3f"/>
+    <circle cx="70" cy="325" r="28" fill="#4f7a3a"/>
+    <rect x="852" y="330" width="9" height="70" fill="#5a3b28"/>
+    <circle cx="856" cy="318" r="36" fill="#6b9444"/>
+  </g>
+  <g id="wildflowers">
+    <g stroke="#3f6b3a" stroke-width="2">
+      <path d="M60 520 v-22M120 500 v-18M190 524 v-20M300 505 v-18M610 510 v-20M690 528 v-22M790 506 v-18M890 520 v-20"/>
+    </g>
+    <g>
+      <circle cx="60" cy="496" r="6" fill="#ff8fa3"/>
+      <circle cx="120" cy="480" r="6" fill="#ffe27a"/>
+      <circle cx="190" cy="502" r="6" fill="#fff"/>
+      <circle cx="300" cy="483" r="6" fill="#c9a2ff"/>
+      <circle cx="610" cy="488" r="6" fill="#ff8fa3"/>
+      <circle cx="690" cy="506" r="6" fill="#ffe27a"/>
+      <circle cx="790" cy="484" r="6" fill="#fff"/>
+      <circle cx="890" cy="498" r="6" fill="#c9a2ff"/>
+    </g>
+  </g>
+</svg>

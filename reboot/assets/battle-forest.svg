@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">전투 숲 배경 (임시 오리지널 SVG)</title>
+  <desc id="d">원경, 중경, 근경 레이어로 분리된 전투 배경. 임시 아트이며 최종 아트가 아닙니다.</desc>
+  <defs>
+    <linearGradient id="bf-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b3f6e"/>
+      <stop offset="0.6" stop-color="#c9807a"/>
+      <stop offset="1" stop-color="#f5c27a"/>
+    </linearGradient>
+    <linearGradient id="bf-floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5d7a3c"/>
+      <stop offset="1" stop-color="#2f4a2a"/>
+    </linearGradient>
+  </defs>
+  <g id="layer-far">
+    <rect width="960" height="540" fill="url(#bf-sky)"/>
+    <circle cx="200" cy="170" r="40" fill="#ffe7b0" opacity="0.85"/>
+    <path d="M0 300 L90 200 L170 290 L270 180 L380 295 L500 190 L620 290 L740 195 L850 290 L960 210 V380 H0Z" fill="#7d5f86" opacity="0.7"/>
+    <g fill="#5f4a72" opacity="0.8">
+      <polygon points="40,330 70,230 100,330"/><polygon points="130,340 165,240 200,340"/>
+      <polygon points="330,335 360,235 390,335"/><polygon points="560,340 595,245 630,340"/>
+      <polygon points="780,335 815,240 850,335"/>
+    </g>
+  </g>
+  <g id="layer-mid">
+    <rect y="330" width="960" height="40" fill="#4a6a3a"/>
+    <g fill="#3a5a35">
+      <polygon points="20,380 70,250 120,380"/><polygon points="90,380 150,230 210,380"/>
+      <polygon points="250,380 300,260 350,380"/><polygon points="640,380 695,250 750,380"/>
+      <polygon points="730,380 790,225 850,380"/><polygon points="860,380 915,260 960,380"/>
+    </g>
+    <g fill="#ffe7b0" opacity="0.18">
+      <polygon points="420,0 470,0 560,380 400,380"/>
+      <polygon points="530,0 560,0 650,380 590,380"/>
+    </g>
+  </g>
+  <g id="layer-ground">
+    <path d="M0 370 Q240 350 480 368 T960 360 V540 H0Z" fill="url(#bf-floor)"/>
+    <ellipse cx="260" cy="440" rx="130" ry="18" fill="#000" opacity="0.18"/>
+    <ellipse cx="700" cy="440" rx="130" ry="18" fill="#000" opacity="0.18"/>
+  </g>
+  <g id="layer-near">
+    <path d="M0 540 V470 Q40 430 70 540Z" fill="#1f3320"/>
+    <path d="M0 0 H70 Q40 120 90 260 Q30 200 0 330Z" fill="#1d2a1e"/>
+    <path d="M960 0 H890 Q920 130 870 250 Q930 210 960 340Z" fill="#1d2a1e"/>
+    <g fill="#243d25">
+      <path d="M120 540 q10 -50 25 -60 q-3 40 15 60Z"/><path d="M820 540 q10 -60 30 -70 q-2 40 18 70Z"/>
+      <path d="M430 540 q8 -30 20 -36 q-2 24 10 36Z"/>
+    </g>
+    <g>
+      <circle cx="170" cy="505" r="5" fill="#ffd0e0"/><circle cx="540" cy="515" r="5" fill="#fff0a0"/>
+      <circle cx="770" cy="500" r="5" fill="#fff"/>
+    </g>
+    <g fill="#fff3c0" opacity="0.7">
+      <circle cx="300" cy="260" r="2.5"/><circle cx="610" cy="220" r="2.5"/><circle cx="480" cy="300" r="2"/><circle cx="820" cy="290" r="2"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-labelledby="t d">
+  <title id="t">아렌 – 대검 전사 (임시 오리지널 SVG)</title>
+  <desc id="d">묵직한 대검을 든 넓은 실루엣의 전사. 임시 아트이며 최종 아트가 아닙니다.</desc>
+  <rect width="240" height="320" rx="16" fill="#7a3b2e"/>
+  <circle cx="120" cy="130" r="100" fill="#c8693f" opacity="0.55"/>
+  <g id="greatsword">
+    <rect x="171" y="18" width="22" height="200" rx="3" fill="#cfd5dc" stroke="#5a6470" stroke-width="3"/>
+    <rect x="179" y="22" width="5" height="190" fill="#f4f7fa"/>
+    <polygon points="171,18 182,0 193,18" fill="#cfd5dc" stroke="#5a6470" stroke-width="3"/>
+    <rect x="156" y="216" width="52" height="12" rx="3" fill="#8a5a2c"/>
+    <rect x="177" y="228" width="10" height="38" fill="#4a2f1c"/>
+    <circle cx="182" cy="272" r="8" fill="#8a5a2c"/>
+  </g>
+  <g id="body">
+    <path d="M40 320 L52 218 Q60 180 120 172 Q180 180 188 218 L200 320Z" fill="#3a2a26"/>
+    <path d="M52 222 Q30 214 26 238 Q42 252 62 240Z" fill="#8c8f96" stroke="#444" stroke-width="2"/>
+    <path d="M188 222 Q210 214 214 238 Q198 252 178 240Z" fill="#8c8f96" stroke="#444" stroke-width="2"/>
+    <path d="M76 214 H164 L156 320 H84Z" fill="#a24a34"/>
+    <rect x="76" y="262" width="88" height="10" fill="#5a3a22"/>
+    <rect x="108" y="256" width="24" height="22" rx="3" fill="#d9a441"/>
+  </g>
+  <g id="portrait">
+    <rect x="104" y="160" width="32" height="24" fill="#d9a07a"/>
+    <ellipse cx="120" cy="136" rx="34" ry="40" fill="#e0aa84"/>
+    <path d="M84 132 Q80 88 120 88 Q160 88 156 132 Q150 108 120 106 Q90 108 84 132Z" fill="#3a1f18"/>
+    <path d="M90 120 L150 120 L150 128 L90 128Z" fill="#c8693f"/>
+    <circle cx="106" cy="140" r="3.5" fill="#2a1a14"/><circle cx="134" cy="140" r="3.5" fill="#2a1a14"/>
+    <path d="M100 133 L113 136M140 133 L127 136" stroke="#2a1a14" stroke-width="3"/>
+    <path d="M110 160 Q120 164 130 160" stroke="#8a4a3a" stroke-width="3" fill="none"/>
+    <path d="M108 168 Q120 180 132 168 Q130 184 120 186 Q110 184 108 168Z" fill="#3a1f18"/>
+  </g>
+</svg>
