@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T00:47:04+09:00",
+  "generated_at": "2026-10-07T00:49:03+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -43,23 +43,23 @@
       "id": "development",
       "name": "개발 채팅",
       "role": "Codex + Claude Code 병행 구현·교차검수",
-      "task": "교차 코드 검수",
-      "status": "reviewing",
-      "progress": 82,
-      "started_at": "2026-10-07T00:43:54+09:00",
-      "updated_at": "2026-10-07T00:47:01+09:00",
+      "task": "자동 수정 2회 후에도 문제가 남았습니다. 검수·테스트 결과를 확인하세요.",
+      "status": "blocked",
+      "progress": 65,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:47:32+09:00",
       "stale_after_sec": 600,
       "sub": [
         {
           "id": "codex",
           "name": "Codex",
-          "status": "working",
+          "status": "idle",
           "usage": {
             "remaining": 24.0,
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:46:33+09:00",
+            "snapshot_at": "2026-10-07T00:47:32+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
