@@ -1859,3 +1859,83 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
 /* No dev controls in the player-facing phase-2 preview. */
 #common-controls { opacity:0 !important; pointer-events:none !important; }
 #art-preview-note { display:none !important; }
+
+
+/* ======================= PHASE 2 ALIGNMENT HOTFIX ======================= */
+#village-map .hotspot {
+  min-width: 190px !important;
+  height: 62px !important;
+  padding-left: 28px !important;
+}
+#village-map .hotspot::before {
+  width: 58px !important;
+  height: 58px !important;
+  left: 0 !important;
+  top: 1px !important;
+  transform: none !important;
+  clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);
+  border: 2px solid #e6c168 !important;
+  border-radius: 0 !important;
+  background: rgba(42,43,42,.98) !important;
+  color: #f7d98b !important;
+  font-size: 25px;
+}
+#village-map .hotspot::after { display:none !important; }
+#village-map .hotspot .hs-name {
+  margin-left: 28px !important;
+  min-width: 170px !important;
+  height: 54px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding: 0 24px !important;
+  background: linear-gradient(90deg, rgba(44,46,45,.99), rgba(48,52,52,.97)) !important;
+  border: 1px solid #d9b65f !important;
+  border-left:0 !important;
+  border-radius: 0 24px 24px 0 !important;
+  font-size: 23px !important;
+}
+#hs-church::before { content:"♜" !important; }
+#hs-market::before { content:"⚖" !important; }
+#hs-mine::before { content:"⚒" !important; }
+#hs-dispatch::before { content:"✒" !important; }
+#hs-pocketwatch::before { content:"✥" !important; }
+#hs-raid::before { content:"⚔" !important; }
+
+#hs-church { left:286px !important; top:236px !important; }
+#hs-market { left:190px !important; top:466px !important; }
+#hs-mine { left:1015px !important; top:212px !important; }
+#hs-dispatch { left:1362px !important; top:350px !important; }
+#hs-pocketwatch { left:724px !important; top:555px !important; width:258px !important; }
+#hs-pocketwatch .hs-name { min-width:220px !important; }
+#hs-raid { left:1296px !important; top:558px !important; width:220px !important; }
+
+/* Opaque HUD panels intentionally cover the baked concept labels beneath. */
+#village-profile {
+  left:18px !important;
+  top:18px !important;
+  width:282px !important;
+  background:linear-gradient(90deg,#1e2b35f7,#314350f2) !important;
+}
+#village-currencies {
+  right:108px !important;
+  top:20px !important;
+}
+.currency { background:linear-gradient(180deg,#55758df8,#355469f6) !important; }
+#village-top-right { right:18px !important; top:20px !important; }
+
+/* Bottom menu covers the concept-image menu and remains interactive. */
+#village-nav {
+  bottom:12px !important;
+  width:900px !important;
+  height:94px !important;
+  background:linear-gradient(180deg,#fffdf8fa,#f7f2e7fa) !important;
+}
+
+/* Stronger but still restrained phase-2 motion visibility. */
+.vfx-clock { left:810px !important; top:516px !important; filter:drop-shadow(0 0 18px rgba(103,205,255,.78)) !important; }
+.clock-core { box-shadow:0 0 22px 10px rgba(97,205,255,.72),0 0 48px 20px rgba(255,219,135,.22) !important; }
+.vfx-mine-glow { left:1118px !important; top:226px !important; opacity:.95 !important; }
+.vfx-crane { left:1100px !important; top:75px !important; opacity:.72 !important; }
+.vfx-dispatch-people { left:1395px !important; top:447px !important; opacity:.9 !important; }
+.vfx-raid { left:1430px !important; top:612px !important; filter:drop-shadow(0 0 24px rgba(73,167,255,.75)) !important; }
