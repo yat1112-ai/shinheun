@@ -1,17 +1,17 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T00:39:03+09:00",
+  "generated_at": "2026-10-07T00:41:03+09:00",
   "refresh_sec": 15,
   "staff": [
     {
       "id": "main-control",
       "name": "메인 컨트롤타워 · ChatGPT",
       "role": "사용자 대화·승인·작업 분배·최종 보고",
-      "task": "사용자 지시 대기",
-      "status": "idle",
-      "progress": 0,
-      "started_at": null,
-      "updated_at": "2026-10-07T00:35:30+09:00",
+      "task": "각 채팅방 30초 실가동 연결 테스트",
+      "status": "working",
+      "progress": 20,
+      "started_at": "2026-10-07T00:39:00+09:00",
+      "updated_at": "2026-10-07T00:39:00+09:00",
       "stale_after_sec": 900,
       "identity": "현재 사용자와 직접 대화 중인 메인 ChatGPT"
     },
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:37:04+09:00",
+            "snapshot_at": "2026-10-07T00:39:05+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
