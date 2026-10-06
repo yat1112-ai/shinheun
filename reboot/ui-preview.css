@@ -1348,3 +1348,183 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
 
 /* Main: independent review hotspot overlap confirmed and corrected. */
 #hs-dispatch { top: 540px; }
+
+
+/* ======================= Village motion test v1 ======================= */
+#village-vfx {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+.vfx-clock {
+  position: absolute;
+  left: 742px;
+  top: 575px;
+  width: 160px;
+  height: 160px;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 12px rgba(130, 218, 255, .55));
+}
+.vfx-clock > span { position: absolute; inset: 0; border-radius: 50%; }
+.clock-a {
+  border: 3px solid rgba(255, 232, 166, .72);
+  background:
+    conic-gradient(from 0deg, transparent 0 9%, rgba(255,240,190,.95) 10% 12%, transparent 13% 24%, rgba(124,218,255,.85) 25% 27%, transparent 28% 49%, rgba(255,240,190,.9) 50% 52%, transparent 53% 74%, rgba(124,218,255,.82) 75% 77%, transparent 78%);
+  -webkit-mask: radial-gradient(circle, transparent 0 56%, #000 57% 61%, transparent 62% 100%);
+  mask: radial-gradient(circle, transparent 0 56%, #000 57% 61%, transparent 62% 100%);
+  animation: shin-clock-spin 14s linear infinite;
+}
+.clock-b {
+  inset: 23px !important;
+  border: 2px solid rgba(106, 205, 255, .8);
+  background: conic-gradient(from 45deg, transparent 0 20%, rgba(255,255,255,.8) 21% 23%, transparent 24% 45%, rgba(117,215,255,.9) 46% 49%, transparent 50% 72%, rgba(255,235,172,.9) 73% 76%, transparent 77%);
+  -webkit-mask: radial-gradient(circle, transparent 0 51%, #000 52% 58%, transparent 59%);
+  mask: radial-gradient(circle, transparent 0 51%, #000 52% 58%, transparent 59%);
+  animation: shin-clock-spin-reverse 9s linear infinite;
+}
+.clock-core {
+  inset: 58px !important;
+  background: radial-gradient(circle, #fff 0 10%, #8fe9ff 28%, #3e9eea 48%, rgba(64,157,229,.1) 68%, transparent 72%);
+  box-shadow: 0 0 18px 8px rgba(97,205,255,.55), 0 0 42px 16px rgba(255,219,135,.18);
+  animation: shin-core-pulse 2.8s ease-in-out infinite;
+}
+.vfx-mine-glow {
+  position: absolute;
+  left: 1015px;
+  top: 286px;
+  width: 250px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,238,154,.88) 0, rgba(255,137,42,.56) 30%, rgba(255,74,18,.20) 54%, transparent 73%);
+  mix-blend-mode: screen;
+  filter: blur(4px);
+  box-shadow: 0 0 34px rgba(255,126,38,.28);
+  animation: shin-fire-breathe 1.8s ease-in-out infinite alternate;
+}
+.vfx-smoke {
+  position: absolute;
+  width: 95px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 70%, rgba(235,238,231,.24), rgba(190,199,193,.12) 42%, transparent 70%);
+  filter: blur(8px);
+  opacity: 0;
+}
+.smoke-a { left: 1040px; top: 222px; animation: shin-smoke-rise 5.2s ease-out infinite; }
+.smoke-b { left: 1092px; top: 236px; animation: shin-smoke-rise 5.2s 2.6s ease-out infinite; }
+.vfx-crane {
+  position: absolute;
+  left: 1085px;
+  top: 167px;
+  width: 210px;
+  height: 150px;
+  transform-origin: 22px 115px;
+  animation: shin-crane-sway 6.5s ease-in-out infinite;
+  opacity: .72;
+}
+.crane-arm {
+  position: absolute;
+  left: 12px;
+  top: 38px;
+  width: 175px;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(72,52,35,.1), rgba(78,53,31,.85) 12%, rgba(166,115,55,.9));
+  transform: rotate(-10deg);
+  transform-origin: 0 50%;
+  box-shadow: 0 1px 0 rgba(255,222,160,.25);
+}
+.crane-cable {
+  position: absolute;
+  left: 163px;
+  top: 16px;
+  width: 2px;
+  height: 87px;
+  background: rgba(45,32,22,.74);
+  transform-origin: 50% 0;
+  animation: shin-hook-sway 4.4s ease-in-out infinite;
+}
+.crane-hook {
+  position: absolute;
+  left: 156px;
+  top: 96px;
+  width: 16px;
+  height: 19px;
+  border: 3px solid rgba(66,44,25,.85);
+  border-top: 0;
+  border-left-color: transparent;
+  border-radius: 0 0 12px 12px;
+  animation: shin-hook-sway 4.4s ease-in-out infinite;
+  transform-origin: 50% -78px;
+}
+.vfx-raid {
+  position: absolute;
+  left: 1042px;
+  top: 654px;
+  width: 150px;
+  height: 105px;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+}
+.raid-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 3px solid rgba(95,200,255,.65);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.raid-ring-a { width: 108px; height: 72px; animation: shin-raid-wave 2.4s ease-out infinite; }
+.raid-ring-b { width: 76px; height: 50px; animation: shin-raid-wave 2.4s 1.2s ease-out infinite; }
+.raid-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 42px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255,255,255,.9), rgba(95,200,255,.68) 32%, rgba(87,113,255,.22) 62%, transparent 76%);
+  filter: blur(1px);
+  animation: shin-raid-core 1.7s ease-in-out infinite alternate;
+}
+@keyframes shin-clock-spin { to { transform: rotate(360deg); } }
+@keyframes shin-clock-spin-reverse { to { transform: rotate(-360deg); } }
+@keyframes shin-core-pulse {
+  0%,100% { transform: scale(.86); opacity: .68; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes shin-fire-breathe {
+  0% { opacity: .45; transform: scale(.93) translateY(3px); }
+  45% { opacity: .9; transform: scale(1.05) translateY(-2px); }
+  70% { opacity: .58; transform: scale(.98); }
+  100% { opacity: .82; transform: scale(1.08) translateY(-4px); }
+}
+@keyframes shin-smoke-rise {
+  0% { opacity: 0; transform: translate3d(0, 18px, 0) scale(.65); }
+  18% { opacity: .32; }
+  72% { opacity: .14; }
+  100% { opacity: 0; transform: translate3d(22px, -92px, 0) scale(1.4); }
+}
+@keyframes shin-crane-sway {
+  0%,100% { transform: rotate(-.55deg); }
+  50% { transform: rotate(.65deg); }
+}
+@keyframes shin-hook-sway {
+  0%,100% { transform: rotate(-2.5deg); }
+  50% { transform: rotate(3.2deg); }
+}
+@keyframes shin-raid-wave {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.55); filter: blur(0); }
+  25% { opacity: .8; }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.45); filter: blur(2px); }
+}
+@keyframes shin-raid-core {
+  from { opacity: .48; transform: translate(-50%,-50%) scale(.92); }
+  to { opacity: .98; transform: translate(-50%,-50%) scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #village-vfx *, #village-vfx { animation: none !important; }
+}
