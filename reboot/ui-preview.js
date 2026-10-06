@@ -878,3 +878,23 @@
   // Touch/mobile: a very small device-orientation-free drift on first interaction.
   village.addEventListener("pointerdown", (event) => setTarget(event.clientX, event.clientY), { passive: true });
 })();
+
+
+/* SHINHEUN PHASE 2 DOM TEXT HOTFIX */
+(() => {
+  const style = document.createElement("style");
+  style.id = "phase2-dom-text-hotfix";
+  style.textContent = `
+    #village-nav button{
+      font-size:0!important;
+      line-height:0!important;
+      color:transparent!important;
+      text-shadow:none!important;
+      overflow:hidden!important;
+    }
+    #village-nav button::before,
+    #village-nav button::after{content:none!important;display:none!important}
+    #village-nav button .nav-icon{display:none!important}
+  `;
+  document.head.appendChild(style);
+})();
