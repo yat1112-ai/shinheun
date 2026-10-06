@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T01:01:03+09:00",
+  "generated_at": "2026-10-07T01:03:03+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:59:15+09:00",
+            "snapshot_at": "2026-10-07T01:01:16+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
@@ -71,7 +71,7 @@
             "remaining": 50.0,
             "used": 50.0,
             "reset_at": "2026-10-08T00:00:00+09:00",
-            "stale": false,
+            "stale": true,
             "snapshot_at": "2026-10-07T00:46:52+09:00",
             "source": "Claude CLI rate_limit_event"
           }
