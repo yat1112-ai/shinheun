@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T07:13:03+09:00",
+  "generated_at": "2026-10-07T07:15:04+09:00",
   "refresh_sec": 120,
   "staff": [
     {
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T07:12:13+09:00",
+            "snapshot_at": "2026-10-07T07:14:14+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
@@ -100,7 +100,7 @@
         "assignee": "미연결",
         "progress": 0,
         "lane": "design",
-        "updated_at": "2026-10-07T07:13:03+09:00"
+        "updated_at": "2026-10-07T07:15:04+09:00"
       },
       {
         "id": "S-001",
@@ -109,7 +109,7 @@
         "assignee": "미연결",
         "progress": 0,
         "lane": "story",
-        "updated_at": "2026-10-07T07:13:03+09:00"
+        "updated_at": "2026-10-07T07:15:04+09:00"
       },
       {
         "id": "V-001",
@@ -118,7 +118,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:13:03+09:00"
+        "updated_at": "2026-10-07T07:15:04+09:00"
       },
       {
         "id": "V-002",
@@ -127,7 +127,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:13:03+09:00"
+        "updated_at": "2026-10-07T07:15:04+09:00"
       }
     ],
     "reserved": [],
