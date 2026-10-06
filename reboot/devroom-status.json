@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state; progress is workflow milestone-derived",
-  "generated_at": "2026-10-07T00:21:04+09:00",
+  "generated_at": "2026-10-07T00:23:03+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -63,7 +63,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:20:45+09:00",
+            "snapshot_at": "2026-10-07T00:22:46+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
