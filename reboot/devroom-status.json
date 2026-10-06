@@ -1,23 +1,19 @@
 {
-  "source": "AIController live snapshot + parallel_chat state; progress is workflow milestone-derived",
-  "generated_at": "2026-10-07T00:23:03+09:00",
+  "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
+  "generated_at": "2026-10-07T00:25:03+09:00",
   "refresh_sec": 15,
   "staff": [
     {
       "id": "main-control",
-      "name": "메인 컨트롤타워",
-      "role": "사용자 대화·승인·최종 보고",
-      "task": "개발실 현황판 공개 준비 및 검증",
+      "name": "메인 컨트롤타워 · ChatGPT",
+      "role": "사용자 대화·승인·작업 분배·최종 보고",
+      "task": "신흔 DIVINE TRACE 전체 인계 및 개발실 메인 연동 수정",
       "status": "working",
-      "progress": 92,
-      "started_at": "2026-10-06T23:52:44+09:00",
-      "updated_at": "2026-10-06T23:56:04+09:00",
+      "progress": 55,
+      "started_at": "2026-10-07T00:18:00+09:00",
+      "updated_at": "2026-10-07T00:22:31+09:00",
       "stale_after_sec": 900,
-      "chat_load": {
-        "messages": 80,
-        "level": "high",
-        "label": "새 채팅 교체 권장"
-      }
+      "identity": "현재 사용자와 직접 대화 중인 메인 ChatGPT"
     },
     {
       "id": "design",
@@ -61,9 +57,9 @@
           "usage": {
             "remaining": 24.0,
             "used": 76.0,
-            "reset_at": "2026-10-10T09:25:04+09:00",
+            "reset_at": "2026-10-10T09:25:15+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:22:46+09:00",
+            "snapshot_at": "2026-10-07T00:24:58+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
