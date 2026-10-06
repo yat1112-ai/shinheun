@@ -820,7 +820,8 @@
     stale.hidden = true;
     var upMs = toMs(s.updated_at);
     var limit = Number(s.stale_after_sec);
-    if (upMs !== null && present(s.stale_after_sec) && !isNaN(limit)) {
+    var trackStale = s.status === 'working' || s.status === 'reviewing';
+    if (trackStale && upMs !== null && present(s.stale_after_sec) && !isNaN(limit)) {
       stale.setAttribute('data-updated', String(upMs));
       stale.setAttribute('data-stale-after', String(limit));
     }

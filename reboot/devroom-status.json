@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state; progress is workflow milestone-derived",
-  "generated_at": "2026-10-07T00:06:36+09:00",
+  "generated_at": "2026-10-07T00:13:19+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -27,7 +27,7 @@
       "status": "idle",
       "progress": 0,
       "started_at": null,
-      "updated_at": "2026-10-07T00:06:36+09:00",
+      "updated_at": "2026-10-06T23:22:00+09:00",
       "stale_after_sec": 1800,
       "connection": "미연결"
     },
@@ -39,7 +39,7 @@
       "status": "idle",
       "progress": 0,
       "started_at": null,
-      "updated_at": "2026-10-07T00:06:36+09:00",
+      "updated_at": "2026-10-06T23:22:00+09:00",
       "stale_after_sec": 1800,
       "connection": "미연결"
     },
@@ -63,7 +63,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:04:37+09:00",
+            "snapshot_at": "2026-10-07T00:12:41+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
@@ -75,7 +75,7 @@
             "remaining": 51.0,
             "used": 49.0,
             "reset_at": "2026-10-08T00:00:00+09:00",
-            "stale": false,
+            "stale": true,
             "snapshot_at": "2026-10-06T23:55:30+09:00",
             "source": "Claude CLI rate_limit_event"
           }
@@ -90,7 +90,7 @@
       "status": "idle",
       "progress": 0,
       "started_at": null,
-      "updated_at": "2026-10-07T00:06:36+09:00",
+      "updated_at": "2026-10-06T23:22:00+09:00",
       "stale_after_sec": 1800,
       "connection": "미연결"
     }
