@@ -1,17 +1,17 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T00:44:49+09:00",
+  "generated_at": "2026-10-07T00:45:04+09:00",
   "refresh_sec": 15,
   "staff": [
     {
       "id": "main-control",
       "name": "메인 컨트롤타워 · ChatGPT",
       "role": "사용자 대화·승인·작업 분배·최종 보고",
-      "task": "각 채팅방 30초 실가동 연결 테스트",
-      "status": "working",
-      "progress": 50,
-      "started_at": "2026-10-07T00:44:34+09:00",
-      "updated_at": "2026-10-07T00:44:49+09:00",
+      "task": "사용자 지시 대기",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:45:04+09:00",
       "stale_after_sec": 900,
       "identity": "현재 사용자와 직접 대화 중인 메인 ChatGPT"
     },
@@ -19,25 +19,25 @@
       "id": "design",
       "name": "디자인 채팅",
       "role": "UI·이미지·오브젝트 제작",
-      "task": "SMOKE-30S",
-      "status": "working",
-      "progress": 50,
-      "started_at": "2026-10-07T00:44:34+09:00",
-      "updated_at": "2026-10-07T00:44:49+09:00",
+      "task": "대기: D-001",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:45:04+09:00",
       "stale_after_sec": 1800,
-      "connection": "연결됨"
+      "connection": "미연결"
     },
     {
       "id": "story-dialogue",
       "name": "스토리/대사 채팅",
       "role": "스토리라인·연출·대사 작성",
-      "task": "SMOKE-30S",
-      "status": "working",
-      "progress": 50,
-      "started_at": "2026-10-07T00:44:34+09:00",
-      "updated_at": "2026-10-07T00:44:49+09:00",
+      "task": "대기: S-001",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:45:04+09:00",
       "stale_after_sec": 1800,
-      "connection": "연결됨"
+      "connection": "미연결"
     },
     {
       "id": "development",
@@ -47,13 +47,13 @@
       "status": "reviewing",
       "progress": 82,
       "started_at": "2026-10-07T00:43:54+09:00",
-      "updated_at": "2026-10-07T00:44:42+09:00",
+      "updated_at": "2026-10-07T00:44:52+09:00",
       "stale_after_sec": 600,
       "sub": [
         {
           "id": "codex",
           "name": "Codex",
-          "status": "idle",
+          "status": "working",
           "usage": {
             "remaining": 24.0,
             "used": 76.0,
@@ -66,13 +66,13 @@
         {
           "id": "claude-code",
           "name": "Claude Code",
-          "status": "working",
+          "status": "idle",
           "usage": {
             "remaining": 50.0,
             "used": 50.0,
             "reset_at": "2026-10-08T00:00:00+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:44:46+09:00",
+            "snapshot_at": "2026-10-07T00:44:51+09:00",
             "source": "Claude CLI rate_limit_event"
           }
         }
@@ -82,13 +82,13 @@
       "id": "overall-management",
       "name": "전체관리 채팅",
       "role": "작업 큐·중복·인수인계 관리",
-      "task": "SMOKE-30S",
-      "status": "working",
-      "progress": 50,
-      "started_at": "2026-10-07T00:44:34+09:00",
-      "updated_at": "2026-10-07T00:44:49+09:00",
+      "task": "전용 채팅 연결 대기",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:45:04+09:00",
       "stale_after_sec": 1800,
-      "connection": "연결됨"
+      "connection": "미연결"
     }
   ]
 }
