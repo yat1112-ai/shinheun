@@ -85,7 +85,9 @@
           object-fit:cover;
           pointer-events:none;
           opacity:1;
-          filter:brightness(1.03) saturate(1.015);
+          filter:brightness(1.05) saturate(1.02);
+          forced-color-adjust:none;
+          mix-blend-mode:normal;
         }
 
         .final-clock-object {
@@ -212,33 +214,6 @@
         @keyframes final-clock-core {
           0%,100% { opacity:.58; transform:translate(-50%,-50%) scale(.88); }
           50%     { opacity:1; transform:translate(-50%,-50%) scale(1.14); }
-        }
-
-        @media (max-width:900px), (max-height:500px) {
-          html.final-clock-mode,
-          html.final-clock-mode body,
-          html.final-clock-mode #viewport,
-          html.final-clock-mode #stage,
-          #final-clock-scene {
-            background:#eefaff !important;
-            filter:none !important;
-            opacity:1 !important;
-          }
-          #final-clock-scene .final-hub-bg {
-            opacity:1 !important;
-            filter:brightness(1.09) saturate(1.035) contrast(.985) !important;
-            mix-blend-mode:normal !important;
-          }
-          .final-clock-object {
-            bottom:72px;
-            width:250px;
-            height:312px;
-            filter:drop-shadow(0 9px 10px rgba(31,61,87,.16));
-          }
-          .final-clock-aura {
-            width:150px;
-            height:150px;
-          }
         }
 
         @media (prefers-reduced-motion:reduce) {
