@@ -234,3 +234,113 @@ html, body { margin: 0; }
     filter: drop-shadow(0 0 10px #b5e9a3);
   }
 }
+
+/* 개발실: 렌더러는 devroom-* 클래스와 배지의 data-status를 사용한다. */
+.devroom {
+  margin: 12px 16px;
+  padding: 14px;
+  background: var(--library-panel);
+  border: 1px solid var(--library-line);
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.devroom-title { margin: 0; font-size: 1.1rem; }
+.devroom-meta { margin: 4px 0 12px; color: var(--library-dim); font-size: .8rem; }
+.devroom-meta[data-error="true"], .devroom-error { color: var(--library-missing); }
+.devroom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.devroom-grid > li { min-width: 0; margin: 0; }
+.devroom-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  height: 100%;
+  padding: 12px;
+  background: var(--library-bg);
+  border: 1px solid var(--library-line);
+  border-radius: 10px;
+}
+.devroom-card-head, .devroom-badges, .devroom-progress-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+.devroom-card-head, .devroom-progress-row { justify-content: space-between; }
+.devroom-card-title, .devroom-usage-title { margin: 0; font-size: .95rem; }
+.devroom-role, .devroom-task, .devroom-chat-load { margin: 0; font-size: .85rem; }
+.devroom-role { color: var(--library-dim); }
+.devroom-badge {
+  display: inline-block;
+  max-width: 100%;
+  padding: 2px 8px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: var(--library-dim);
+  font-size: .75rem;
+}
+.devroom-badge[data-status="idle"] { color: var(--library-dim); }
+.devroom-badge[data-status="working"] { color: var(--library-accent); }
+.devroom-badge[data-status="reviewing"] { color: var(--library-draft); }
+.devroom-badge[data-status="blocked"] { color: var(--library-missing); }
+.devroom-badge[data-status="verified"] { color: var(--library-applied); }
+.devroom-badge[data-status="published"] { color: var(--library-placeholder); }
+.devroom-stale, .devroom-badge[data-stale="true"] {
+  color: var(--library-focus);
+  border: 1px dashed currentColor;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: .75rem;
+}
+.devroom-progress-row { font-size: .8rem; }
+.devroom progress {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 10px;
+  border: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--library-panel-2);
+  accent-color: var(--library-accent);
+}
+.devroom progress::-webkit-progress-bar { background: var(--library-panel-2); border-radius: 999px; }
+.devroom progress::-webkit-progress-value { background: var(--library-accent); border-radius: 999px; }
+.devroom progress::-moz-progress-bar { background: var(--library-accent); border-radius: 999px; }
+.devroom-times, .devroom-usage-info {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 4px 8px;
+  margin: 0;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+.devroom-times dt, .devroom-usage-info dt { color: var(--library-dim); }
+.devroom-times dd, .devroom-usage-info dd { min-width: 0; margin: 0; }
+.devroom-usage {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--library-line);
+  border-radius: 8px;
+  background: var(--library-panel-2);
+}
+.devroom-chat-load {
+  padding-top: 8px;
+  border-top: 1px solid var(--library-line);
+  color: var(--library-dim);
+}
+.devroom [hidden] { display: none; }
+@media (max-width: 600px) {
+  .devroom { margin-left: 10px; margin-right: 10px; padding: 10px; }
+  .devroom-grid { grid-template-columns: minmax(0, 1fr); }
+}

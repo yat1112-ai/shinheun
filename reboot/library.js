@@ -714,3 +714,193 @@
 
   loadManifest();
 })();
+
+// 신흔 개발실 현황판
+(function () {
+  'use strict';
+
+  var STATUS_URL = 'devroom-status.json';
+  var REFRESH_MS = 15000;
+  var NONE = '정보 없음';
+  var STATUS_LABEL = {
+    idle: '대기', working: '작업 중', reviewing: '검토 중',
+    blocked: '막힘', verified: '검증됨', published: '게시됨'
+  };
+
+  var grid = document.getElementById('devroom-grid');
+  var meta = document.getElementById('devroom-meta');
+  if (!grid || !meta) return;
+
+  function make(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function present(v) { return v !== null && v !== undefined && v !== ''; }
+  function show(v) { return present(v) ? String(v) : NONE; }
+
+  function toMs(v) {
+    if (!present(v)) return null;
+    var t = Date.parse(v);
+    return isNaN(t) ? null : t;
+  }
+
+  function pad(n) { return n < 10 ? '0' + n : String(n); }
+
+  function fmtTime(v) {
+    var t = toMs(v);
+    if (t === null) return NONE;
+    var d = new Date(t);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+      ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  function fmtElapsed(startMs) {
+    var s = Math.max(0, Math.floor((Date.now() - startMs) / 1000));
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    return pad(h) + ':' + pad(m) + ':' + pad(s % 60);
+  }
+
+  function clampProgress(v) {
+    var n = Number(v);
+    if (!present(v) || isNaN(n)) return null;
+    return Math.min(100, Math.max(0, n));
+  }
+
+  function statusBadge(status) {
+    var b = make('span', 'devroom-badge', STATUS_LABEL[status] || show(status));
+    b.setAttribute('data-status', present(status) ? String(status) : 'unknown');
+    return b;
+  }
+
+  function addRow(dl, label, value) {
+    dl.appendChild(make('dt', null, label));
+    var dd = make('dd', null, value);
+    dl.appendChild(dd);
+    return dd;
+  }
+
+  function usageValue(v) { return present(v) ? String(v) : NONE; }
+
+  function renderUsage(sub) {
+    var box = make('div', 'devroom-usage');
+    var head = make('div', 'devroom-badges');
+    head.appendChild(make('h4', 'devroom-usage-title', show(sub.name)));
+    head.appendChild(statusBadge(sub.status));
+    box.appendChild(head);
+
+    var u = sub.usage;
+    var dl = make('dl', 'devroom-usage-info');
+    if (u && typeof u === 'object') {
+      addRow(dl, '남은 사용량', usageValue(u.remaining));
+      addRow(dl, '사용량', usageValue(u.used));
+      addRow(dl, '초기화', present(u.reset_at) ? fmtTime(u.reset_at) : NONE);
+      addRow(dl, '스냅샷', present(u.snapshot_at) ? fmtTime(u.snapshot_at) : NONE);
+      addRow(dl, '최신 여부', u.stale === true ? '오래됨(stale)' : (u.stale === false ? '최신' : NONE));
+    } else {
+      addRow(dl, '사용량', NONE);
+    }
+    box.appendChild(dl);
+    return box;
+  }
+
+  function renderCard(s) {
+    var li = make('li');
+    var card = make('article', 'devroom-card');
+    card.setAttribute('data-id', show(s.id));
+
+    var head = make('div', 'devroom-card-head');
+    head.appendChild(make('h3', 'devroom-card-title', show(s.name)));
+    var badges = make('div', 'devroom-badges');
+    badges.appendChild(statusBadge(s.status));
+    var stale = make('span', 'devroom-badge devroom-stale', '정지 의심');
+    stale.hidden = true;
+    var upMs = toMs(s.updated_at);
+    var limit = Number(s.stale_after_sec);
+    if (upMs !== null && present(s.stale_after_sec) && !isNaN(limit)) {
+      stale.setAttribute('data-updated', String(upMs));
+      stale.setAttribute('data-stale-after', String(limit));
+    }
+    badges.appendChild(stale);
+    head.appendChild(badges);
+    card.appendChild(head);
+
+    card.appendChild(make('p', 'devroom-role', show(s.role)));
+    card.appendChild(make('p', 'devroom-task', show(s.task)));
+
+    var pct = clampProgress(s.progress);
+    var row = make('div', 'devroom-progress-row');
+    row.appendChild(make('span', null, '진행도'));
+    row.appendChild(make('span', null, pct === null ? NONE : pct + '%'));
+    card.appendChild(row);
+    var bar = document.createElement('progress');
+    bar.max = 100;
+    if (pct !== null) bar.value = pct;
+    card.appendChild(bar);
+
+    var times = make('dl', 'devroom-times');
+    addRow(times, '시작', fmtTime(s.started_at));
+    var startMs = toMs(s.started_at);
+    var elapsed = addRow(times, '경과', startMs === null ? NONE : fmtElapsed(startMs));
+    if (startMs !== null) elapsed.setAttribute('data-started', String(startMs));
+    addRow(times, '최근 업데이트', fmtTime(s.updated_at));
+    card.appendChild(times);
+
+    if (Array.isArray(s.sub)) {
+      s.sub.forEach(function (sub) { card.appendChild(renderUsage(sub || {})); });
+    }
+
+    if (s.chat_load && typeof s.chat_load === 'object') {
+      var c = s.chat_load;
+      card.appendChild(make('p', 'devroom-chat-load',
+        '채팅 부하: 메시지 ' + show(c.messages) + '개 · 수준 ' + show(c.level) + ' · ' + show(c.label)));
+    }
+
+    li.appendChild(card);
+    return li;
+  }
+
+  function render(data) {
+    var staff = Array.isArray(data.staff) ? data.staff : [];
+    var frag = document.createDocumentFragment();
+    staff.forEach(function (s) { frag.appendChild(renderCard(s || {})); });
+    grid.textContent = '';
+    grid.appendChild(frag);
+    meta.removeAttribute('data-error');
+    meta.textContent = '출처: ' + show(data.source) + ' · 생성: ' + fmtTime(data.generated_at);
+    tick();
+  }
+
+  function tick() {
+    var now = Date.now();
+    Array.prototype.forEach.call(grid.querySelectorAll('[data-started]'), function (n) {
+      n.textContent = fmtElapsed(Number(n.getAttribute('data-started')));
+    });
+    Array.prototype.forEach.call(grid.querySelectorAll('.devroom-stale'), function (n) {
+      var up = n.getAttribute('data-updated');
+      var lim = n.getAttribute('data-stale-after');
+      n.hidden = !(up !== null && lim !== null && (now - Number(up)) / 1000 > Number(lim));
+      n.setAttribute('data-stale', n.hidden ? 'false' : 'true');
+    });
+  }
+
+  function load() {
+    fetch(STATUS_URL, { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(render)
+      .catch(function (err) {
+        meta.setAttribute('data-error', 'true');
+        meta.textContent = '현황 데이터를 불러오지 못했습니다: ' + (err && err.message ? err.message : err);
+      });
+  }
+
+  load();
+  setInterval(load, REFRESH_MS);
+  setInterval(tick, 1000);
+})();

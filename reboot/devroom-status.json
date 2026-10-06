@@ -1,0 +1,98 @@
+{
+  "source": "AIController live snapshot + parallel_chat state; progress is workflow milestone-derived",
+  "generated_at": "2026-10-07T00:06:36+09:00",
+  "refresh_sec": 15,
+  "staff": [
+    {
+      "id": "main-control",
+      "name": "메인 컨트롤타워",
+      "role": "사용자 대화·승인·최종 보고",
+      "task": "개발실 현황판 공개 준비 및 검증",
+      "status": "working",
+      "progress": 92,
+      "started_at": "2026-10-06T23:52:44+09:00",
+      "updated_at": "2026-10-06T23:56:04+09:00",
+      "stale_after_sec": 900,
+      "chat_load": {
+        "messages": 80,
+        "level": "high",
+        "label": "새 채팅 교체 권장"
+      }
+    },
+    {
+      "id": "design",
+      "name": "디자인 채팅",
+      "role": "UI·이미지·오브젝트 제작",
+      "task": "대기: D-001",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:06:36+09:00",
+      "stale_after_sec": 1800,
+      "connection": "미연결"
+    },
+    {
+      "id": "story-dialogue",
+      "name": "스토리/대사 채팅",
+      "role": "스토리라인·연출·대사 작성",
+      "task": "대기: S-001",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:06:36+09:00",
+      "stale_after_sec": 1800,
+      "connection": "미연결"
+    },
+    {
+      "id": "development",
+      "name": "개발 채팅",
+      "role": "Codex + Claude Code 병행 구현·교차검수",
+      "task": "구현·검수 완료. 결과 브랜치: ai/c4cc56b5625a/result",
+      "status": "verified",
+      "progress": 92,
+      "started_at": "2026-10-06T23:52:44+09:00",
+      "updated_at": "2026-10-06T23:56:04+09:00",
+      "stale_after_sec": 600,
+      "sub": [
+        {
+          "id": "codex",
+          "name": "Codex",
+          "status": "idle",
+          "usage": {
+            "remaining": 24.0,
+            "used": 76.0,
+            "reset_at": "2026-10-10T09:25:04+09:00",
+            "stale": false,
+            "snapshot_at": "2026-10-07T00:04:37+09:00",
+            "source": "Codex account/rateLimits/read"
+          }
+        },
+        {
+          "id": "claude-code",
+          "name": "Claude Code",
+          "status": "idle",
+          "usage": {
+            "remaining": 51.0,
+            "used": 49.0,
+            "reset_at": "2026-10-08T00:00:00+09:00",
+            "stale": false,
+            "snapshot_at": "2026-10-06T23:55:30+09:00",
+            "source": "Claude CLI rate_limit_event"
+          }
+        }
+      ]
+    },
+    {
+      "id": "overall-management",
+      "name": "전체관리 채팅",
+      "role": "작업 큐·중복·인수인계 관리",
+      "task": "전용 채팅 연결 대기",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:06:36+09:00",
+      "stale_after_sec": 1800,
+      "connection": "미연결"
+    }
+  ]
+}
