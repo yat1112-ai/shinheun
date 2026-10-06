@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-06T00:00:00+09:00",
+  "notes": [
+    "경로는 저장소 루트 기준 상대경로이며 실제로 열람한 파일만 색인한다.",
+    "Source SHA256 values and content versions were computed from actual local file bytes by main controller. Published equivalence remains unverified.",
+    "Main inspected and indexed engine.js and index.html. cloud.js and private settings remain excluded; WEB_BRIEF.md remains excluded for local path privacy.",
+    "dialogue 배열은 data.js의 STAGES story/victoryStory를 그대로 옮긴 것이다. library.js가 data.js의 line() 호출을 스테이지·순서·화자·본문 단위로 정확히 대조해 일치/불일치를 표시한다. 불일치 시 경고를 함께 보인다.",
+    "localOnly=true는 게시본과 동일성이 확인되지 않았다는 보수적 표시이다.",
+    "라이브러리 자신의 파일(library.*, LIBRARY_QA.md)과 인수인계 노트는 색인하지 않는다."
+  ],
+  "categories": [
+    {
+      "id": "illustrations",
+      "label": "일러스트",
+      "description": "게임에 쓰이는 이미지 파일. 현재 저장소에는 이미지 파일이 없고 캐릭터는 임시 CSS/SVG 표현이다."
+    },
+    {
+      "id": "vfx",
+      "label": "이펙트",
+      "description": "style.css에 실제로 있는 CSS 모션. 라이브러리의 미리보기는 시뮬레이션 데모이며 실제 게임 효과 그 자체가 아니다."
+    },
+    {
+      "id": "characters",
+      "label": "캐릭터",
+      "description": "data.js에 정의된 플레이어블·스토리 캐릭터와 스킬 데이터. 수치는 임시값이다."
+    },
+    {
+      "id": "scenario",
+      "label": "시나리오",
+      "description": "data.js의 챕터 1 스테이지 구성(적·웨이브·보상). 승인된 초안이며 최종본이 아니다."
+    },
+    {
+      "id": "world",
+      "label": "세계관",
+      "description": "세계관 설정 문서. 현재 확인된 별도 세계관 문서가 없다."
+    },
+    {
+      "id": "story",
+      "label": "스토리",
+      "description": "챕터 1 줄거리 요약. 별도 최종 스토리 스크립트는 없다."
+    },
+    {
+      "id": "dialogue",
+      "label": "대사",
+      "description": "data.js의 스테이지별 구조화 대사(speaker/text)."
+    }
+  ],
+  "entries": [
+    {
+      "id": "illustrations.missing",
+      "category": "illustrations",
+      "title": "일러스트 없음 (안내)",
+      "path": null,
+      "kind": "image",
+      "provenance": "저장소 루트에서 이미지 파일을 찾지 못했다. BRIEF.md는 임시 CSS/SVG 캐릭터 사용을 명시한다. 최종 일러스트는 만들지 않았다.",
+      "status": "missing",
+      "usedIn": [],
+      "sha256": null,
+      "localOnly": true
+    },
+    {
+      "id": "vfx.riana-dual-blades",
+      "category": "vfx",
+      "title": "리아나 쌍검 (flurry)",
+      "path": "style.css",
+      "kind": "vfx",
+      "provenance": "style.css의 `.acting .avatar.riana{animation:flurry ...}` 와 `@keyframes flurry`. 데이터상 motion 키는 data.js CHARACTERS.riana.motion = dualBlades.",
+      "status": "draft",
+      "usedIn": [
+        "style.css",
+        "app.js",
+        "data.js"
+      ],
+      "sha256": "4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142",
+      "localOnly": true,
+      "previewRef": "vfx.flurry",
+      "demoNote": "시뮬레이션 데모. 실제 게임 효과를 그대로 실행하지 않으며 CSS를 재작성할 경우 동일 코드라고 주장하지 않는다. 원본 keyframes: 20%,60% translateX(30px) skewX(-8deg); 40%,80% translateX(-8px). 지속시간은 app.js의 --motion-time(700ms/배속).",
+      "version": "sha256:4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142"
+    },
+    {
+      "id": "vfx.aren-single-sword",
+      "category": "vfx",
+      "title": "아렌 단일검 (heavy)",
+      "path": "style.css",
+      "kind": "vfx",
+      "provenance": "style.css의 `.acting .avatar.aren{animation:heavy ...}` 와 `@keyframes heavy`. data.js CHARACTERS.aren.motion = heavySword.",
+      "status": "draft",
+      "usedIn": [
+        "style.css",
+        "app.js",
+        "data.js"
+      ],
+      "sha256": "4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142",
+      "localOnly": true,
+      "previewRef": "vfx.heavy",
+      "demoNote": "시뮬레이션 데모. 원본 keyframes: 25% rotate(-12deg); 60% translateX(32px) rotate(8deg). 실제 게임 효과와 동일하다고 주장하지 않는다.",
+      "version": "sha256:4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142"
+    },
+    {
+      "id": "vfx.eir-prayer",
+      "category": "vfx",
+      "title": "에이르 기도 (prayer)",
+      "path": "style.css",
+      "kind": "vfx",
+      "provenance": "style.css의 `.acting .avatar.eir .aura{animation:prayer ...}` 와 `@keyframes prayer`. data.js CHARACTERS.eir.motion = prayer.",
+      "status": "draft",
+      "usedIn": [
+        "style.css",
+        "app.js",
+        "data.js"
+      ],
+      "sha256": "4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142",
+      "localOnly": true,
+      "previewRef": "vfx.prayer",
+      "demoNote": "시뮬레이션 데모. 원본 keyframes: 30% opacity 1 + drop-shadow(0 0 10px #b5e9a3); 80% scale(1.08). 실제 게임 효과와 동일하다고 주장하지 않는다.",
+      "version": "sha256:4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142"
+    },
+    {
+      "id": "vfx.clea-shield",
+      "category": "vfx",
+      "title": "클레아 방패 (brace)",
+      "path": "style.css",
+      "kind": "vfx",
+      "provenance": "style.css의 `.acting .avatar.clea{animation:brace ...}` 와 `@keyframes brace`. data.js CHARACTERS.clea.motion = shield.",
+      "status": "draft",
+      "usedIn": [
+        "style.css",
+        "app.js",
+        "data.js"
+      ],
+      "sha256": "4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142",
+      "localOnly": true,
+      "previewRef": "vfx.brace",
+      "demoNote": "시뮬레이션 데모. 원본 keyframes: 35% translateX(10px) scaleX(1.1); 70% translateX(4px). 실제 게임 효과와 동일하다고 주장하지 않는다.",
+      "version": "sha256:4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142"
+    },
+    {
+      "id": "characters.eir",
+      "category": "characters",
+      "title": "에이르 (힐러)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js CHARACTERS.eir, SKILLS.eirHeal/eirGroupHeal/eirRevive. 수치는 임시.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "CHARACTERS.eir",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "characters.aren",
+      "category": "characters",
+      "title": "아렌 (스트라이커)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js CHARACTERS.aren, SKILLS.arenBreak/arenBuff/arenFocus. 수치는 임시.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "CHARACTERS.aren",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "characters.riana",
+      "category": "characters",
+      "title": "리아나 (로그)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js CHARACTERS.riana, SKILLS.rianaFlurry/rianaMark/rianaFollowup. 수치는 임시.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "CHARACTERS.riana",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "characters.clea",
+      "category": "characters",
+      "title": "클레아 (가디언)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js CHARACTERS.clea, SKILLS.cleaTaunt/cleaShield/cleaSupport. 패시브는 임시(draft) 표기.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "CHARACTERS.clea",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "characters.jin",
+      "category": "characters",
+      "title": "진 (비플레이어블 주인공)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js STORY_CHARACTERS.jin (playable:false). 이름과 한 줄 설명만 존재.",
+      "status": "applied",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "STORY_CHARACTERS.jin",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "characters.mother",
+      "category": "characters",
+      "title": "어머니 (스토리 캐릭터)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js STORY_CHARACTERS.mother (playable:false, canFightInStory:true). 이름과 플래그만 존재.",
+      "status": "applied",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "STORY_CHARACTERS.mother",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "scenario.ch1-stages",
+      "category": "scenario",
+      "title": "챕터 1 스테이지 1~10 구성",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "data.js STAGES (id 1~10: 이름, 웨이브, 보상, 합류/해금). ENEMIES의 적 4종(stray, wolf, boar, ragingBoar) 참조. 승인된 초안.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "STAGES",
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "world.missing",
+      "category": "world",
+      "title": "세계관 문서 없음 (안내)",
+      "path": null,
+      "kind": "text",
+      "provenance": "열람한 파일에서 별도 세계관 설정 문서를 찾지 못했다. 설정을 지어내지 않았다.",
+      "status": "missing",
+      "usedIn": [],
+      "sha256": null,
+      "localOnly": true
+    },
+    {
+      "id": "story.ch1-outline",
+      "category": "story",
+      "title": "챕터 1 서사 요약 (BRIEF.md)",
+      "path": "BRIEF.md",
+      "kind": "text",
+      "provenance": "BRIEF.md의 '서사:' 줄(어머니 귀가 지연 → 폭주 숲멧돼지 → 광산 문제 예고). 줄거리 요약이며 최종 스토리 스크립트가 아니다.",
+      "status": "draft",
+      "usedIn": [
+        "BRIEF.md"
+      ],
+      "sha256": "1527760aa85c119cfe175d7349ba75689bbbb823a704b50c43eeda3a5f53fa93",
+      "localOnly": true,
+      "version": "sha256:1527760aa85c119cfe175d7349ba75689bbbb823a704b50c43eeda3a5f53fa93"
+    },
+    {
+      "id": "story.script-missing",
+      "category": "story",
+      "title": "최종 스토리 스크립트 없음 (안내)",
+      "path": null,
+      "kind": "text",
+      "provenance": "요약 외 최종 스토리 스크립트 파일이 열람한 저장소에 없다. 지어내지 않았다.",
+      "status": "missing",
+      "usedIn": [],
+      "sha256": null,
+      "localOnly": true
+    },
+    {
+      "id": "dialogue.ch1-stage-lines",
+      "category": "dialogue",
+      "title": "챕터 1 스테이지별 대사",
+      "path": "data.js",
+      "kind": "dialogue",
+      "provenance": "data.js STAGES[n].story 및 STAGES[1,10].victoryStory 의 {speaker,text} 배열. 승인된 서사 기반 초안.",
+      "status": "draft",
+      "usedIn": [
+        "data.js",
+        "app.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "dataKey": "STAGES[].story / STAGES[].victoryStory",
+      "dialogue": [
+        {
+          "group": "스테이지 1",
+          "speaker": "jin",
+          "text": "어머니가 아직 돌아오지 않았어. 성당에 들르면 소식을 알 수 있을까?"
+        },
+        {
+          "group": "스테이지 1",
+          "speaker": "eir",
+          "text": "진, 네 아버지가 맡긴 회중시계야. 잘 간직해."
+        },
+        {
+          "group": "스테이지 1",
+          "speaker": "jin",
+          "text": "시계가 조금 따뜻해진 것 같아… 저 소리는 뭐지?"
+        },
+        {
+          "group": "스테이지 1",
+          "speaker": "eir",
+          "text": "짐승들이 마을로 들어왔어. 내 뒤에 있어!"
+        },
+        {
+          "group": "스테이지 1 승리 후",
+          "speaker": "aren",
+          "text": "마을 밖도 소란스럽다. 내가 함께 갈게."
+        },
+        {
+          "group": "스테이지 2",
+          "speaker": "aren",
+          "text": "흔적이 숲으로 이어진다. 어머니도 이 길로 가셨겠지?"
+        },
+        {
+          "group": "스테이지 2",
+          "speaker": "jin",
+          "text": "응. 우리도 따라가 보자."
+        },
+        {
+          "group": "스테이지 3",
+          "speaker": "eir",
+          "text": "짐승들이 평소와 달라. 다친 사람부터 찾아야 해."
+        },
+        {
+          "group": "스테이지 3",
+          "speaker": "aren",
+          "text": "길은 내가 열겠다."
+        },
+        {
+          "group": "스테이지 4",
+          "speaker": "jin",
+          "text": "저쪽에서 어머니 목소리가 들려!"
+        },
+        {
+          "group": "스테이지 4",
+          "speaker": "eir",
+          "text": "서두르되 떨어지지 말자."
+        },
+        {
+          "group": "스테이지 5",
+          "speaker": "riana",
+          "text": "위험해요! 저희가 도와드릴게요!"
+        },
+        {
+          "group": "스테이지 5",
+          "speaker": "clea",
+          "text": "제 방패 뒤로 오세요."
+        },
+        {
+          "group": "스테이지 5",
+          "speaker": "mother",
+          "text": "고맙구나. 하지만 나도 싸울 수 있단다. 진, 여기까지 왔니?"
+        },
+        {
+          "group": "스테이지 5",
+          "speaker": "jin",
+          "text": "걱정돼서 왔어. 같이 돌아가자."
+        },
+        {
+          "group": "스테이지 5",
+          "speaker": "mother",
+          "text": "먼저 저 짐승들을 진정시켜야겠구나."
+        },
+        {
+          "group": "스테이지 6",
+          "speaker": "riana",
+          "text": "큰 멧돼지가 지나갔어요. 다른 짐승들도 쫓겨 나온 것 같아요."
+        },
+        {
+          "group": "스테이지 6",
+          "speaker": "aren",
+          "text": "더 가까이 오기 전에 막자."
+        },
+        {
+          "group": "스테이지 7",
+          "speaker": "clea",
+          "text": "나무가 이렇게 부러지다니… 모두 제 뒤에서 움직여요."
+        },
+        {
+          "group": "스테이지 7",
+          "speaker": "eir",
+          "text": "다치면 바로 말해. 기도가 닿을 거야."
+        },
+        {
+          "group": "스테이지 8",
+          "speaker": "mother",
+          "text": "저 앞의 멧돼지는 보통 상태가 아니야. 조심해야 한다."
+        },
+        {
+          "group": "스테이지 8",
+          "speaker": "jin",
+          "text": "시계는 잘 가지고 있어. 모두 무사히 돌아가자."
+        },
+        {
+          "group": "스테이지 9",
+          "speaker": "riana",
+          "text": "왔어요! 양옆에서 빈틈을 찾을게요."
+        },
+        {
+          "group": "스테이지 9",
+          "speaker": "clea",
+          "text": "돌진은 모두에게 닿아요. 방패로 함께 버텨요!"
+        },
+        {
+          "group": "스테이지 9",
+          "speaker": "aren",
+          "text": "내가 끝까지 붙잡겠다."
+        },
+        {
+          "group": "스테이지 10",
+          "speaker": "mother",
+          "text": "아직 길목에 남은 짐승들이 있구나. 마지막으로 길을 열자."
+        },
+        {
+          "group": "스테이지 10",
+          "speaker": "jin",
+          "text": "이 길 끝에서 다 같이 마을로 돌아가자."
+        },
+        {
+          "group": "스테이지 10 승리 후",
+          "speaker": "eir",
+          "text": "이제 마을에서 쉬자. 모두 수고했어."
+        },
+        {
+          "group": "스테이지 10 승리 후",
+          "speaker": "mother",
+          "text": "광산 쪽에도 문제가 있다는 소식을 들었어. 다음에는 그곳을 살펴봐야겠구나."
+        }
+      ],
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "runtime.data-js",
+      "category": "scenario",
+      "title": "data.js (게임 데이터 모듈)",
+      "path": "data.js",
+      "kind": "code",
+      "provenance": "저장소 루트의 CH1 데이터 모듈. 주석상 모든 밸런스 수치는 임시.",
+      "status": "applied",
+      "usedIn": [
+        "app.js",
+        "cloud-core.js"
+      ],
+      "sha256": "378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a",
+      "localOnly": true,
+      "version": "sha256:378259da1457261b45b1fb10dd21a7df63054b3f5dec4a2b12330e8c711bba1a"
+    },
+    {
+      "id": "runtime.app-js",
+      "category": "scenario",
+      "title": "app.js (UI·진입점)",
+      "path": "app.js",
+      "kind": "code",
+      "provenance": "저장소 루트. engine.js, data.js, cloud.js, cloud-core.js를 import. 전투 연출 시간 --motion-time 설정 포함.",
+      "status": "applied",
+      "usedIn": [
+        "index.html"
+      ],
+      "sha256": "ef393a1eb05a6d68b3be2626c746291ee9e9efb7afc51377f76125297f6ad145",
+      "localOnly": true,
+      "version": "sha256:ef393a1eb05a6d68b3be2626c746291ee9e9efb7afc51377f76125297f6ad145"
+    },
+    {
+      "id": "runtime.cloud-core-js",
+      "category": "scenario",
+      "title": "cloud-core.js (클라우드 동기화 로직)",
+      "path": "cloud-core.js",
+      "kind": "code",
+      "provenance": "저장소 루트. import 줄 확인: engine.js의 restoreSave/createInitialState, data.js의 GAME_CONFIG. app.js가 localKey 등을 import. 라이브러리는 이 파일을 실행하지 않고 텍스트로만 보여준다.",
+      "status": "applied",
+      "usedIn": [
+        "app.js"
+      ],
+      "sha256": "7179263875961582714e5e86dc36440a1c4dbf982844ad3fea333717217f019a",
+      "localOnly": true,
+      "version": "sha256:7179263875961582714e5e86dc36440a1c4dbf982844ad3fea333717217f019a"
+    },
+    {
+      "id": "runtime.style-css",
+      "category": "vfx",
+      "title": "style.css (스타일·CSS 모션)",
+      "path": "style.css",
+      "kind": "code",
+      "provenance": "저장소 루트. lunge, strike, heavy, flurry, brace, prayer, impact keyframes 포함.",
+      "status": "applied",
+      "usedIn": [
+        "index.html"
+      ],
+      "sha256": "4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142",
+      "localOnly": true,
+      "version": "sha256:4526db6228ec6c73ef363fda79c2d0dffceeb427eb842d90b8238400a7bca142"
+    },
+    {
+      "id": "docs.brief",
+      "category": "story",
+      "title": "BRIEF.md (기획 초안 v0.1)",
+      "path": "BRIEF.md",
+      "kind": "text",
+      "provenance": "저장소 루트 기획 문서. 서사·캐릭터·모션 요구 포함.",
+      "status": "applied",
+      "usedIn": [],
+      "sha256": "1527760aa85c119cfe175d7349ba75689bbbb823a704b50c43eeda3a5f53fa93",
+      "localOnly": true,
+      "version": "sha256:1527760aa85c119cfe175d7349ba75689bbbb823a704b50c43eeda3a5f53fa93"
+    },
+    {
+      "id": "runtime.engine-js",
+      "category": "scenario",
+      "title": "engine.js runtime source",
+      "path": "engine.js",
+      "kind": "code",
+      "provenance": "Main inspected actual local source on 2026-10-06. Draft runtime, not final design.",
+      "status": "applied",
+      "usedIn": [
+        "app.js"
+      ],
+      "sha256": "9d4c2febba5597df8d101ca7e0250fcda0b2cddfe349c1d6284b785404bdf1b5",
+      "version": "sha256:9d4c2febba5597df8d101ca7e0250fcda0b2cddfe349c1d6284b785404bdf1b5",
+      "localOnly": true
+    },
+    {
+      "id": "runtime.index-html",
+      "category": "scenario",
+      "title": "index.html runtime source",
+      "path": "index.html",
+      "kind": "code",
+      "provenance": "Main inspected actual local source on 2026-10-06. Draft runtime, not final design.",
+      "status": "applied",
+      "usedIn": [
+        "browser-entry"
+      ],
+      "sha256": "054ad0adbae88a73a826886578736e7b3a1dc191320088b8d747ef0b63aff55b",
+      "version": "sha256:054ad0adbae88a73a826886578736e7b3a1dc191320088b8d747ef0b63aff55b",
+      "localOnly": true
+    }
+  ]
+}

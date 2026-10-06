@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신흥 리부트 검수 라이브러리</title>
+<link rel="stylesheet" href="library.css">
+</head>
+<body class="library-body">
+<a class="library-skip" href="#grid">목록으로 건너뛰기</a>
+
+<header class="library-header">
+  <h1 class="library-title">신흥 리부트 검수 라이브러리</h1>
+  <p class="library-sub">읽기 전용 검수 카탈로그 · 게임 저장과 무관 · 실제 확인된 파일만 표시</p>
+</header>
+
+<section class="library-toolbar" aria-label="검색과 필터">
+  <div class="library-field library-field-search">
+    <label for="search">검색</label>
+    <input id="search" type="search" placeholder="id, 경로, 출처, 사용처" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="library-field">
+    <label for="filter-category">카테고리</label>
+    <select id="filter-category">
+      <option value="">전체</option>
+      <option value="illustrations">일러스트</option>
+      <option value="vfx">VFX</option>
+      <option value="characters">캐릭터</option>
+      <option value="scenario">시나리오</option>
+      <option value="world">세계관</option>
+      <option value="story">스토리</option>
+      <option value="dialogue">대사</option>
+    </select>
+  </div>
+  <div class="library-field">
+    <label for="filter-status">상태</label>
+    <select id="filter-status">
+      <option value="">전체</option>
+      <option value="applied">적용됨</option>
+      <option value="draft">초안</option>
+      <option value="placeholder">임시</option>
+      <option value="missing">없음</option>
+    </select>
+  </div>
+  <p class="library-count" id="result-count" role="status" aria-live="polite"></p>
+</section>
+
+<main class="library-main">
+  <ul id="grid" class="library-grid" aria-label="항목 목록" tabindex="-1"></ul>
+  <div id="empty" class="library-empty" role="status" hidden>
+    <p class="library-empty-title">표시할 항목이 없습니다</p>
+    <p class="library-empty-text">검색어나 필터에 맞는 실제 파일이 매니페스트에 없습니다. 없는 항목은 만들어 보여주지 않습니다.</p>
+  </div>
+  <nav id="pager" class="library-pager" aria-label="페이지"></nav>
+</main>
+
+<div id="detail" class="library-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" hidden>
+  <div class="library-detail-panel" tabindex="-1">
+    <header class="library-detail-head">
+      <div class="library-detail-heading">
+        <h2 id="detail-title" class="library-detail-title">항목 상세</h2>
+        <p id="detail-meta" class="library-detail-meta"></p>
+      </div>
+      <button type="button" id="detail-close" class="library-btn" aria-label="상세 닫기">닫기 (Esc)</button>
+    </header>
+
+    <div class="library-detail-body">
+      <dl id="detail-info" class="library-info"></dl>
+
+      <div class="library-panes">
+        <section class="library-pane" aria-labelledby="source-title">
+          <h3 id="source-title" class="library-pane-title">소스 (텍스트로만 표시, 실행 안 함)</h3>
+          <pre id="source-view" class="library-source" tabindex="0" aria-label="소스 뷰어"></pre>
+        </section>
+
+        <section class="library-pane" aria-labelledby="preview-title">
+          <h3 id="preview-title" class="library-pane-title">미리보기</h3>
+          <p id="preview-label" class="library-preview-label"></p>
+          <div id="preview" class="library-preview" tabindex="0" aria-label="미리보기"></div>
+
+          <div id="vfx-controls" class="library-vfx-controls" role="group" aria-label="VFX 컨트롤" hidden>
+            <button type="button" id="vfx-play" class="library-btn">재생</button>
+            <button type="button" id="vfx-pause" class="library-btn">일시정지</button>
+            <button type="button" id="vfx-replay" class="library-btn">다시재생</button>
+            <div class="library-segment" role="group" aria-label="재생 속도">
+              <button type="button" class="library-btn" data-speed="1" aria-pressed="true">1x</button>
+              <button type="button" class="library-btn" data-speed="2" aria-pressed="false">2x</button>
+            </div>
+            <label class="library-vfx-target">
+              <span>대상</span>
+              <select id="vfx-target"></select>
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <section class="library-note-area" aria-labelledby="note-title">
+        <h3 id="note-title" class="library-pane-title">수정 메모 (한국어)</h3>
+        <label for="note" class="library-visually-hidden">이 항목의 수정 메모</label>
+        <textarea id="note" rows="4" placeholder="이 파일/항목에 대한 수정 요청을 적어 주세요. 브라우저의 shinheun-review 영역에만 임시 저장됩니다."></textarea>
+        <div class="library-actions">
+          <button type="button" id="export-json" class="library-btn library-btn-primary">JSON 내보내기</button>
+          <button type="button" id="export-md" class="library-btn library-btn-primary">Markdown 내보내기</button>
+          <span id="note-status" class="library-note-status" role="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script src="library.js"></script>
+</body>
+</html>
