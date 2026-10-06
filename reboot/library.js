@@ -719,8 +719,8 @@
 (function () {
   'use strict';
 
-  var STATUS_URL = 'https://raw.githubusercontent.com/yat1112-ai/shinheun/main/reboot/devroom-status.json';
-  var REFRESH_MS = 15000;
+  var STATUS_URL = 'https://api.github.com/repos/yat1112-ai/shinheun/contents/reboot/devroom-status.json?ref=main';
+  var REFRESH_MS = 120000;
   var NONE = '정보 없음';
   var STATUS_LABEL = {
     idle: '대기', working: '작업 중', reviewing: '검토 중',
@@ -928,7 +928,7 @@
   }
 
   function load() {
-    fetch(STATUS_URL + '?t=' + Date.now(), { cache: 'no-store', mode: 'cors' })
+    fetch(STATUS_URL + '&t=' + Date.now(), { cache: 'no-store', mode: 'cors', headers: { 'Accept': 'application/vnd.github.raw+json' } })
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
