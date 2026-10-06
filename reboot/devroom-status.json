@@ -1,17 +1,17 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T00:29:03+09:00",
+  "generated_at": "2026-10-07T00:31:16+09:00",
   "refresh_sec": 15,
   "staff": [
     {
       "id": "main-control",
       "name": "메인 컨트롤타워 · ChatGPT",
       "role": "사용자 대화·승인·작업 분배·최종 보고",
-      "task": "신흔 DIVINE TRACE 전체 인계 및 개발실 메인 연동 수정",
+      "task": "개발실 상태·경과시간 버그 수정 및 공개 검증",
       "status": "working",
-      "progress": 55,
-      "started_at": "2026-10-07T00:18:00+09:00",
-      "updated_at": "2026-10-07T00:22:31+09:00",
+      "progress": 70,
+      "started_at": "2026-10-07T00:28:00+09:00",
+      "updated_at": "2026-10-07T00:31:00+09:00",
       "stale_after_sec": 900,
       "identity": "현재 사용자와 직접 대화 중인 메인 ChatGPT"
     },
@@ -43,10 +43,10 @@
       "id": "development",
       "name": "개발 채팅",
       "role": "Codex + Claude Code 병행 구현·교차검수",
-      "task": "구현·검수 완료. 결과 브랜치: ai/c4cc56b5625a/result",
-      "status": "verified",
-      "progress": 92,
-      "started_at": "2026-10-06T23:52:44+09:00",
+      "task": "대기 · 최근 작업 검증 완료",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
       "updated_at": "2026-10-06T23:56:04+09:00",
       "stale_after_sec": 600,
       "sub": [
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:29:00+09:00",
+            "snapshot_at": "2026-10-07T00:31:02+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },

@@ -843,8 +843,9 @@
     card.appendChild(bar);
 
     var times = make('dl', 'devroom-times');
-    addRow(times, '시작', fmtTime(s.started_at));
-    var startMs = toMs(s.started_at);
+    var activeTiming = s.status === 'working' || s.status === 'reviewing';
+    var startMs = activeTiming ? toMs(s.started_at) : null;
+    addRow(times, '시작', activeTiming ? fmtTime(s.started_at) : NONE);
     var elapsed = addRow(times, '경과', startMs === null ? NONE : fmtElapsed(startMs));
     if (startMs !== null) elapsed.setAttribute('data-started', String(startMs));
     addRow(times, '최근 업데이트', fmtTime(s.updated_at));
