@@ -881,24 +881,31 @@
 
   function changeReservation(item, stageKey, btn) {
     var reserve = stageKey === 'waiting';
-    var endpoint = reserve ? '/reserve' : '/unreserve';
     btn.disabled = true;
-    btn.textContent = '반영 중';
-    fetch(RESERVATION_URL + endpoint, {
-      method: 'POST', mode: 'cors', cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: item.id })
-    }).then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    }).then(function (res) {
-      if (!res || res.ok !== true) throw new Error('예약 저장 실패');
-      updateLocalStage(item, stageKey, reserve ? 'reserved' : 'waiting');
-    }).catch(function () {
-      btn.disabled = false;
-      btn.textContent = 'PC 연결 실패';
-      btn.title = '이 PC의 예약 브리지(127.0.0.1:8766)에 연결하지 못했습니다.';
-    });
+    btn.textContent = '이동 중';
+    var endpoint = reserve ? '/reserve-link?id=' : '/unreserve-link?id=';
+    window.location.href = RESERVATION_URL + endpoint + encodeURIComponent(item.id);
+  }
+
+  function applyReservationHint(data) {
+    if (!data || !data.work_items || !window.URLSearchParams) return;
+    var params = new URLSearchParams(window.location.search);
+    var reserveId = params.get('reserve_hint');
+    var unreserveId = params.get('unreserve_hint');
+    function move(id, fromKey, toKey) {
+      if (!id) return;
+      var from = Array.isArray(data.work_items[fromKey]) ? data.work_items[fromKey] : [];
+      var to = Array.isArray(data.work_items[toKey]) ? data.work_items[toKey] : [];
+      var found = null;
+      data.work_items[fromKey] = from.filter(function (x) { if (String(x.id) === String(id)) { found = x; return false; } return true; });
+      if (found && !to.some(function (x) { return String(x.id) === String(id); })) to.push(found);
+      data.work_items[toKey] = to;
+    }
+    move(reserveId, 'waiting', 'reserved');
+    move(unreserveId, 'reserved', 'waiting');
+    if ((reserveId || unreserveId) && window.history && history.replaceState) {
+      history.replaceState(null, '', window.location.pathname + '#workboard-title');
+    }
   }
 
   function renderWorkboard(data) {
@@ -955,6 +962,7 @@
   }
 
   function render(data) {
+    applyReservationHint(data);
     lastData = data;
     var staff = Array.isArray(data.staff) ? data.staff : [];
     var frag = document.createDocumentFragment();
