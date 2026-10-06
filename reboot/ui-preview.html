@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="#2a1d14">
 <title>UI 배치 미리보기 (1단계)</title>
 <link rel="stylesheet" href="ui-preview.css">
@@ -13,7 +14,7 @@
 
     <!-- 공통 상단 컨트롤: 항상 표시 -->
     <div id="common-controls">
-      <span id="preview-badge" class="badge">UI 배치 검토용 · 임시 아트</span>
+      <span id="preview-badge" class="badge">ART / UI PREVIEW</span>
       <button id="btn-fullscreen" type="button" data-action="toggle-fullscreen" aria-label="전체화면 전환" aria-pressed="false">
         <span id="fullscreen-icon" aria-hidden="true">⛶</span>
         <span id="fullscreen-label">전체화면</span>
@@ -27,6 +28,7 @@
     <!-- 마을 장면 -->
     <section id="village" class="scene active" data-scene-id="village" aria-label="마을">
       <div id="village-backdrop" aria-hidden="true"></div>
+      <p id="art-preview-note">마을 아트 샘플 / UI 데모 / 최종 디자인 아님</p>
 
       <header id="village-top">
         <div id="village-currencies" class="currency-row">

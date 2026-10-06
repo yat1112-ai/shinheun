@@ -681,7 +681,7 @@
   };
 
   var BUILDINGS = {
-    pocketwatch: { name: '모험 회중시계', desc: '모험을 시작합니다. 누르면 전투 화면으로 이동합니다.', go: 'battle' },
+    pocketwatch: { name: '모험 회중시계', desc: '아트/UI 미리보기입니다. 누르면 임시 전투 배치를 확인합니다.', go: 'battle' },
     mine: { name: '광산', desc: '광석을 모으는 곳. 데모에서는 상세 화면 없이 안내만 표시합니다.' },
     dispatch: { name: '파견소', desc: '동료를 파견 보내는 곳. 진행 현황은 오른쪽 파견 패널에 고정값으로 표시됩니다.' },
     raid: { name: '레이드', desc: '후속 범위 자리 표시입니다.' },
