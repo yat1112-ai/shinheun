@@ -1,5 +1,3 @@
-[Reading 260 lines from start (total: 260 lines, 0 remaining)]
-
 /* Shinheun final pocket-watch focused village test */
 (() => {
   function mountFinalClock() {
@@ -260,5 +258,3 @@
     mountFinalClock();
   }
 })();
-
-[executed on device: DESKTOP-8S4SL3U (486b8df7-6af2-47a5-a096-8c78bf9a969a)]
