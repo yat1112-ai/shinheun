@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T07:11:03+09:00",
+  "generated_at": "2026-10-07T07:11:26+09:00",
   "refresh_sec": 120,
   "staff": [
     {
@@ -97,19 +97,19 @@
         "id": "D-001",
         "title": "현재 선택된 화이트/골드/블루 산악마을 기준으로 회중시계 최종 구현용 에셋 규격을 3레이어(배경/고정부/회전부)로 점검하고, 웹 합성 위치 기준을 문서화한다. 새 이미지 생성은 규격 확인 후 필요할 때만 1장씩.",
         "owner": "디자인 채팅",
-        "assignee": "실행자 미연결",
+        "assignee": "미연결",
         "progress": 0,
         "lane": "design",
-        "updated_at": "2026-10-07T07:11:03+09:00"
+        "updated_at": "2026-10-07T07:11:26+09:00"
       },
       {
         "id": "S-001",
         "title": "프롤로그 성당에서 진과 회중시계가 처음 반응하는 장면을 6~8개 연출 비트로 정리하고, 진/에이르의 실제 대사 8~12줄 초안을 작성한다. 기존 확정 설정은 변경하지 않는다.",
         "owner": "스토리·대사 채팅",
-        "assignee": "실행자 미연결",
+        "assignee": "미연결",
         "progress": 0,
         "lane": "story",
-        "updated_at": "2026-10-07T07:11:03+09:00"
+        "updated_at": "2026-10-07T07:11:26+09:00"
       },
       {
         "id": "V-001",
@@ -118,7 +118,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:11:03+09:00"
+        "updated_at": "2026-10-07T07:11:26+09:00"
       },
       {
         "id": "V-002",
@@ -127,7 +127,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:11:03+09:00"
+        "updated_at": "2026-10-07T07:11:26+09:00"
       }
     ],
     "reserved": [],
