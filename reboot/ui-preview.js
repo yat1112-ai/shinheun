@@ -822,3 +822,59 @@
     window.UIPreview.onInit(start);
   }
 })();
+
+
+/* ======================= SHINHEUN PHASE 2 PARALLAX ======================= */
+(() => {
+  const village = document.getElementById("village");
+  const layerRoot = document.getElementById("hub-phase2-layers");
+  if (!village || !layerRoot) return;
+
+  const depthMap = [
+    [".hub-church", -5.0],
+    [".hub-market", -8.0],
+    [".hub-mine", 4.0],
+    [".hub-dispatch", 7.0],
+    [".hub-raid", 9.0],
+    [".hub-clock-base", 11.0],
+    [".hub-clock-motion", 13.0],
+    [".hub-mine-motion", 6.0],
+    [".hub-dispatch-motion", 8.0],
+    [".hub-raid-motion", 10.0]
+  ].map(([selector, depth]) => [layerRoot.querySelector(selector), depth])
+   .filter(([el]) => el);
+
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0, raf = 0;
+
+  function renderParallax() {
+    raf = 0;
+    currentX += (targetX - currentX) * 0.09;
+    currentY += (targetY - currentY) * 0.09;
+    for (const [el, depth] of depthMap) {
+      const x = currentX * depth;
+      const y = currentY * depth * 0.55;
+      el.style.translate = x.toFixed(2) + "px " + y.toFixed(2) + "px";
+    }
+    if (Math.abs(targetX-currentX) > 0.001 || Math.abs(targetY-currentY) > 0.001) {
+      raf = requestAnimationFrame(renderParallax);
+    }
+  }
+
+  function setTarget(clientX, clientY) {
+    const rect = village.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    targetX = ((clientX - rect.left) / rect.width - 0.5) * 2;
+    targetY = ((clientY - rect.top) / rect.height - 0.5) * 2;
+    if (!raf) raf = requestAnimationFrame(renderParallax);
+  }
+
+  village.addEventListener("pointermove", (event) => setTarget(event.clientX, event.clientY), { passive: true });
+  village.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+    if (!raf) raf = requestAnimationFrame(renderParallax);
+  }, { passive: true });
+
+  // Touch/mobile: a very small device-orientation-free drift on first interaction.
+  village.addEventListener("pointerdown", (event) => setTarget(event.clientX, event.clientY), { passive: true });
+})();
