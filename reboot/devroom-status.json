@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T04:15:02+09:00",
+  "generated_at": "2026-10-07T04:17:02+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T04:14:50+09:00",
+            "snapshot_at": "2026-10-07T04:16:51+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
