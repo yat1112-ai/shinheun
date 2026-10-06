@@ -94,7 +94,7 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
 #common-controls {
   position: absolute;
   z-index: 60;
-  top: 8px;
+  top: 92px;
   left: 520px;
   width: 560px;
   height: 56px;
@@ -283,9 +283,57 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
   pointer-events: none;
 }
 #village-top > * { pointer-events: auto; }
-#village-currencies {
+
+#village-profile {
   position: absolute;
   left: 20px;
+  top: 0;
+  width: 250px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 14px 5px 7px;
+  border: 3px solid var(--panel-line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 3px #ffffff0a, 0 4px 14px #10231f50;
+}
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d9c18c;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3dfb7, #8d6646 70%);
+  color: #2d241b;
+  font-size: 15px;
+  font-weight: 900;
+}
+.profile-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.08;
+}
+.profile-name {
+  overflow: hidden;
+  color: #fff;
+  font-size: 19px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-level {
+  margin-top: 4px;
+  color: var(--cream-dim);
+  font-size: 13px;
+}
+
+#village-currencies {
+  position: absolute;
+  right: 130px;
   top: 0;
   width: 490px;
   height: 56px;
@@ -1295,8 +1343,8 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
 #art-preview-note { position: absolute; left: 24px; bottom: 150px; margin: 0; padding: 8px 12px; background: #f4ead6ed; color: #413c30; border: 1px solid #9c8b67; border-radius: 6px; font-size: 20px; pointer-events: none; }
 .compact-landscape #art-preview-note { font-size: 28px; bottom: 140px; }
 
-#art-preview-note { bottom: auto; top: 100px; }
-.compact-landscape #art-preview-note { bottom: auto; top: 100px; }
+#art-preview-note { bottom: auto; top: 170px; }
+.compact-landscape #art-preview-note { bottom: auto; top: 170px; }
 
 /* Main: independent review hotspot overlap confirmed and corrected. */
 #hs-dispatch { top: 540px; }
