@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T07:51:02+09:00",
+  "generated_at": "2026-10-07T07:53:03+09:00",
   "refresh_sec": 120,
   "staff": [
     {
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T07:50:31+09:00",
+            "snapshot_at": "2026-10-07T07:52:31+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
@@ -98,7 +98,7 @@
         "title": "회중시계 최종 에셋 3레이어 규격·웹 합성 위치 확정",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -107,7 +107,7 @@
         "title": "마을 성당·시장 오브젝트 레이어 분리와 조명/VFX 디자인",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -116,7 +116,7 @@
         "title": "실전 전투 캐릭터 아트 연결용 배치·크롭·가시성 규격 점검",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -125,7 +125,7 @@
         "title": "리아나 매핑·SD 색상·1-1 전투 배경 비주얼 점검",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -134,7 +134,7 @@
         "title": "가로 전투 UI 아군 최대 5명·적 배치 최종안",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -143,7 +143,7 @@
         "title": "가로 전투 하단 UI: 일러스트·HP·상태이상·스킬·쿨타임 최종안",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -152,7 +152,7 @@
         "title": "가로 전투 상단 UI: 스테이지·배속·마을·전체화면 최종안",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -161,7 +161,7 @@
         "title": "전투 결과창: 피해/DPS·보상·전투시간·턴/라운드 정보 구조",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -170,7 +170,7 @@
         "title": "캐릭터 정적 5종 세트 사양 정리: 기본·스킬컷인·부상·사망·로비",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -179,7 +179,7 @@
         "title": "프롤로그 성당: 진·회중시계 첫 반응 6~8비트 + 진/에이르 대사",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -188,7 +188,7 @@
         "title": "프롤로그 전체 흐름 확정: 어머니 귀가 지연→성당→몬스터→에이르 동행",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -197,7 +197,7 @@
         "title": "마을 밖 아렌 합류 장면·대사 작성",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -206,7 +206,7 @@
         "title": "어머니 귀가 중 리아나·클레아 조우 장면 작성",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -215,7 +215,7 @@
         "title": "초반 폭주 맷돼지 보스 전후 연출·대사 확정",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -224,7 +224,7 @@
         "title": "광산 챕터 바레온 라인 첫 등장·전투 전개 초안",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -233,7 +233,7 @@
         "title": "비전투 스테이지·컷신·대사 플레이 구조용 스토리 단위 정의",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -242,7 +242,7 @@
         "title": "확정 스토리와 초안/후보 장면 분리 정리 및 다음 확정본 준비",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -251,7 +251,7 @@
         "title": "Codex·Claude Code 병렬 작업환경 정식 스모크 테스트 보강",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -260,7 +260,7 @@
         "title": "깨진 회중시계 웹 테스트를 실제 asset URL 방식으로 수정 + PC/모바일 밝기 검증",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -269,7 +269,7 @@
         "title": "가로 고정 캔버스 + 내부 스케일 + 전체화면 반응형 검증",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -278,7 +278,7 @@
         "title": "가로 전투 UI 최대 5인·적 배치·행동순서 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -287,7 +287,7 @@
         "title": "전투 하단 카드 HP·상태이상·스킬·쿨타임 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -296,7 +296,7 @@
         "title": "전투 상단 스테이지·배속×1/×2·마을·전체화면 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -305,7 +305,7 @@
         "title": "전투 결과창 피해/DPS·재화·시간·턴/라운드·승패 버튼 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -314,7 +314,7 @@
         "title": "실제 전투 캐릭터 아트 연결 + 브라우저/Fold8 QA",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -323,7 +323,7 @@
         "title": "마을 레이어·패럴랙스·조명/VFX 실제 적용",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -332,7 +332,7 @@
         "title": "오프라인 파견 최대 12시간 + 마을 성장 연계 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -341,7 +341,7 @@
         "title": "모험/레이드 온라인 반복 동시 1개 제한 + 마을 진행 표기",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -350,7 +350,7 @@
         "title": "훈련장 파티·적 선택 + 누적 피해 목표 1회성 보상 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -359,7 +359,7 @@
         "title": "모험 턴 제한 + 스테이지 3별 + 챕터 누적 보상 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -368,7 +368,7 @@
         "title": "몬스터 도감 100회 보상 + 캐릭터 특별도감 누적 출전 보상 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -377,7 +377,7 @@
         "title": "광산 광물 승급 시스템 + 마을 광산 개방 연동",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -386,7 +386,7 @@
         "title": "파티 2→3→최대5 성장 + 진 비플레이어블 계정 버프 적용",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -395,7 +395,7 @@
         "title": "일반공격1 + 액티브2 + 패시브1 스킬 구조 데이터화",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -404,7 +404,7 @@
         "title": "스토리 플레이어·비전투 스테이지·컷신/대사 UI 구현",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -413,7 +413,7 @@
         "title": "신규 게임 데이터와 기존 저장 구조 격리·회귀 테스트",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -422,7 +422,7 @@
         "title": "메인 게임·UI 프리뷰·라이브러리 공개 3페이지 정기 브라우저 QA",
         "owner": "개발 채팅",
         "lane": "dev",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "Codex + Claude Code",
         "progress": 0
       },
@@ -431,7 +431,7 @@
         "title": "완료 시 CHANGELOG/HANDOFF/Library/QA 인계 자동 체크",
         "owner": "전체관리 채팅",
         "lane": "manager",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -440,7 +440,7 @@
         "title": "채팅방 정리·보관 규칙과 신규 채팅 인수인계 자동화",
         "owner": "전체관리 채팅",
         "lane": "manager",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -449,7 +449,7 @@
         "title": "대기·예약·진행중·완료 큐 중복/누락 주기 점검",
         "owner": "전체관리 채팅",
         "lane": "manager",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       },
@@ -458,7 +458,7 @@
         "title": "Controller/Codex/Claude 사용량·멈춤·공개동기화 상태 주기 점검",
         "owner": "전체관리 채팅",
         "lane": "manager",
-        "updated_at": "2026-10-07T07:51:02+09:00",
+        "updated_at": "2026-10-07T07:53:03+09:00",
         "assignee": "미연결",
         "progress": 0
       }
