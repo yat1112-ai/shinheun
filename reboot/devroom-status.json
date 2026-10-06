@@ -1,7 +1,7 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T07:09:03+09:00",
-  "refresh_sec": 15,
+  "generated_at": "2026-10-07T07:10:09+09:00",
+  "refresh_sec": 120,
   "staff": [
     {
       "id": "main-control",
@@ -100,7 +100,7 @@
         "assignee": "실행자 미연결",
         "progress": 0,
         "lane": "design",
-        "updated_at": "2026-10-07T07:09:03+09:00"
+        "updated_at": "2026-10-07T07:10:09+09:00"
       },
       {
         "id": "S-001",
@@ -109,7 +109,7 @@
         "assignee": "실행자 미연결",
         "progress": 0,
         "lane": "story",
-        "updated_at": "2026-10-07T07:09:03+09:00"
+        "updated_at": "2026-10-07T07:10:09+09:00"
       },
       {
         "id": "V-001",
@@ -118,7 +118,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:09:03+09:00"
+        "updated_at": "2026-10-07T07:10:09+09:00"
       },
       {
         "id": "V-002",
@@ -127,7 +127,7 @@
         "assignee": "Codex + Claude Code",
         "progress": 0,
         "lane": "dev",
-        "updated_at": "2026-10-07T07:09:03+09:00"
+        "updated_at": "2026-10-07T07:10:09+09:00"
       }
     ],
     "reserved": [],
