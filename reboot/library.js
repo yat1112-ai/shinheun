@@ -729,7 +729,8 @@
 
   var grid = document.getElementById('devroom-grid');
   var meta = document.getElementById('devroom-meta');
-  if (!grid || !meta) return;
+  var workboard = document.getElementById('workboard-grid');
+  if (!grid || !meta || !workboard) return;
 
   function make(tag, cls, text) {
     var n = document.createElement(tag);
@@ -865,12 +866,49 @@
     return li;
   }
 
+  function renderWorkboard(data) {
+    var groups = data.work_items && typeof data.work_items === 'object' ? data.work_items : {};
+    var stages = [
+      { key: 'waiting', label: '대기' },
+      { key: 'reserved', label: '예약' },
+      { key: 'in_progress', label: '진행중' },
+      { key: 'completed', label: '완료' }
+    ];
+    var frag = document.createDocumentFragment();
+    stages.forEach(function (stage) {
+      var items = Array.isArray(groups[stage.key]) ? groups[stage.key] : [];
+      var col = make('section', 'workboard-column');
+      col.setAttribute('data-stage', stage.key);
+      var head = make('div', 'workboard-column-head');
+      head.appendChild(make('h4', 'workboard-column-title', stage.label));
+      head.appendChild(make('span', 'workboard-count', String(items.length)));
+      col.appendChild(head);
+      if (!items.length) {
+        col.appendChild(make('p', 'workboard-empty', '업무 없음'));
+      } else {
+        var list = make('ul', 'workboard-list');
+        items.forEach(function (item) {
+          var li = make('li', 'workboard-item');
+          li.appendChild(make('p', 'workboard-item-id', show(item.id)));
+          li.appendChild(make('p', 'workboard-item-title', show(item.title)));
+          li.appendChild(make('p', 'workboard-item-owner', '담당: ' + show(item.owner)));
+          list.appendChild(li);
+        });
+        col.appendChild(list);
+      }
+      frag.appendChild(col);
+    });
+    workboard.textContent = '';
+    workboard.appendChild(frag);
+  }
+
   function render(data) {
     var staff = Array.isArray(data.staff) ? data.staff : [];
     var frag = document.createDocumentFragment();
     staff.forEach(function (s) { frag.appendChild(renderCard(s || {})); });
     grid.textContent = '';
     grid.appendChild(frag);
+    renderWorkboard(data);
     meta.removeAttribute('data-error');
     meta.textContent = '출처: ' + show(data.source) + ' · 생성: ' + fmtTime(data.generated_at);
     tick();

@@ -344,3 +344,25 @@ html, body { margin: 0; }
   .devroom { margin-left: 10px; margin-right: 10px; padding: 10px; }
   .devroom-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* 개발실 업무 리스트 */
+.workboard { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--library-line); }
+.workboard-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; margin-bottom: 10px; }
+.workboard-title { margin: 0; font-size: 1rem; }
+.workboard-sub { margin: 0; color: var(--library-dim); font-size: .78rem; }
+.workboard-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.workboard-column { min-width: 0; padding: 10px; border: 1px solid var(--library-line); border-radius: 10px; background: var(--library-bg); }
+.workboard-column-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.workboard-column-title { margin: 0; font-size: .9rem; }
+.workboard-count { min-width: 24px; padding: 1px 7px; border: 1px solid var(--library-line); border-radius: 999px; text-align: center; color: var(--library-dim); font-size: .72rem; }
+.workboard-list { display: flex; flex-direction: column; gap: 7px; list-style: none; margin: 0; padding: 0; }
+.workboard-item { min-width: 0; padding: 8px; border: 1px solid var(--library-line); border-radius: 8px; background: var(--library-panel); }
+.workboard-item-id { margin: 0 0 3px; color: var(--library-accent); font-size: .72rem; font-weight: 700; }
+.workboard-item-title { margin: 0; font-size: .82rem; overflow-wrap: anywhere; }
+.workboard-item-owner { margin: 5px 0 0; color: var(--library-dim); font-size: .72rem; }
+.workboard-empty { margin: 0; padding: 8px 2px; color: var(--library-dim); font-size: .78rem; }
+.workboard-column[data-stage="reserved"] .workboard-column-title { color: var(--library-draft); }
+.workboard-column[data-stage="in_progress"] .workboard-column-title { color: var(--library-accent); }
+.workboard-column[data-stage="completed"] .workboard-column-title { color: var(--library-applied); }
+@media (max-width: 900px) { .workboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .workboard-grid { grid-template-columns: minmax(0, 1fr); } }

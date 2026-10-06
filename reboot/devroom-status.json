@@ -1,6 +1,6 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T06:59:03+09:00",
+  "generated_at": "2026-10-07T07:00:39+09:00",
   "refresh_sec": 15,
   "staff": [
     {
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T06:58:05+09:00",
+            "snapshot_at": "2026-10-07T07:00:07+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
@@ -98,68 +98,32 @@
         "title": "현재 선택된 화이트/골드/블루 산악마을 기준으로 회중시계 최종 구현용 에셋 규격을 3레이어(배경/고정부/회전부)로 점검하고, 웹 합성 위치 기준을 문서화한다. 새 이미지 생성은 규격 확인 후 필요할 때만 1장씩.",
         "owner": "디자인 채팅",
         "lane": "design",
-        "updated_at": "2026-10-07T06:59:03+09:00"
+        "updated_at": "2026-10-07T07:00:39+09:00"
       },
       {
         "id": "S-001",
         "title": "프롤로그 성당에서 진과 회중시계가 처음 반응하는 장면을 6~8개 연출 비트로 정리하고, 진/에이르의 실제 대사 8~12줄 초안을 작성한다. 기존 확정 설정은 변경하지 않는다.",
         "owner": "스토리·대사 채팅",
         "lane": "story",
-        "updated_at": "2026-10-07T06:59:03+09:00"
+        "updated_at": "2026-10-07T07:00:39+09:00"
       },
       {
         "id": "V-001",
         "title": "병렬 작업환경 스모크 테스트. Codex와 Claude Code가 서로 독립된 테스트 파일을 하나씩 작성하고 교차 검수하는지 확인한다. 실제 게임 코드는 수정하지 않는다.",
         "owner": "개발 채팅 · Codex + Claude Code",
         "lane": "dev",
-        "updated_at": "2026-10-07T06:59:03+09:00"
+        "updated_at": "2026-10-07T07:00:39+09:00"
       },
       {
         "id": "V-002",
         "title": "스모크 테스트 통과 후 현재 깨진 회중시계 웹 테스트를 실제 asset URL 방식으로 수정하고 PC/모바일 밝기까지 검증한다.",
         "owner": "개발 채팅 · Codex + Claude Code",
         "lane": "dev",
-        "updated_at": "2026-10-07T06:59:03+09:00"
+        "updated_at": "2026-10-07T07:00:39+09:00"
       }
     ],
     "reserved": [],
     "in_progress": [],
-    "completed": [
-      {
-        "id": "JOB-c4cc56b5",
-        "title": "Library 개발실 병렬 현황판",
-        "owner": "개발 채팅 · Codex + Claude Code",
-        "lane": "dev",
-        "updated_at": "2026-10-06T23:56:04+09:00"
-      },
-      {
-        "id": "JOB-35967d35",
-        "title": "Landscape village and battle UI placement preview",
-        "owner": "개발 채팅 · Codex + Claude Code",
-        "lane": "dev",
-        "updated_at": "2026-10-06T15:41:24+09:00"
-      },
-      {
-        "id": "JOB-f3388bab",
-        "title": "File-level art VFX and story review library",
-        "owner": "개발 채팅 · Codex + Claude Code",
-        "lane": "dev",
-        "updated_at": "2026-10-06T15:00:19+09:00"
-      },
-      {
-        "id": "JOB-8072d368",
-        "title": "Graphics phase 1: village and combat",
-        "owner": "개발 채팅 · Codex + Claude Code",
-        "lane": "dev",
-        "updated_at": "2026-10-06T02:17:45+09:00"
-      },
-      {
-        "id": "JOB-f2849ba6",
-        "title": "Isolated public web and Google cloud save upgrade",
-        "owner": "개발 채팅 · Codex + Claude Code",
-        "lane": "dev",
-        "updated_at": "2026-10-05T21:22:18+09:00"
-      }
-    ]
+    "completed": []
   }
 }
