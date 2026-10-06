@@ -366,3 +366,10 @@ html, body { margin: 0; }
 .workboard-column[data-stage="completed"] .workboard-column-title { color: var(--library-applied); }
 @media (max-width: 900px) { .workboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .workboard-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.workboard-item-assignee { margin: 2px 0 0; color: var(--library-text); font-size: .72rem; }
+.workboard-progress-row { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; color: var(--library-dim); font-size: .72rem; }
+.workboard-progress { display: block; width: 100%; height: 7px; margin-top: 3px; border: 0; border-radius: 999px; overflow: hidden; background: var(--library-panel-2); accent-color: var(--library-accent); }
+.workboard-progress::-webkit-progress-bar { background: var(--library-panel-2); border-radius: 999px; }
+.workboard-progress::-webkit-progress-value { background: var(--library-accent); border-radius: 999px; }
+.workboard-progress::-moz-progress-bar { background: var(--library-accent); border-radius: 999px; }

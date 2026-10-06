@@ -892,6 +892,17 @@
           li.appendChild(make('p', 'workboard-item-id', show(item.id)));
           li.appendChild(make('p', 'workboard-item-title', show(item.title)));
           li.appendChild(make('p', 'workboard-item-owner', '담당: ' + show(item.owner)));
+          li.appendChild(make('p', 'workboard-item-assignee', '실행자: ' + show(item.assignee)));
+          var pct = clampProgress(item.progress);
+          var prow = make('div', 'workboard-progress-row');
+          prow.appendChild(make('span', null, '진행도'));
+          prow.appendChild(make('span', null, (pct === null ? 0 : pct) + '%'));
+          li.appendChild(prow);
+          var pbar = document.createElement('progress');
+          pbar.className = 'workboard-progress';
+          pbar.max = 100;
+          pbar.value = pct === null ? 0 : pct;
+          li.appendChild(pbar);
           list.appendChild(li);
         });
         col.appendChild(list);
