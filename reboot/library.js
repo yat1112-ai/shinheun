@@ -719,7 +719,7 @@
 (function () {
   'use strict';
 
-  var STATUS_URL = 'devroom-status.json';
+  var STATUS_URL = 'https://raw.githubusercontent.com/yat1112-ai/shinheun/main/reboot/devroom-status.json';
   var REFRESH_MS = 15000;
   var NONE = '정보 없음';
   var STATUS_LABEL = {
@@ -890,7 +890,7 @@
   }
 
   function load() {
-    fetch(STATUS_URL, { cache: 'no-store' })
+    fetch(STATUS_URL + '?t=' + Date.now(), { cache: 'no-store', mode: 'cors' })
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
