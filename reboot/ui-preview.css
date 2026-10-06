@@ -1547,3 +1547,315 @@ button:focus-visible { outline: 4px solid #8fd3ff; outline-offset: 2px; }
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+
+/* ======================= SHINHEUN PHASE 2 LIVE HUB ======================= */
+#village-backdrop {
+  filter: saturate(1.03) brightness(1.02);
+}
+#village-vfx { display: block !important; z-index: 7 !important; }
+
+/* Real web HUD restored over the concept art. */
+#village-top {
+  display: block !important;
+  z-index: 30 !important;
+  pointer-events: none;
+}
+#village-top > * { pointer-events: auto; }
+#village-profile {
+  display: flex !important;
+  left: 20px !important;
+  top: 16px !important;
+  width: 270px !important;
+  height: 72px !important;
+  gap: 12px !important;
+  padding: 8px 16px 8px 8px !important;
+  border: 1px solid rgba(216,180,101,.9) !important;
+  border-radius: 20px !important;
+  background: linear-gradient(90deg, rgba(27,39,50,.88), rgba(38,55,69,.62)) !important;
+  box-shadow: 0 5px 20px rgba(30,42,52,.18), inset 0 0 0 1px rgba(255,255,255,.17) !important;
+  backdrop-filter: blur(7px);
+}
+.profile-avatar {
+  width: 52px !important;
+  height: 52px !important;
+  flex-basis: 52px !important;
+  border: 2px solid #e6c675 !important;
+  background: radial-gradient(circle at 35% 28%, #f8f4e8 0 18%, #d3b272 54%, #715734 100%) !important;
+  color: #56411e !important;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.38), 0 0 16px rgba(234,203,125,.3);
+}
+.profile-name { font-size: 20px !important; color:#fff !important; }
+.profile-level { color:#ffe8a5 !important; font-size:13px !important; }
+
+#village-currencies {
+  display: flex !important;
+  left: auto !important;
+  right: 122px !important;
+  top: 16px !important;
+  width: auto !important;
+  height: 52px !important;
+  gap: 8px !important;
+}
+.currency {
+  min-width: 138px !important;
+  height: 50px !important;
+  padding: 0 13px !important;
+  gap: 8px !important;
+  border: 1px solid rgba(225,232,238,.5) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, rgba(71,105,131,.78), rgba(37,63,83,.76)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.24), 0 4px 12px rgba(43,61,76,.14) !important;
+  backdrop-filter: blur(8px);
+}
+.currency .cur-name { display:none !important; }
+.currency .cur-icon { font-size:24px !important; }
+.currency .cur-value { margin-left:auto; color:#fff !important; font-size:18px !important; }
+.currency[data-currency="gold"] .cur-icon { color:#ffd85d !important; }
+.currency[data-currency="gem"] .cur-icon { color:#70d7ff !important; }
+.currency[data-currency="ore"] .cur-icon { color:#f0c86a !important; }
+#village-top-right {
+  display:flex !important;
+  right:20px !important;
+  top:16px !important;
+}
+#btn-settings {
+  width:52px !important;
+  height:52px !important;
+  padding:0 !important;
+  overflow:hidden;
+  color:transparent !important;
+  border-radius:50% !important;
+  border:1px solid rgba(225,232,238,.55) !important;
+  background:rgba(45,72,91,.74) !important;
+  backdrop-filter:blur(8px);
+}
+#btn-settings::before {
+  content:"⚙";
+  color:#fff;
+  font-size:26px;
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+}
+
+/* Actual clickable location labels. */
+#village-map {
+  display:block !important;
+  z-index:20 !important;
+}
+#village-map .hotspot {
+  width:auto !important;
+  min-width:158px !important;
+  min-height:54px !important;
+  gap:0 !important;
+  transform:none !important;
+}
+#village-map .hs-icon { display:none !important; }
+#village-map .hs-tag { display:none !important; }
+#village-map .hs-name {
+  display:block !important;
+  min-width:150px;
+  padding:12px 24px !important;
+  border:1px solid rgba(216,180,101,.95) !important;
+  border-radius:4px 22px 22px 4px !important;
+  background:linear-gradient(90deg, rgba(35,39,43,.92), rgba(52,60,65,.72)) !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 4px 14px rgba(19,29,36,.16) !important;
+  color:#fff !important;
+  font-size:26px !important;
+  font-weight:700 !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.55) !important;
+  backdrop-filter:blur(5px);
+}
+#village-map .hotspot::before {
+  content:"✦";
+  position:absolute;
+  left:-34px;
+  top:5px;
+  width:46px;
+  height:46px;
+  display:grid;
+  place-items:center;
+  border:2px solid #e1bd66;
+  background:rgba(44,49,51,.93);
+  color:#f0d17d;
+  transform:rotate(45deg);
+  border-radius:8px;
+  z-index:2;
+  box-shadow:0 3px 12px rgba(0,0,0,.18);
+}
+#village-map .hotspot::after {
+  content:"";
+  position:absolute;
+  left:-20px;
+  top:18px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#f4d784;
+  opacity:.65;
+  z-index:3;
+}
+#village-map .hotspot:hover .hs-name,
+#village-map .hotspot.selected .hs-name {
+  background:linear-gradient(90deg, rgba(67,84,96,.96), rgba(76,100,116,.82)) !important;
+  box-shadow:0 0 18px rgba(120,210,255,.28), inset 0 0 0 1px rgba(255,255,255,.14) !important;
+}
+#hs-church { left:320px !important; top:250px !important; }
+#hs-market { left:220px !important; top:500px !important; }
+#hs-mine { left:1030px !important; top:235px !important; }
+#hs-dispatch { left:1370px !important; top:385px !important; }
+#hs-pocketwatch { left:760px !important; top:585px !important; }
+#hs-raid { left:1320px !important; top:585px !important; }
+#hs-tower { display:none !important; }
+
+/* Hide prototype progress cards for this hub direction. */
+#village-side { display:none !important; }
+
+/* Real bottom navigation. */
+#village-nav {
+  display:flex !important;
+  z-index:28 !important;
+  left:50% !important;
+  bottom:14px !important;
+  width:860px !important;
+  height:92px !important;
+  transform:translateX(-50%) !important;
+  padding:8px 24px !important;
+  border:1px solid rgba(218,181,101,.75) !important;
+  border-radius:32px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.93), rgba(245,240,226,.91)) !important;
+  box-shadow:0 9px 26px rgba(49,62,71,.18), inset 0 1px 0 rgba(255,255,255,.9) !important;
+  backdrop-filter:blur(10px);
+}
+#village-nav button {
+  flex:1;
+  min-width:0;
+  border:0 !important;
+  background:transparent !important;
+  color:#3f382c !important;
+  font-size:20px !important;
+  font-weight:700 !important;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  box-shadow:none !important;
+}
+#village-nav button:hover { transform:translateY(-3px); color:#a66c1b !important; }
+#village-nav .nav-icon {
+  width:38px !important;
+  height:38px !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  position:relative;
+}
+#village-nav button:nth-child(1) .nav-icon::before { content:"♟"; }
+#village-nav button:nth-child(2) .nav-icon::before { content:"⚑"; }
+#village-nav button:nth-child(3) .nav-icon::before { content:"⚔"; }
+#village-nav button:nth-child(4) .nav-icon::before { content:"▤"; }
+#village-nav button:nth-child(5) .nav-icon::before { content:"◆"; }
+#village-nav .nav-icon::before {
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#a96e1d;
+  font-size:29px;
+}
+
+/* Click feedback toast */
+#village-info.info-toast {
+  z-index:40 !important;
+  left:50% !important;
+  bottom:120px !important;
+  transform:translateX(-50%) !important;
+  min-width:340px;
+  padding:14px 20px !important;
+  border:1px solid #d8b465 !important;
+  border-radius:16px !important;
+  background:rgba(28,43,56,.92) !important;
+  color:#fff !important;
+  text-align:center;
+  backdrop-filter:blur(8px);
+}
+
+/* Phase 2 world motion */
+.vfx-clock {
+  left:812px !important;
+  top:520px !important;
+  width:185px !important;
+  height:185px !important;
+  z-index:8;
+}
+.clock-a { animation-duration:16s !important; opacity:.82; }
+.clock-b { animation-duration:10s !important; }
+.clock-core { animation-duration:3.1s !important; }
+
+.vfx-mine-glow {
+  left:1124px !important;
+  top:247px !important;
+  width:290px !important;
+  height:175px !important;
+  opacity:.8;
+}
+.smoke-a { left:1080px !important; top:160px !important; }
+.smoke-b { left:1150px !important; top:175px !important; }
+.vfx-crane {
+  left:1110px !important;
+  top:88px !important;
+  opacity:.55 !important;
+  animation-duration:7.5s !important;
+}
+
+/* Dispatch office: tiny silhouettes walk/turn inside the terrace. */
+.vfx-dispatch-people {
+  position:absolute;
+  left:1360px;
+  top:465px;
+  width:190px;
+  height:70px;
+  z-index:9;
+  opacity:.72;
+}
+.dispatch-person {
+  position:absolute;
+  bottom:0;
+  width:10px;
+  height:28px;
+  border-radius:50% 50% 35% 35%;
+  background:linear-gradient(#25384b 0 28%, #3c5870 29% 100%);
+  box-shadow:0 -8px 0 -3px #e4c09a;
+  transform-origin:50% 100%;
+}
+.person-a { left:18px; animation:shin-dispatch-walk 7s ease-in-out infinite; }
+.person-b { left:82px; transform:scale(.88); animation:shin-dispatch-turn 4.4s ease-in-out infinite; }
+.person-c { left:145px; transform:scale(.8); animation:shin-dispatch-walk 8.4s 2s ease-in-out infinite reverse; }
+
+.vfx-raid {
+  left:1420px !important;
+  top:625px !important;
+  width:190px !important;
+  height:125px !important;
+  filter:drop-shadow(0 0 18px rgba(85,174,255,.5));
+}
+.raid-ring-a { width:138px !important; height:88px !important; }
+.raid-ring-b { width:92px !important; height:58px !important; }
+.raid-core { width:76px !important; height:48px !important; }
+
+@keyframes shin-dispatch-walk {
+  0%,100% { transform:translateX(0) scale(.9); }
+  45% { transform:translateX(34px) scale(.9); }
+  55% { transform:translateX(34px) scaleX(-.9) scaleY(.9); }
+}
+@keyframes shin-dispatch-turn {
+  0%,40%,100% { transform:scale(.88) rotate(0deg); }
+  55%,75% { transform:scale(.88) rotate(7deg); }
+}
+
+/* No dev controls in the player-facing phase-2 preview. */
+#common-controls { opacity:0 !important; pointer-events:none !important; }
+#art-preview-note { display:none !important; }
