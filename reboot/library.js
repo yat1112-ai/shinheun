@@ -720,7 +720,9 @@
   'use strict';
 
   var STATUS_URL = 'https://api.github.com/repos/yat1112-ai/shinheun/contents/reboot/devroom-status.json?ref=main';
+  var RESERVATION_URL = 'http://127.0.0.1:8766';
   var REFRESH_MS = 120000;
+  var lastData = null;
   var NONE = '정보 없음';
   var STATUS_LABEL = {
     idle: '대기', working: '작업 중', reviewing: '검토 중',
@@ -866,6 +868,39 @@
     return li;
   }
 
+  function updateLocalStage(item, fromKey, toKey) {
+    if (!lastData || !lastData.work_items) return;
+    var groups = lastData.work_items;
+    var from = Array.isArray(groups[fromKey]) ? groups[fromKey] : [];
+    var to = Array.isArray(groups[toKey]) ? groups[toKey] : [];
+    groups[fromKey] = from.filter(function (x) { return String(x.id) !== String(item.id); });
+    if (!to.some(function (x) { return String(x.id) === String(item.id); })) to.push(item);
+    groups[toKey] = to;
+    renderWorkboard(lastData);
+  }
+
+  function changeReservation(item, stageKey, btn) {
+    var reserve = stageKey === 'waiting';
+    var endpoint = reserve ? '/reserve' : '/unreserve';
+    btn.disabled = true;
+    btn.textContent = '반영 중';
+    fetch(RESERVATION_URL + endpoint, {
+      method: 'POST', mode: 'cors', cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: item.id })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    }).then(function (res) {
+      if (!res || res.ok !== true) throw new Error('예약 저장 실패');
+      updateLocalStage(item, stageKey, reserve ? 'reserved' : 'waiting');
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = 'PC 연결 실패';
+      btn.title = '이 PC의 예약 브리지(127.0.0.1:8766)에 연결하지 못했습니다.';
+    });
+  }
+
   function renderWorkboard(data) {
     var groups = data.work_items && typeof data.work_items === 'object' ? data.work_items : {};
     var stages = [
@@ -903,6 +938,12 @@
           pbar.max = 100;
           pbar.value = pct === null ? 0 : pct;
           li.appendChild(pbar);
+          if (stage.key === 'waiting' || stage.key === 'reserved') {
+            var action = make('button', 'workboard-action', stage.key === 'waiting' ? '예약' : '예약 취소');
+            action.type = 'button';
+            action.addEventListener('click', function () { changeReservation(item, stage.key, action); });
+            li.appendChild(action);
+          }
           list.appendChild(li);
         });
         col.appendChild(list);
@@ -914,6 +955,7 @@
   }
 
   function render(data) {
+    lastData = data;
     var staff = Array.isArray(data.staff) ? data.staff : [];
     var frag = document.createDocumentFragment();
     staff.forEach(function (s) { frag.appendChild(renderCard(s || {})); });

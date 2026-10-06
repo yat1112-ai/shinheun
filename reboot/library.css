@@ -373,3 +373,7 @@ html, body { margin: 0; }
 .workboard-progress::-webkit-progress-bar { background: var(--library-panel-2); border-radius: 999px; }
 .workboard-progress::-webkit-progress-value { background: var(--library-accent); border-radius: 999px; }
 .workboard-progress::-moz-progress-bar { background: var(--library-accent); border-radius: 999px; }
+
+.workboard-action { width: 100%; min-height: 34px; margin-top: 8px; border: 1px solid var(--library-accent); border-radius: 7px; background: var(--library-panel-2); color: var(--library-text); font: inherit; font-size: .76rem; cursor: pointer; }
+.workboard-action:hover { background: var(--library-accent); color: #07121f; }
+.workboard-action:disabled { opacity: .55; cursor: default; }
