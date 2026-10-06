@@ -1,17 +1,17 @@
 {
   "source": "AIController live snapshot + parallel_chat state + current main ChatGPT status",
-  "generated_at": "2026-10-07T00:51:59+09:00",
+  "generated_at": "2026-10-07T00:54:38+09:00",
   "refresh_sec": 15,
   "staff": [
     {
       "id": "main-control",
       "name": "메인 컨트롤타워 · ChatGPT",
       "role": "사용자 대화·승인·작업 분배·최종 보고",
-      "task": "30초 실가동 테스트 정리 및 상태 복구",
-      "status": "working",
-      "progress": 90,
-      "started_at": "2026-10-07T00:44:34+09:00",
-      "updated_at": "2026-10-07T00:51:00+09:00",
+      "task": "사용자 지시 대기",
+      "status": "idle",
+      "progress": 0,
+      "started_at": null,
+      "updated_at": "2026-10-07T00:53:30+09:00",
       "stale_after_sec": 900,
       "identity": "현재 사용자와 직접 대화 중인 메인 ChatGPT"
     },
@@ -43,7 +43,7 @@
       "id": "development",
       "name": "개발 채팅",
       "role": "Codex + Claude Code 병행 구현·교차검수",
-      "task": "대기 · 최근 작업 canceled",
+      "task": "대기 · 최근 작업 테스트 종료",
       "status": "idle",
       "progress": 0,
       "started_at": null,
@@ -59,7 +59,7 @@
             "used": 76.0,
             "reset_at": "2026-10-10T09:25:04+09:00",
             "stale": false,
-            "snapshot_at": "2026-10-07T00:51:11+09:00",
+            "snapshot_at": "2026-10-07T00:53:12+09:00",
             "source": "Codex account/rateLimits/read"
           }
         },
