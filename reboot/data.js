@@ -58,18 +58,26 @@ export const SKILLS = {
     target: 'allAllies', shieldOwnerMaxHpRatio: 0.05, durationRounds: 1, draft: true },
 };
 
+// 일반공격 데이터. atkRatio 1은 엔진의 기존 기본 공격 배율과 동일하다(수치 변경 없음).
+export const BASIC_ATTACKS = {
+  eirBasic: { id: 'eirBasic', name: '일반공격', type: 'basic', target: 'singleEnemy', damageType: 'physical', atkRatio: 1, animation: 'prayer' },
+  arenBasic: { id: 'arenBasic', name: '일반공격', type: 'basic', target: 'singleEnemy', damageType: 'physical', atkRatio: 1, animation: 'heavySword' },
+  rianaBasic: { id: 'rianaBasic', name: '일반공격', type: 'basic', target: 'singleEnemy', damageType: 'physical', atkRatio: 1, animation: 'dualBlades' },
+  cleaBasic: { id: 'cleaBasic', name: '일반공격', type: 'basic', target: 'singleEnemy', damageType: 'physical', atkRatio: 1, animation: 'shield' },
+};
+
 export const CHARACTERS = {
   eir: { id: 'eir', name: '에이르', role: 'healer', playable: true, initialLevel: 1,
-    stats: { hp: 150, atk: 22, defense: 8, speed: 10 }, skills: ['eirHeal', 'eirGroupHeal'], passive: 'eirRevive',
+    stats: { hp: 150, atk: 22, defense: 8, speed: 10 }, basicAttack: 'eirBasic', skills: ['eirHeal', 'eirGroupHeal'], passive: 'eirRevive',
     aiPriority: ['eirGroupHeal', 'eirHeal', 'basicAttack'], motion: 'prayer', join: { type: 'initial' } },
   aren: { id: 'aren', name: '아렌', role: 'striker', playable: true, initialLevel: 1,
-    stats: { hp: 190, atk: 32, defense: 12, speed: 9 }, skills: ['arenBreak', 'arenBuff'], passive: 'arenFocus',
+    stats: { hp: 190, atk: 32, defense: 12, speed: 9 }, basicAttack: 'arenBasic', skills: ['arenBreak', 'arenBuff'], passive: 'arenFocus',
     aiPriority: ['arenBreak', 'arenBuff', 'basicAttack'], motion: 'heavySword', join: { type: 'stageVictory', stageId: 1 } },
   riana: { id: 'riana', name: '리아나', role: 'rogue', playable: true, initialLevel: 1,
-    stats: { hp: 155, atk: 27, defense: 8, speed: 15 }, skills: ['rianaFlurry', 'rianaMark'], passive: 'rianaFollowup',
+    stats: { hp: 155, atk: 27, defense: 8, speed: 15 }, basicAttack: 'rianaBasic', skills: ['rianaFlurry', 'rianaMark'], passive: 'rianaFollowup',
     aiPriority: ['rianaFlurry', 'rianaMark', 'basicAttack'], motion: 'dualBlades', join: { type: 'stageFirstEntry', stageId: 5 } },
   clea: { id: 'clea', name: '클레아', role: 'guardian', playable: true, initialLevel: 1,
-    stats: { hp: 270, atk: 20, defense: 18, speed: 7 }, skills: ['cleaTaunt', 'cleaShield'], passive: 'cleaSupport',
+    stats: { hp: 270, atk: 20, defense: 18, speed: 7 }, basicAttack: 'cleaBasic', skills: ['cleaTaunt', 'cleaShield'], passive: 'cleaSupport',
     aiPriority: ['cleaShield', 'cleaTaunt', 'basicAttack'], motion: 'shield', join: { type: 'stageFirstEntry', stageId: 5 } },
 };
 export const STORY_CHARACTERS = {
@@ -170,5 +178,12 @@ export const ACTIVITY_RULES = {
 };
 export const RESERVED_CONTENT = { equipmentSlots: ['accessory', 'artifact'], extraPartySlots: 1 };
 
-export default { BALANCE_NOTES, GAME_CONFIG, SKILLS, CHARACTERS, STORY_CHARACTERS,
+// 캐릭터 스킬 구조: 일반공격 1 + 액티브 2 + 패시브 1 (참조만 해석하며 수치는 각 데이터가 보유).
+export function getSkillKit(characterId) {
+  const c = CHARACTERS[characterId];
+  if (!c) return null;
+  return { basicAttack: BASIC_ATTACKS[c.basicAttack], actives: c.skills.map(id => SKILLS[id]), passive: SKILLS[c.passive] };
+}
+
+export default { BALANCE_NOTES, GAME_CONFIG, SKILLS, BASIC_ATTACKS, CHARACTERS, STORY_CHARACTERS,
   ENEMIES, STAGES, EQUIPMENT, INITIAL_EQUIPMENT, PRODUCTION, ACTIVITY_RULES, RESERVED_CONTENT };
