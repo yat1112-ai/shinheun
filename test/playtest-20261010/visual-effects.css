@@ -1,21 +1,40 @@
-/* GP-05 is scoped to field units, independent of HUD layout. No continuous FX. */
-.unit.gp05-shield .sprite { outline:2px solid #85cce0; outline-offset:2px; border-radius:9px }
-.unit.gp05-turn .shadow { outline:2px solid #ffe0a0 }
-.unit.gp05-attack .sprite { animation:gp05-attack var(--gp05-duration) ease-out; --gp05-step:5px }
-.unit.enemy.gp05-attack .sprite { --gp05-step:-5px }
-.unit.gp05-damage .sprite { animation:gp05-impact var(--gp05-duration) ease-out }
-.unit.gp05-heal .sprite { animation:gp05-heal var(--gp05-duration) ease-out }
-.unit.gp05-block .sprite { outline:2px solid #85cce0; outline-offset:2px }
-.unit .gp05-feedback { position:absolute; bottom:4px; left:0; right:0; max-height:36px; overflow:hidden; padding:2px; border-radius:4px; background:#131820e6; color:#ffe0a0; text-align:center; font-size:12px; line-height:15px; font-weight:800; pointer-events:none; animation:gp05-label var(--gp05-duration) ease-out both }
-.unit.gp05-damage .gp05-feedback { color:#ffb0a9 }
-.unit.gp05-heal .gp05-feedback { color:#b5f4c4 }
-@keyframes gp05-attack { 35% { transform:translateX(var(--gp05-step)) } }
-@keyframes gp05-impact { 25% { transform:translateX(-3px); opacity:.7 } }
-@keyframes gp05-heal { 30% { opacity:.75 } }
-@keyframes gp05-label { 0%,70% { opacity:1 } 100% { opacity:0 } }
-@media (prefers-reduced-motion:reduce) {
-  .unit.gp05-attack .sprite,.unit.gp05-damage .sprite,.unit.gp05-heal .sprite,.unit .gp05-feedback { animation:none }
-  .unit.gp05-damage .sprite { outline:2px solid #ffb0a9; outline-offset:2px }
-  .unit.gp05-heal .sprite { outline:2px solid #b5f4c4; outline-offset:2px }
-  .unit .sprite,.unit .float,.unit .tag,.unit .shadow { animation:none !important; transition:none !important }
+﻿/* Phase 3 artwork is confined to the battlefield sprite region. */
+.combat-fx{position:absolute;inset:4px -16px -4px;z-index:4;pointer-events:none;background-position:center;background-repeat:no-repeat;background-size:contain;animation:fx-bloom var(--gp05-duration) ease-out both;transform-origin:50% 65%}
+.fx-slash{background-image:url('assets/fx-slash.svg');animation-name:fx-slash}
+.fx-dual-slash{background-image:url('assets/fx-dual-slash.svg');animation-name:fx-slash}
+.enemy .fx-slash,.enemy .fx-dual-slash{scale:-1 1}
+.fx-spark{background-image:url('assets/fx-spark.svg');animation-name:fx-spark}
+.fx-heal{background-image:url('assets/fx-heal.svg')}
+.fx-revive{background-image:url('assets/fx-revive.svg')}
+.fx-shield{background-image:url('assets/fx-shield.svg')}
+.fx-taunt{background-image:url('assets/fx-taunt.svg')}
+.unit.gp05-shield .sprite:before{content:'';position:absolute;inset:10px -8px -2px;background:url('assets/fx-shield.svg') center/contain no-repeat;opacity:.3;pointer-events:none;z-index:2}
+.unit.gp05-taunted .shadow{box-shadow:0 0 0 2px #ef9b65,0 0 15px #ed633c88!important}
+#game[data-view=battle] .unit .sprite img{animation:none!important}
+#game[data-view=battle] .unit:not(.fallen):not(.gp05-attack):not(.gp05-damage):not(.gp05-cast):not(.gp05-heal) .sprite{animation:fx-idle 2.6s ease-in-out infinite}
+#game[data-view=battle] .unit.gp05-attack .sprite{--fx-step:40px;animation:fx-lunge var(--gp05-duration) cubic-bezier(.2,.8,.3,1)}
+#game[data-view=battle] .unit.enemy.gp05-attack .sprite{--fx-step:-40px}
+#game[data-view=battle] .unit.gp05-damage:not(.fallen) .sprite{animation:fx-hit var(--gp05-duration) ease-out}
+#game[data-view=battle] .unit.gp05-cast .sprite,#game[data-view=battle] .unit.gp05-heal .sprite{animation:fx-cast var(--gp05-duration) ease-out}
+#game[data-view=battle] .unit.fallen{opacity:.65}
+#game[data-view=battle] .unit.fallen .sprite{animation:none;transform:translate(22px,20px) rotate(76deg) scale(.8);transform-origin:50% 88%;filter:grayscale(1) blur(.3px)}
+.unit .gp05-feedback{position:absolute;top:68px;left:50%;z-index:9;pointer-events:none;white-space:nowrap;font:900 34px/1.15 system-ui,sans-serif;color:#fff1da;-webkit-text-stroke:1.3px #21101d;paint-order:stroke fill;text-shadow:0 3px 0 #21101d,0 0 6px #000,2px 0 2px #000,-2px 0 2px #000;animation:fx-number var(--gp05-duration) cubic-bezier(.2,.7,.2,1) both;--fx-x:-50%;--fx-y:calc(var(--fx-lane,0) * 38px)}
+.unit .fx-number-heal{color:#b4ffc4}
+.unit .fx-number-block{color:#b9eaff;font-size:23px}
+.gp05-shake{animation:fx-shake var(--gp05-duration) linear}
+@keyframes fx-idle{50%{transform:translateY(-2px)}}
+@keyframes fx-lunge{0%{transform:translateX(-5px) rotate(-3deg)}25%,38%{transform:translateX(var(--fx-step)) rotate(5deg)}70%,100%{transform:none}}
+@keyframes fx-hit{0%{transform:translateX(7px);filter:brightness(1.8)}15%{transform:translateX(-8px);filter:brightness(1.3)}35%{transform:translateX(3px)}65%,100%{transform:none;filter:none}}
+@keyframes fx-cast{30%{transform:translateY(-6px);filter:drop-shadow(0 0 9px #b8ffce)}100%{transform:none;filter:none}}
+@keyframes fx-slash{0%{opacity:0;transform:rotate(-38deg) scale(.45)}16%{opacity:1;transform:rotate(-12deg) scale(1.05)}42%{opacity:1;transform:rotate(12deg)}100%{opacity:0;transform:rotate(30deg) scale(1.15)}}
+@keyframes fx-spark{0%{opacity:1;transform:scale(.35)}18%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.35)}}
+@keyframes fx-bloom{0%{opacity:0;transform:translateY(10px) scale(.7)}20%,45%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-8px) scale(1.08)}}
+@keyframes fx-number{0%{opacity:1;transform:translate(var(--fx-x),var(--fx-y)) scale(1.22)}18%,55%{opacity:1;transform:translate(var(--fx-x),calc(var(--fx-y) - 8px)) scale(1)}100%{opacity:0;transform:translate(var(--fx-x),calc(var(--fx-y) - 26px)) scale(.95)}}
+@keyframes fx-shake{0%,22%,100%{transform:none}3%,9%{transform:translateX(-2px)}6%,12%{transform:translateX(2px)}}
+@media(prefers-reduced-motion:reduce){
+ #game[data-view=battle] .unit .sprite,.combat-fx,.unit .gp05-feedback,.gp05-shake{animation:none!important}
+ .unit .gp05-feedback{transform:translate(var(--fx-x),var(--fx-y))}
+ .combat-fx{opacity:.8}
+ #game[data-view=battle] .unit.gp05-damage:not(.fallen) .sprite{filter:brightness(1.3)}
 }
+

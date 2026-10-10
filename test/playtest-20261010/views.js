@@ -116,7 +116,7 @@ function resultPanel(b, c) {
   const onward = win && st.id < STAGES.length
     ? button('next-stage','다음 스테이지', `data-id="${st.id + 1}"`)
     : button('view', win ? '챕터 완료' : '스테이지 선택', `data-id="${win ? 'village' : 'adventure'}"`);
-  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><img class="result-ornament" src="assets/ornament-divider.svg" alt=""><h2>${win ? '승리' : '패배'}</h2>
+  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><img class="result-ornament" src="assets/composition-separator.svg" alt=""><h2>${win ? '승리' : '패배'}</h2>
     <p class="stage-name">${esc(st.name)}</p>
     ${win ? `<p class="reward">보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p class="paid">보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}
     <div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${onward}</div></div>`;
@@ -133,7 +133,7 @@ function battle(c) {
 
   const detail = selected ? (() => { const def = CHARACTERS[selected.characterId]; return `${esc(def.name)} — ${[...def.skills, def.passive].map(k => esc(skillTip(SKILLS[k]) || SKILLS[k]?.name || k)).join(' / ')}`; })() : esc(c.log.slice(-2).join('  ›  ') || '자동 전투 대기 중');
   return `<div class="battle">
-<div class="ground" aria-label="전투 지면">
+<div class="ground" aria-label="전투 지면"><div class="composition-atmosphere" aria-hidden="true"></div>
 <div class="team-hp-vs" aria-label="아군 대 적군 총 체력">
   <div class="team-hp ally-side"><span>아군 HP</span><div class="track"><i style="width:${percent(allyHp)}%"></i></div><b>${allyHp.current} / ${allyHp.maximum}</b></div>
   <strong class="vs-seal">VS</strong>
@@ -149,7 +149,7 @@ ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed
 </div><div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
 </aside></div>
-<div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-label="빈 자리"><img class="empty-seal" src="assets/icon-state.svg" alt=""><span>빈 자리</span><small>출전 동료 없음</small></div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
+<div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-label="빈 자리"><img class="empty-seal" src="assets/composition-crest.svg" alt=""><span>빈 자리</span><small>출전 동료 없음</small></div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
 ${b.status !== 'active' && c.resultOpen ? resultPanel(b, c) : ''}</div>`;
 }
 

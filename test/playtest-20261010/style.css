@@ -589,3 +589,91 @@ body[data-view=battle]{background:#080f18 url(assets/battle-bg.webp) center/cove
 #game[data-view=battle] .unit.acting .sprite img{animation-play-state:paused}
 #game[data-view=battle] .unit .shadow{width:110px;opacity:.62;filter:blur(3px)}
 @media(prefers-reduced-motion:reduce){#game[data-view=battle] .unit .sprite img{animation:none!important}}
+/* Composition: portrait art, carved bronze and moonlit stone share one material language. */
+#game[data-view=battle] .hud{gap:14px}
+#game[data-view=battle] .hud::before{content:"";position:absolute;left:0;right:0;top:-43px;height:38px;background:url(assets/composition-separator.svg) center/100% 100% no-repeat;pointer-events:none}
+#game[data-view=battle] .hud-card{padding:18px 16px 13px;background:linear-gradient(110deg,#253234,#10161d 75%);box-shadow:0 12px 22px #0009;gap:5px;justify-content:flex-start}
+#game[data-view=battle] .hud-card::after{content:"";position:absolute;inset:-1px;background:url(assets/composition-card-metal.svg) center/100% 100% no-repeat;pointer-events:none;z-index:4}
+#game[data-view=battle] .hud-card::before{content:"";position:absolute;inset:5px;background:linear-gradient(90deg,transparent 25%,#0b10133b 48%,#080c13e8 85%),linear-gradient(0deg,#070d16 3%,transparent 52%);pointer-events:none;z-index:0}
+#game[data-view=battle] .hud-top{min-height:88px;height:88px;position:static}
+#game[data-view=battle] .hud-portrait,html.compact #game[data-view=battle] .hud-portrait{left:7px;top:7px;width:72%;height:170px;z-index:-1;mask-image:linear-gradient(90deg,#000 65%,transparent 100%);clip-path:polygon(9% 0,100% 0,100% 100%,8% 100%,0 89%,0 12%);background:none}
+#game[data-view=battle] .hud-portrait:hover{background:none}
+#game[data-view=battle] .hud-art{background:none;box-shadow:none}
+#game[data-view=battle] .hud-art::after{border:0;background:linear-gradient(120deg,#e5c58b18,transparent 45%,#3a747e26)}
+#game[data-view=battle] .hud-art .portrait-image{width:135%;height:145%;left:-20%;top:-4%;object-fit:cover;object-position:50% 18%;filter:drop-shadow(2px 0 2px #cbe8e435)}
+#game[data-view=battle] .hud-art[data-portrait=riana] .portrait-image{top:-19%;left:-17%}
+#game[data-view=battle] .hud-art[data-portrait=aren] .portrait-image{top:-2%;left:-23%}
+#game[data-view=battle] .hud-art[data-portrait=clea] .portrait-image{top:-4%;left:-20%}
+#game[data-view=battle] .hud-main{margin-left:45%;gap:4px;justify-content:flex-start;position:relative;pointer-events:none}
+#game[data-view=battle] .hud-main strong,html.compact #game[data-view=battle] .hud-main strong{font-size:24px;letter-spacing:1px;color:#fff1d5}
+#game[data-view=battle] .hud-main .lv{font-size:12px;color:#d9c9a5}
+#game[data-view=battle] .hud-mode{font-size:10px;color:#bac8c7}
+#game[data-view=battle] .hud .hp{height:19px;border-color:#b29864;background:#050d0d;box-shadow:0 2px 8px #0008}
+#game[data-view=battle] .hud .hp i{background:linear-gradient(#d5f5df,#619e86 45%,#285b4c)}
+#game[data-view=battle] .skills{margin-left:25%;gap:8px;height:43px;z-index:2}
+#game[data-view=battle] .skill{flex:1;min-width:0;height:43px;min-height:43px;gap:4px;background:linear-gradient(90deg,#081118c9,transparent)}
+#game[data-view=battle] .skill-bezel{width:39px;height:39px;flex:none;padding:7px;background:url(assets/composition-skill-bezel.svg) center/contain no-repeat}
+#game[data-view=battle] .skill-copy{flex:1;min-width:0}
+#game[data-view=battle] .skill em{font-size:11px;max-width:65px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ece0c1}
+#game[data-view=battle] .skill b{font-size:11px}
+#game[data-view=battle] .status{margin-left:42%;position:relative;z-index:1;min-height:16px;gap:3px}
+#game[data-view=battle] .chip{font-size:10px;padding:0 3px;border-color:#ad9a6044;color:#d5ddcd}
+#game[data-view=battle] .chip.none{border:0;background:none;color:#b0b6ad}
+#game[data-view=battle] .hud-card.empty{background:radial-gradient(ellipse at center,#8d82680b,transparent 65%);box-shadow:none;opacity:.58;gap:3px}
+#game[data-view=battle] .hud-card.empty::before{background:none}
+#game[data-view=battle] .hud-card.empty::after{opacity:.15}
+#game[data-view=battle] .empty-seal{width:64px;height:64px;opacity:.55}
+#game[data-view=battle] .hud-card.empty span{font-size:13px;letter-spacing:3px}
+#game[data-view=battle] .hud-card.empty small{font-size:10px;color:#8d938e}
+#game[data-view=battle] .hud-card.selected{box-shadow:0 0 22px #c6ad6d60}
+#game[data-view=battle] .hud-card.selected::after{filter:drop-shadow(0 0 3px #ffe0a0)}
+#game[data-view=battle] .order{background:linear-gradient(90deg,#080e15b8,transparent);padding:10px 8px;width:100px}
+#game[data-view=battle] .order ol{position:relative}
+#game[data-view=battle] .order ol::before{content:"";position:absolute;left:40px;top:20px;bottom:25px;width:1px;background:linear-gradient(#e6ca88,#8b795d55)}
+#game[data-view=battle] .order li,#game[data-view=battle] .order li.future{height:64px;margin-bottom:5px;justify-content:center;background:none;border:0;opacity:.82;position:relative;gap:0;padding:0}
+#game[data-view=battle] .order li .mini{width:48px;height:58px;border:1px solid #ac9062;clip-path:polygon(15% 0,85% 0,100% 12%,100% 86%,85% 100%,15% 100%,0 86%,0 12%);border-radius:0;background:#10191f}
+#game[data-view=battle] .order li .portrait-image{width:170%;height:auto;left:-35%;top:-9%}
+#game[data-view=battle] .order li span:not(.portrait-frame){position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;line-height:12px;color:#e0d6bd;background:linear-gradient(90deg,transparent,#050c13,transparent)}
+#game[data-view=battle] .order li.next{height:77px;background:url(assets/composition-crest.svg) center/88px 88px no-repeat;opacity:1}
+#game[data-view=battle] .order li.next .mini{width:55px;height:66px;border-color:#ffe2a0;box-shadow:0 0 16px #c8b57980}
+#game[data-view=battle] .order li.next::before{content:"NEXT";position:absolute;top:-7px;left:0;right:0;text-align:center;color:#ffe1a0;font-size:9px;letter-spacing:3px;z-index:3}
+#game[data-view=battle] .order li.enemy{background:none}
+#game[data-view=battle] .order li.enemy .mini{border-color:#956661;background:radial-gradient(#573c3a,#0c141b)}
+#game[data-view=battle] .order li>small{font-size:8px;top:0;right:0;background:#0b1019;color:#cfbc91}
+#game[data-view=battle] .team-hp-vs{left:330px;width:940px;height:56px;top:53px;background:linear-gradient(90deg,transparent,#101a23ed 12%,#17191eea 88%,transparent);padding:12px 28px}
+#game[data-view=battle] .team-hp-vs::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:30px;background:url(assets/composition-separator.svg) center/100% 100%;pointer-events:none}
+#game[data-view=battle] .team-hp .track{height:10px;border-color:#b5a17066;box-shadow:0 1px 4px #000}
+#game[data-view=battle] .vs-seal{font-family:var(--serif);color:#ead6a4;font-size:23px}
+#game[data-view=battle] .formation{background:url(assets/composition-crest.svg) center/100% 100% no-repeat;color:#d9c396;opacity:.9}
+#game[data-view=battle] .formation h4{font-size:10px}
+#game[data-view=battle] .formation .letter{font-family:var(--serif);font-size:30px}
+#game[data-view=battle] .formation span{font-size:10px}
+#game[data-view=battle] .ground{background:linear-gradient(180deg,#07101910,#07101912 50%,#08101880 100%),url(assets/battle-bg.webp) center/cover no-repeat}
+.composition-atmosphere{position:absolute;inset:130px 100px 190px;pointer-events:none;background:radial-gradient(ellipse at 28% 55%,#b5c6aa16,transparent 28%),radial-gradient(ellipse at 73% 55%,#967a6a13,transparent 30%),linear-gradient(175deg,transparent 48%,#a6bfbb0d 60%,transparent 73%);z-index:1}
+#game[data-view=battle] .unit .shadow{width:128px;height:18px;background:radial-gradient(ellipse,#020509d9 15%,#05080b80 45%,transparent 72%);filter:blur(2px);opacity:.9}
+#game[data-view=battle] .slot-pad{opacity:.13}
+#game[data-view=battle] .unit .sprite img.ally-art{filter:drop-shadow(0 7px 4px #04060ba9) drop-shadow(-2px -1px 2px #a3c9c82a)}
+#game[data-view=battle] .ticker{top:8px;left:420px;right:340px;color:#c0c9c6}
+#game[data-view=battle] .result{background:linear-gradient(#19212bf7,#090f18fc);border:1px solid #9f8659;padding:42px;box-shadow:0 25px 80px #000c,inset 0 0 80px #bf9a4812}
+#game[data-view=battle] .result::after{content:"";position:absolute;inset:-5px;background:url(assets/composition-card-metal.svg) center/100% 100% no-repeat;pointer-events:none}
+#game[data-view=battle] .result h2{font-size:52px;letter-spacing:18px;color:#f3d79c;text-shadow:0 0 25px #caaa6350}
+#game[data-view=battle] .result-ornament{width:100%;height:44px;object-fit:fill}
+#game[data-view=battle] #topbar{background:linear-gradient(#1a2129,#0b121a);border-color:#8b7551}
+#game[data-view=battle] .stage-title{background:none}
+#game[data-view=battle] .speed button,#game[data-view=battle] .battle-info>button{background:linear-gradient(#30363c,#111b22);border-color:#a48b5e}
+#game[data-view=battle] .speed button[aria-pressed=true]{background:linear-gradient(#b39a66,#50412b);color:#fff2d1}
+html.compact #game[data-view=battle] .team-hp-vs{top:88px}
+@media(prefers-reduced-motion:reduce){.composition-atmosphere{animation:none}}
+#game[data-view=battle] .formation{background:linear-gradient(180deg,#111923b8,transparent);padding:12px 8px;text-align:center}
+#game[data-view=battle] .formation::after{content:"";display:block;width:100%;height:20px;background:url(assets/composition-separator.svg) center/200% 100%}
+#game[data-view=battle] .formation .letter{display:block;line-height:36px}
+#game[data-view=battle] .formation span{display:block;line-height:15px}
+#game[data-view=battle] .hud-top{pointer-events:none}
+#game[data-view=battle] .hud-portrait,html.compact #game[data-view=battle] .hud-portrait{pointer-events:auto;z-index:0}
+#game[data-view=battle] .hud-card::before{z-index:1}
+#game[data-view=battle] .hud-main{z-index:2}
+#game[data-view=battle] .status{z-index:2}
+#game[data-view=battle] .hud-art .portrait-image{height:auto;object-fit:initial;top:-3%}
+#game[data-view=battle] .hud-art[data-portrait=riana] .portrait-image{top:-8%;left:-25%}
+#game[data-view=battle] .hud-art[data-portrait=aren] .portrait-image{top:0;left:-25%}
+#game[data-view=battle] .hud-art[data-portrait=clea] .portrait-image{top:-3%;left:-25%}
