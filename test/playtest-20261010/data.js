@@ -1,3 +1,4 @@
+import { APPROVED_CH1_SCENES } from './approved-ch1.js';
 // CH1 승인 초안 콘텐츠. 모든 밸런스 수치는 임시이며 최종 기획값이 아니다.
 // 브라우저 ES module 및 Node ES module에서 사용하는 순수 데이터 모듈.
 export const BALANCE_NOTES = {
@@ -21,7 +22,7 @@ export const GAME_CONFIG = {
   reservedEquipmentSlots: ['accessory', 'artifact'],
   level: { initial: 1, max: 30, experiencePerLevel: 50, experienceGrowth: 25,
     statGrowth: { hp: 12, atk: 2, defense: 1 } },
-  watchBlessing: { name: '회중시계의 가호', atk: 2, hp: 10, description: '아버지가 맡긴 회중시계에서 전해지는 작은 가호.' },
+  watchBlessing: { name: '회중시계의 가호', atk: 2, hp: 10, description: '성당에 보관되어 있던 회중시계에서 전해지는 작은 가호.' },
   codex: { killThreshold: 100, claimReward: { sharedAtk: 1 }, countOnFinalVictoryOnly: true },
 };
 
@@ -141,6 +142,21 @@ export const STAGES = [
     line('mother', '광산 쪽에도 문제가 있다는 소식을 들었어. 다음에는 그곳을 살펴봐야겠구나.'),
   ], unlockOnVictory: ['dispatch'] }),
 ];
+
+
+// P2 playable CH1 cutscenes. Approved source dialogue is immutable.
+const approvedScene = number => APPROVED_CH1_SCENES[String(number)].map(({speaker,text})=>({speaker,text}));
+// T-0010 is an alternative chapel rendition, archived in approved-ch1.js,
+// not auto-played a second time (duplicates event in T-0011).
+const chapel=approvedScene(2);
+STAGES[0].story=chapel.slice(0,21); // before the first enemy battle
+STAGES[0].victoryStory=[...chapel.slice(21),...approvedScene(3)]; // after victory: aren joins
+STAGES[4].story=approvedScene(4); // mother, Riana and Clea encounter
+const boss=approvedScene(5);
+STAGES[8].story=boss.slice(0,13); // boss threat and party preparation
+STAGES[8].victoryStory=boss.slice(20); // victory and unresolved clock mystery
+// boss lines 14..20 require a future mid-battle cutscene trigger; retained verbatim
+// in approved-ch1.js, intentionally not presented after victory or before combat.
 
 const equipment = (id, name, slot, stats, price) => ({ id, name, slot, stats, price, currency: 'gold', draft: true });
 export const EQUIPMENT = {
