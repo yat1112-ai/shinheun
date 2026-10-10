@@ -570,3 +570,22 @@ body[data-view=battle]{background:#080f18 url(assets/battle-bg.webp) center/cove
 #game[data-view=battle] .order li span{font-size:10px;white-space:normal;line-height:1.2}
 #game[data-view=battle] .order li.enemy::after{display:none}
 #game[data-view=battle] .order li.enemy{background-image:url(assets/skill-enemy.svg);background-size:18px;background-position:right bottom;background-repeat:no-repeat}
+
+
+/* FINAL COMBAT GP08: 512x512 original 2.5D-inspired SD art replaces boxed unit placeholders. */
+#game[data-view=battle] .unit .sprite{width:148px;height:158px;display:flex;align-items:flex-end;justify-content:center;position:relative;margin-left:-12px;isolation:isolate}
+#game[data-view=battle] .unit .sprite img.ally-art,
+#game[data-view=battle] .unit.enemy .sprite img.enemy-art{
+  width:148px;height:158px;max-width:none;max-height:none;object-fit:contain;object-position:center bottom;
+  border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;filter:drop-shadow(0 9px 5px #010710b9) drop-shadow(0 0 8px #8dbee830);
+  image-rendering:auto;transform-origin:50% 90%;
+}
+#game[data-view=battle] .unit.enemy .sprite img.enemy-art{transform:scaleX(-1);filter:drop-shadow(0 10px 6px #04060ba9) drop-shadow(0 0 7px #d0565740)}
+@keyframes combat-sd-idle{0%,100%{translate:0 0}47%{translate:0 -3px}65%{translate:0 -2px}}
+#game[data-view=battle] .unit:not(.acting):not(.hit):not(.fallen) .sprite img{animation:combat-sd-idle 2.1s ease-in-out infinite}
+#game[data-view=battle] .unit.enemy:not(.acting):not(.hit):not(.fallen) .sprite img{animation-duration:2.55s}
+#game[data-view=battle] .unit.fallen .sprite img{filter:grayscale(1) brightness(.5)!important;opacity:.5}
+#game[data-view=battle] .unit.acting .sprite img{animation-play-state:paused}
+#game[data-view=battle] .unit .shadow{width:110px;opacity:.62;filter:blur(3px)}
+@media(prefers-reduced-motion:reduce){#game[data-view=battle] .unit .sprite img{animation:none!important}}

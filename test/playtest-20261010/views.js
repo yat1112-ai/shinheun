@@ -13,8 +13,8 @@ const shortEffects = {regen:'재생', defenseDown:'방어↓', atkUp:'공격↑'
 // GP-04: 기존 프로젝트 원본 초상은 미리보기 후보이며 최종 사용자 승인 대기. 필드 임시 SVG는 유지한다.
 // 도트/SD 전투 스프라이트 원본은 아직 없어 같은 슬롯·크기로 교체할 수 있게 경로만 분리해 둔다.
 const PORTRAIT = { eir:'assets/art-preview-eir.webp', aren:'assets/art-preview-aren.webp', riana:'assets/art-preview-riana.webp', clea:'assets/art-preview-clea.webp' };
-const SPRITE = { eir:'assets/sprite-eir.svg', aren:'assets/sprite-aren.svg', riana:'assets/sprite-riana.svg', clea:'assets/sprite-clea.svg' };
-const ENEMY_ART = { stray:'assets/stray.svg', wolf:'assets/wolf.svg', boar:'assets/boar.svg', ragingBoar:'assets/boar.svg' };
+const SPRITE = { eir:'assets/sd-final-eir.svg', aren:'assets/sd-final-aren.svg', riana:'assets/sd-final-riana.svg', clea:'assets/sd-final-clea.svg' };
+const ENEMY_ART = { stray:'assets/sd-final-wolf.svg', wolf:'assets/sd-final-wolf.svg', boar:'assets/sd-final-boar.svg', ragingBoar:'assets/sd-final-boar.svg' };
 export const stage = id => STAGES.find(s => s.id === Number(id));
 export const rewardText = r => Object.keys(names).map(k => `${names[k]} ${r[k] || 0}`).join(' · ');
 export const button = (action, text, attrs = '') => `<button data-action="${action}" ${attrs}>${text}</button>`;
