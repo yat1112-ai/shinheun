@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="t">
+  <title id="t">길 잃은 작은 짐승 (임시 오리지널 SVG)</title>
+  <ellipse cx="120" cy="214" rx="72" ry="10" fill="#000" opacity="0.28"/>
+  <path d="M52 190 Q40 120 100 104 Q170 96 190 150 Q200 196 168 206 L72 208Z" fill="#7a6a58" stroke="#33281f" stroke-width="4"/>
+  <path d="M96 106 Q92 70 112 58 Q138 56 142 84 Q150 106 134 116Z" fill="#8c7a66" stroke="#33281f" stroke-width="4"/>
+  <polygon points="104,66 98,40 120,56" fill="#8c7a66" stroke="#33281f" stroke-width="3"/>
+  <polygon points="130,60 146,38 146,70" fill="#8c7a66" stroke="#33281f" stroke-width="3"/>
+  <circle cx="114" cy="84" r="5" fill="#ffe27a"/><circle cx="132" cy="86" r="5" fill="#ffe27a"/>
+  <circle cx="114" cy="84" r="2" fill="#2a1a14"/><circle cx="132" cy="86" r="2" fill="#2a1a14"/>
+  <path d="M112 102 Q124 108 136 102" stroke="#33281f" stroke-width="3" fill="none"/>
+  <path d="M60 180 Q30 170 28 140 Q50 150 62 160Z" fill="#6a5a48" stroke="#33281f" stroke-width="3"/>
+  <rect x="78" y="196" width="18" height="16" rx="5" fill="#5a4a3a"/><rect x="146" y="196" width="18" height="16" rx="5" fill="#5a4a3a"/>
+</svg>
