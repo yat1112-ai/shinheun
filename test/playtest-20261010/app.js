@@ -336,6 +336,15 @@ document.addEventListener('click', event => {
       case 'inspect': selectedUnit = selectedUnit === id ? null : id; break;
       case 'view': view = id; resultOpen = id === 'battle' && !state().battle && !state().repeat && !!lastBattle && lastBattle.status !== 'active'; break;
       case 'stage': startManual(Number(id)); return;
+       case 'next-stage': {
+         if (!lastBattle || lastBattle.status !== 'victory' || state().battle || state().repeat)
+           throw new Error('승리 후 다음 스테이지로 진행할 수 있습니다.');
+         const nextId = lastBattle.stageId + 1;
+         if (nextId !== Number(id) || !stage(nextId))
+           throw new Error('다음 스테이지를 확인할 수 없습니다.');
+         startManual(nextId);
+         return;
+       }
       case 'speed': engine.setDisplaySpeed(Number(id)); break;
       case 'save': persist(); return;
       case 'repeat': engine.startRepeat(Number($('#repeat-stage').value)); lastBattle = null; break;

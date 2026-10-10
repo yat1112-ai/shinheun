@@ -347,3 +347,63 @@ html.compact #game[data-view=battle] .hud-main strong{font-size:24px}
 html.compact #game[data-view=battle] .skill{font-size:17px}
 html.compact #game[data-view=battle] .result{width:900px}
 html.compact #game[data-view=battle] .result .actions button{min-height:104px;font-size:32px}
+
+
+/* P2 battle UI: dual five-slot roster, living-action forecast, game-style overlay */
+#game[data-view=battle] .ground {
+  background:linear-gradient(180deg,rgba(6,11,19,.18),rgba(6,14,21,.38) 46%,rgba(6,15,23,.79) 100%),url(assets/battle-bg.webp) center/cover no-repeat;
+}
+#game[data-view=battle] .ground::before{
+  left:114px;top:115px;width:1370px;height:508px;
+  clip-path:polygon(4% 100%,19% 0%,81% 0%,96% 100%);
+  background:repeating-linear-gradient(180deg,transparent 0 91px,rgba(252,218,161,.065) 92px,transparent 94px),radial-gradient(ellipse at 49% 63%,rgba(108,83,57,.26),rgba(29,48,39,.3) 59%,rgba(13,24,27,.62));
+  box-shadow:inset 0 0 90px #0009;
+}
+#game[data-view=battle] .ground::after{left:799px;top:130px;height:490px;opacity:.16}
+#game[data-view=battle] .slot-pad{opacity:.72;box-shadow:0 0 18px #0007}
+.enemy-hud{
+  position:absolute;left:120px;top:622px;width:1360px;height:118px;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;
+  z-index:590;
+}
+.enemy-hud-card{
+  display:flex;gap:10px;align-items:center;min-width:0;
+  padding:10px;background:linear-gradient(140deg,rgba(49,25,34,.98),rgba(14,21,31,.97));
+  border:2px solid #99585e;border-radius:10px;
+  box-shadow:0 5px 18px #0009,inset 0 0 15px #5b24242c;
+}
+.enemy-hud-card.dead{filter:grayscale(.8);opacity:.63}
+.enemy-hud-card.vacant{justify-content:center;background:#16171cda;border:2px dashed #836067;color:#d8a2a4;font-size:16px;font-weight:700}
+.enemy-hud-art{flex:none;width:70px;height:84px;overflow:hidden;border:2px solid #b97078;border-radius:7px;background:radial-gradient(#59343a,#15141b)}
+.enemy-hud-art img{width:100%;height:100%;object-fit:contain}
+.enemy-hud-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.enemy-hud-body strong{color:#ffe1df;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.enemy-hud-health{position:relative;height:22px;background:#291921;border:1px solid #8b565c;border-radius:4px;overflow:hidden}
+.enemy-hud-health i{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,#a92f3d,#e87778)}
+.enemy-hud-health span{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:#fff;font-weight:800;text-shadow:0 1px 3px #000}
+.enemy-hud-status{white-space:nowrap;overflow:hidden;color:#d5c0c1}
+.enemy-hud-status small{font-size:12px;overflow:hidden;text-overflow:ellipsis}
+.enemy-hud-status .dead-label{color:#ffaaaa;font-weight:800}
+#game[data-view=battle] .hud{top:752px;height:184px}
+#game[data-view=battle] .hud-card{background:linear-gradient(150deg,rgba(17,40,58,.97),rgba(17,24,34,.97));border-color:#5986a5;box-shadow:0 5px 16px #0008}
+#game[data-view=battle] .hud-card.empty{background:linear-gradient(#172531e6,#121a23ed);border-color:#4e718a}
+#game[data-view=battle] .hud-card.selected{border-color:#ffe0a2}
+.enemy-hud::before,.hud::before{
+  position:absolute;top:-22px;left:4px;pointer-events:none;
+  font-size:13px;font-weight:900;letter-spacing:2px;text-shadow:0 2px 5px #000;
+}
+.enemy-hud::before{content:'적군  ·  ENEMY TEAM';color:#ffb9ba}
+.hud::before{content:'아군  ·  ALLY TEAM';color:#c5e4ff}
+#game[data-view=battle] .order{
+  background:linear-gradient(150deg,#121e2df5,#10141af2);
+  border-color:#a78a5b;box-shadow:0 8px 22px #0009;
+}
+#game[data-view=battle] .order li{position:relative;height:55px;margin-bottom:4px}
+#game[data-view=battle] .order li.future{border-left-style:dashed;background:#26394aaf;opacity:.82}
+#game[data-view=battle] .order li.next{background:linear-gradient(90deg,#5d4a24,#273e50);opacity:1}
+#game[data-view=battle] .order li>small{position:absolute;top:1px;right:2px;color:#ffe39f;background:#111b;font-size:9px}
+#game[data-view=battle] .result{background:linear-gradient(145deg,#1c2b3dfc,#101720fe);box-shadow:0 20px 65px #000e,inset 0 0 60px #7e643228}
+#game[data-view=battle] .result .actions [data-action=next-stage]{background:linear-gradient(#f8d788,#ad7c35);border-color:#ffe1a1;color:#1e160a;font-weight:900}
+#game[data-view=battle] .result .actions button{white-space:nowrap}
+html.compact #game[data-view=battle] .enemy-hud-body strong{font-size:20px}
+html.compact #game[data-view=battle] .enemy-hud-status small{font-size:15px}

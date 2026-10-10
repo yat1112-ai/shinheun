@@ -142,6 +142,27 @@ export function skillTip(skill) {
   return parts.filter(Boolean).join(' · ');
 }
 
+// Show the next living actors continuously, including predicted upcoming rounds.
+export function actionTimeline(battle, limit = 9) {
+  if (!battle || battle.status !== 'active') return [];
+  const live = [...battle.allies, ...battle.enemies].filter(u => u.hp > 0);
+  if (!live.length) return [];
+  const map = new Map(live.map(u => [u.id,u]));
+  const ranked = [...live].sort((a,b) => b.speed - a.speed || a.id.localeCompare(b.id));
+  const pending = (battle.queue || []).slice(battle.cursor || 0)
+    .map(id => map.get(id)).filter(Boolean);
+  const output = pending.map(unit => ({unit, roundOffset:0}));
+  let offset = pending.length ? 1 : 0;
+  while (output.length < limit) {
+    for (const unit of ranked) {
+      if (output.length >= limit) break;
+      output.push({unit, roundOffset:offset});
+    }
+    offset++;
+  }
+  return output.slice(0, limit);
+}
+
 export const cooldownLeft = (unit, skillId) => Math.max(0, Number(unit?.cooldowns?.[skillId]) || 0);
 export const hpPercent = unit => unit && unit.maxHp > 0 ? Math.max(0, Math.min(100, Math.round(unit.hp / unit.maxHp * 100))) : 0;
 

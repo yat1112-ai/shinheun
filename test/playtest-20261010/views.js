@@ -1,7 +1,7 @@
 // 화면 HTML 생성. 엔진 상태는 읽기만 하고, 상호작용은 data-action 으로 app.js 의 핸들러에 맡긴다.
 import { CHARACTERS, STAGES, SKILLS, ENEMIES, EQUIPMENT, GAME_CONFIG, PRODUCTION } from './data.js';
 import { calculateStats } from './engine.js';
-import { MAX_SIDE, VILLAGE, FORMATIONS, placeSide, formationLabel, actionOrder, skillTip, cooldownLeft, hpPercent, statusChips } from './ui-layout.js';
+import { MAX_SIDE, VILLAGE, FORMATIONS, placeSide, formationLabel, actionTimeline, skillTip, cooldownLeft, hpPercent, statusChips } from './ui-layout.js';
 
 export const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const names = { gold:'금화', herbs:'약초', ore:'광석' };
@@ -88,29 +88,50 @@ function hudCard(u, c) {
   const more = all.length > 2 ? `<span class="chip more" title="${esc(all.slice(2).map(e => `${e.label} ${e.remaining}턴`).join(', '))}">+${all.length - 2}</span>` : '';
   return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${c.selected === u.id ? 'selected' : ''}" data-card="${esc(u.id)}"><div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기" aria-pressed="${c.selected === u.id}">${art(u.characterId, false, 'hud-art')}</button><div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv}</span><div class="hp"><i style="width:${hpPercent(u)}%"></i><span>${u.hp} / ${u.maxHp}</span></div></div></div><div class="skills">${def.skills.map(k => { const cd = cooldownLeft(u, k); return `<span class="skill ${cd > 0 ? 'cool' : 'ready'}" title="${esc(skillTip(SKILLS[k]))}"><em>${esc(SKILLS[k].name)}</em><b>${cd > 0 ? `${cd}턴` : '준비'}</b></span>`; }).join('')}</div><div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
 }
+function enemyHudCard(u) {
+  if (!u) return '<div class="enemy-hud-card vacant" aria-hidden="true">대기 슬롯</div>';
+  const dead = u.hp <= 0;
+  const active = statusChips(u, effects).slice(0,2)
+    .map(e => `<small>${esc(e.label)} ${e.remaining}턴</small>`).join('');
+  return `<article class="enemy-hud-card ${dead ? 'dead' : ''}" data-enemy-card="${esc(u.id)}" aria-label="${unitName(u)} 체력 ${Math.max(0,u.hp)} / ${u.maxHp}">
+    <div class="enemy-hud-art">${art(u.enemyId,true,'enemy-card-art')}</div>
+    <div class="enemy-hud-body"><strong>${unitName(u)}</strong>
+      <div class="enemy-hud-health"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div>
+      <div class="enemy-hud-status">${dead ? '<small class="dead-label">처치</small>' : (active || '<small>상태 없음</small>')}</div>
+    </div>
+  </article>`;
+}
 function resultPanel(b, c) {
   const st = stage(b.stageId), win = b.status === 'victory';
   const receipt = b.result;
-  const first = win && (receipt ? receipt.firstClear : !c.clearedBefore) ? `<p>첫 클리어 보상: ${esc(rewardLine(receipt?.firstClearRewards || st.firstClearRewards || {}))}</p>` : '';
+  const first = win && (receipt ? receipt.firstClear : !c.clearedBefore)
+    ? `<p>첫 클리어 보상: ${esc(rewardLine(receipt?.firstClearRewards || st.firstClearRewards || {}))}</p>` : '';
   const paid = receipt ? { ...receipt.rewards, xp: receipt.xp } : st.rewards;
   const members = receipt?.members.map(id => esc(CHARACTERS[id]?.name || id)).join(', ');
-  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><h2>${win ? '승리' : '패배'}</h2><p class="stage-name">${esc(st.name)}</p>${win ? `<p class="reward">보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p class="paid">보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}<div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${button('view','스테이지 선택','data-id="adventure"')}</div></div>`;
+  const onward = win && st.id < STAGES.length
+    ? button('next-stage','다음 스테이지', `data-id="${st.id + 1}"`)
+    : button('view', win ? '챕터 완료' : '스테이지 선택', `data-id="${win ? 'village' : 'adventure'}"`);
+  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><h2>${win ? '승리' : '패배'}</h2>
+    <p class="stage-name">${esc(st.name)}</p>
+    ${win ? `<p class="reward">보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p class="paid">보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}
+    <div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${onward}</div></div>`;
 }
 function battle(c) {
   const b = c.s.battle || c.lastBattle;
   if (!b) return `<div class="panel-view"><article class="panel"><h2>모험을 시작해 보세요.</h2><p>회중시계에서 스테이지를 고르면 자동 전투가 시작됩니다.</p>${button('view','스테이지 선택','data-id="adventure"')}</article></div>`;
   const allies = placeSide(b.allies, 'ally', u => CHARACTERS[u.characterId]?.role, b.formation), foes = placeSide(b.enemies, 'enemy', null, b.enemyFormation);
   const form = formationLabel(FORMATIONS[allies.formation].front, FORMATIONS[allies.formation].back), selected = b.allies.find(u => u.id === c.selected);
-  const order = actionOrder(b);
+  const order = actionTimeline(b, 9);
   const detail = selected ? (() => { const def = CHARACTERS[selected.characterId]; return `${esc(def.name)} — ${[...def.skills, def.passive].map(k => esc(skillTip(SKILLS[k]) || SKILLS[k]?.name || k)).join(' / ')}`; })() : esc(c.log.slice(-2).join('  ›  ') || '자동 전투 대기 중');
   return `<div class="battle">
 <div class="ground" aria-label="전투 지면">
-<aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map((u, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''}" data-order-unit="${esc(u.id)}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span></li>`).join('')}</ol></aside>
+<aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map(({unit:u,roundOffset}, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''} ${roundOffset ? 'future' : ''}" data-order-unit="${esc(u.id)}" data-round-offset="${roundOffset}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)} · ${roundOffset ? '다음 라운드 예상' : '이번 라운드'}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span>${roundOffset && (i===0 || order[i-1].roundOffset !== roundOffset) ? '<small>다음</small>' : ''}</li>`).join('')}</ol></aside>
 ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed.map(unitMarkup).join('')}${foes.placed.map(unitMarkup).join('')}
 <div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
 <div class="pet-slot" aria-label="펫 슬롯 (준비 중)"><h4>펫</h4><span>준비 중</span></div></aside></div>
-<div class="hud" aria-label="파티 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-hidden="true">빈 자리</div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
+<section class="enemy-hud" aria-label="적군 5인 상태">${b.enemies.map(enemyHudCard).join('')}${Array.from({length:Math.max(0,MAX_SIDE-b.enemies.length)},()=>enemyHudCard(null)).join('')}</section>
+<div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-hidden="true">빈 자리</div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
 ${b.status !== 'active' && c.resultOpen ? resultPanel(b, c) : ''}</div>`;
 }
 
