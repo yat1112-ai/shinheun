@@ -77,16 +77,24 @@ function codex(c) {
   return `<div class="panel-view"><h2>숲의 기록</h2><p class="lead">실제 전투 최종 승리에서만 처치·출전을 기록합니다. 종류별 100처치 보상: 공통 공격 +1.</p><div class="stage-grid">${Object.values(ENEMIES).map(e => { const n = s.codex.kills[e.id] || 0, claimed = s.codex.claimed.includes(e.id); return `<article class="panel codex-entry">${art(e.id, true, 'codex-art')}<h3>${esc(e.name)}</h3><p>${n} / 100 처치</p><progress max="100" value="${Math.min(n, 100)}"></progress>${button('codex', claimed ? '수령 완료' : '공격 +1 수령', `data-id="${e.id}" ${claimed || n < 100 ? 'disabled' : ''}`)}</article>`; }).join('')}</div></div>`;
 }
 
+// HP 구간: 위험(25% 이하)·경고(50% 이하)를 색과 맥동으로 구분한다.
+const hpTier = u => u.hp <= 0 ? 'down' : hpPercent(u) <= 25 ? 'crit' : hpPercent(u) <= 50 ? 'warn' : 'ok';
+// 머리 위 상태 배지: 첫 상태 1개와 나머지 개수만 보여 캐릭터를 가리지 않는다.
+function tagBadge(u) {
+  const all = statusChips(u, effects), raw = u.effects || [];
+  if (!all.length) return '';
+  return `<u class="tag-badge" title="${esc(all.map(e => `${e.label} ${e.remaining}턴`).join(', '))}">${esc(shortEffects[raw[0]?.type] || all[0].label)}${all.length > 1 ? `<b>+${all.length - 1}</b>` : ''}</u>`;
+}
 function unitMarkup(p) {
   const u = p.unit, enemy = u.side === 'enemy', id = u.characterId || u.enemyId;
-  return `<div class="unit ${u.side} ${p.row} ${u.hp <= 0 ? 'fallen' : ''}" data-unit="${esc(u.id)}" style="left:${p.x}px;top:${p.y}px;z-index:${p.z};--s:${p.scale ?? 1}"><div class="tag"><span>${unitName(u)}</span><i class="bar"><b style="width:${hpPercent(u)}%"></b></i></div><div class="sprite">${art(id, enemy, '', true)}</div><i class="shadow"></i></div>`;
+  return `<div class="unit ${u.side} ${p.row} ${u.hp <= 0 ? 'fallen' : ''}" data-unit="${esc(u.id)}" style="left:${p.x}px;top:${p.y}px;z-index:${p.z};--s:${p.scale ?? 1}"><div class="tag ${hpTier(u)}"><span>${unitName(u)}</span><i class="bar" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><b style="width:${hpPercent(u)}%"></b></i><em class="tag-hp">${Math.max(0,u.hp)}<small>/${u.maxHp}</small></em>${u.hp <= 0 ? '' : tagBadge(u)}</div><div class="sprite">${art(id, enemy, '', true)}</div><i class="shadow"></i></div>`;
 }
 function hudCard(u, c) {
   const def = CHARACTERS[u.characterId], lv = c.s.characters[u.characterId]?.level ?? 1;
   const all = statusChips(u, effects), raw = u.effects || [];
   const shown = all.slice(0, 2).map((e, i) => `<span class="chip" title="${esc(e.label)} ${e.remaining}턴">${esc(shortEffects[raw[i]?.type] || e.label)} <b>${e.remaining}턴</b></span>`).join('');
   const more = all.length > 2 ? `<span class="chip more" title="${esc(all.slice(2).map(e => `${e.label} ${e.remaining}턴`).join(', '))}">+${all.length - 2}</span>` : '';
-  return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${c.selected === u.id ? 'selected' : ''}" data-card="${esc(u.id)}"><div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기" aria-pressed="${c.selected === u.id}">${art(u.characterId, false, 'hud-art')}</button><div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv}</span><div class="hp"><i style="width:${hpPercent(u)}%"></i><span>${u.hp} / ${u.maxHp}</span></div></div></div><div class="skills">${def.skills.map(k => { const cd = cooldownLeft(u, k); return `<span class="skill ${cd > 0 ? 'cool' : 'ready'}" title="${esc(skillTip(SKILLS[k]))}"><em>${esc(SKILLS[k].name)}</em><b>${cd > 0 ? `${cd}턴` : '준비'}</b></span>`; }).join('')}</div><div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
+  return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${c.selected === u.id ? 'selected' : ''}" data-card="${esc(u.id)}"><div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기" aria-pressed="${c.selected === u.id}">${art(u.characterId, false, 'hud-art')}</button><div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv}</span><div class="hp ${hpTier(u)}" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div></div></div><div class="skills">${def.skills.map(k => { const cd = cooldownLeft(u, k); return `<span class="skill ${cd > 0 ? 'cool' : 'ready'}" title="${esc(skillTip(SKILLS[k]))}"><em>${esc(SKILLS[k].name)}</em><b>${cd > 0 ? `${cd}턴` : '준비'}</b></span>`; }).join('')}</div><div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
 }
 function enemyHudCard(u) {
   if (!u) return '<div class="enemy-hud-card vacant" aria-hidden="true">대기 슬롯</div>';
@@ -94,7 +102,7 @@ function enemyHudCard(u) {
   const active = statusChips(u, effects).slice(0,2)
     .map(e => `<small>${esc(e.label)} ${e.remaining}턴</small>`).join('');
   return `<article class="enemy-hud-card ${dead ? 'dead' : ''}" data-enemy-card="${esc(u.id)}" aria-label="${unitName(u)} 체력 ${Math.max(0,u.hp)} / ${u.maxHp}">
-    <div class="enemy-hud-art">${art(u.enemyId,true,'enemy-card-art')}</div>
+    
     <div class="enemy-hud-body"><strong>${unitName(u)}</strong>
       <div class="enemy-hud-health"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div>
       <div class="enemy-hud-status">${dead ? '<small class="dead-label">처치</small>' : (active || '<small>상태 없음</small>')}</div>
@@ -122,9 +130,18 @@ function battle(c) {
   const allies = placeSide(b.allies, 'ally', u => CHARACTERS[u.characterId]?.role, b.formation), foes = placeSide(b.enemies, 'enemy', null, b.enemyFormation);
   const form = formationLabel(FORMATIONS[allies.formation].front, FORMATIONS[allies.formation].back), selected = b.allies.find(u => u.id === c.selected);
   const order = actionTimeline(b, 9);
+  const sumHp = units => ({ current:units.reduce((v,u)=>v+Math.max(0,u.hp),0), maximum:units.reduce((v,u)=>v+u.maxHp,0) });
+  const allyHp=sumHp(b.allies), enemyHp=sumHp(b.enemies);
+  const percent=hp=>hp.maximum ? Math.round(hp.current*100/hp.maximum):0;
+
   const detail = selected ? (() => { const def = CHARACTERS[selected.characterId]; return `${esc(def.name)} — ${[...def.skills, def.passive].map(k => esc(skillTip(SKILLS[k]) || SKILLS[k]?.name || k)).join(' / ')}`; })() : esc(c.log.slice(-2).join('  ›  ') || '자동 전투 대기 중');
   return `<div class="battle">
 <div class="ground" aria-label="전투 지면">
+<div class="team-hp-vs" aria-label="아군 대 적군 총 체력">
+  <div class="team-hp ally-side"><span>아군 HP</span><div class="track"><i style="width:${percent(allyHp)}%"></i></div><b>${allyHp.current} / ${allyHp.maximum}</b></div>
+  <strong>VS</strong>
+  <div class="team-hp enemy-side"><b>${enemyHp.current} / ${enemyHp.maximum}</b><div class="track"><i style="width:${percent(enemyHp)}%"></i></div><span>적군 HP</span></div>
+</div>
 <aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map(({unit:u,roundOffset}, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''} ${roundOffset ? 'future' : ''}" data-order-unit="${esc(u.id)}" data-round-offset="${roundOffset}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)} · ${roundOffset ? '다음 라운드 예상' : '이번 라운드'}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span>${roundOffset && (i===0 || order[i-1].roundOffset !== roundOffset) ? '<small>다음</small>' : ''}</li>`).join('')}</ol></aside>
 ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed.map(unitMarkup).join('')}${foes.placed.map(unitMarkup).join('')}
 <div class="ticker" role="status">${detail}</div>
