@@ -1,0 +1,503 @@
+/* 고정 논리 캔버스 1600×1000. 배치는 전부 이 캔버스 안에서 계산하고, 뷰포트 맞춤은 app.js 의 fit() 이 transform 으로만 한다.
+   전체 화면 오버레이·backdrop-filter·mix-blend-mode·밝기 filter 는 쓰지 않는다(모바일 밝기 점검 기준). */
+:root{color-scheme:only light;font-family:'Noto Sans KR','Malgun Gothic',system-ui,sans-serif;--serif:'Noto Serif KR','Nanum Myeongjo','Batang',serif;--ink:#f1e8d4;--muted:#b9ad94;--gold:#d8ae5e;--gold-dim:#8a6c34;--panel:rgba(22,26,33,.95);--panel2:#262c36;--ally:#58a4de;--foe:#e06666;--hp:#5fc37a;--motion-time:700ms}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;overflow:hidden;background:#12161b}
+/* 캔버스 밖 여백(전체화면에서 비율이 다를 때)은 같은 장면 배경이 채운다. */
+body{background:#12161b url(assets/battle-forest.svg) center/cover no-repeat;color:var(--ink)}
+body[data-view=village]{background-image:url(assets/final-hub-bg.webp)}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#game{position:absolute;left:50%;top:50%;width:1600px;height:1000px;transform:translate(-50%,-50%);transform-origin:center;background:#12161b;overflow:hidden;box-shadow:0 0 0 1px #000a}
+button,select,textarea{font:inherit}
+button{cursor:pointer;min-height:44px;border:1px solid var(--gold-dim);border-radius:7px;padding:6px 14px;background:linear-gradient(#41382a,#2a241b);color:#f6e8c4;font-weight:700;font-size:15px;line-height:1.2}
+button:hover:not(:disabled){background:linear-gradient(#55492f,#38301f)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,select:focus-visible{outline:3px solid #7fd0c4;outline-offset:2px}
+button[aria-current=page],button[aria-pressed=true]{background:linear-gradient(#e4be6c,#a97f33);color:#1d1608;border-color:#f0d594}
+select{min-height:40px;max-width:100%;padding:6px 8px;border:1px solid var(--gold-dim);border-radius:6px;background:#1a1f27;color:var(--ink);font-size:14px}
+input[type=checkbox]{width:22px;height:22px}
+h1,h2,h3,h4{font-family:var(--serif);margin:0;font-weight:700}
+h2{font-size:26px;color:#f7dc9a}
+h3{font-size:17px;margin-bottom:6px}
+p{line-height:1.5;margin:6px 0 10px;font-size:15px}
+small{color:var(--muted);font-size:13px;line-height:1.4}
+progress{accent-color:var(--hp);max-width:100%;width:100%;height:12px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;align-items:center}
+.actions label{min-height:44px;display:inline-flex;align-items:center;gap:8px;font-size:15px}
+.panel{background:var(--panel);border:1px solid var(--gold-dim);border-radius:10px;padding:12px 14px;box-shadow:0 4px 14px #0008}
+
+/* 상단 바 */
+#topbar{position:absolute;left:0;right:0;top:0;height:56px;z-index:6;display:flex;align-items:center;gap:12px;padding:0 14px;background:linear-gradient(#2a2f39,#161a21);border-bottom:2px solid var(--gold-dim)}
+#top-info{flex:1;min-width:0;overflow:hidden}
+.brand small{display:block;color:var(--gold);font-size:12px;letter-spacing:.04em}
+.brand h1{font-size:20px;line-height:1.15;white-space:nowrap}
+#resources{font-size:14px;font-weight:700;color:#f7dc9a;white-space:nowrap}
+#cloud-controls{display:flex;align-items:center;gap:6px}
+#cloud-status{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:4px 10px;border-radius:12px;background:#0d1015;border:1px solid #3a4150;font-size:12px;color:var(--muted)}
+#top-tools{display:flex;gap:6px}
+#cloud-controls button,#top-tools button{padding:4px 12px;font-size:14px}
+#game[data-view=battle] #cloud-controls{display:none}
+#game[data-view=battle][data-alert="1"] #cloud-controls{display:flex}
+#game[data-view=battle][data-alert="1"] #resources{display:none}
+.battle-info{display:flex;align-items:center;gap:14px}
+.battle-info .stage-title small{display:block;color:var(--gold);font-size:12px}
+.battle-info h1{font-size:18px;white-space:nowrap}
+.battle-info .turn{display:flex;flex-direction:column;line-height:1.15;padding:0 12px;border-left:1px solid #3a4150;border-right:1px solid #3a4150}
+.battle-info .turn small{font-size:11px}
+.battle-info .turn b{font-size:16px;color:#f7dc9a;white-space:nowrap}
+.battle-info .turn span{font-size:12px;color:var(--muted)}
+.speed{display:flex;gap:4px}
+.speed button{min-width:48px;padding:4px 8px}
+
+/* 하단 메뉴 */
+#content{position:absolute;left:0;right:0;top:56px;bottom:56px}
+#game[data-view=battle] #content{bottom:0}
+#nav{position:absolute;left:0;right:0;bottom:0;height:56px;z-index:6;display:flex;align-items:center;gap:8px;padding:0 14px;background:linear-gradient(#1c212a,#0f1217);border-top:2px solid var(--gold-dim)}
+#nav button{min-width:96px}
+#game[data-view=battle] #nav,#game[data-view=battle] #status-line{display:none}
+#status-line{position:absolute;right:16px;bottom:0;height:56px;z-index:7;display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted);pointer-events:none}
+
+/* 마을 */
+#game[data-view=village] #topbar{height:112px}
+#game[data-view=village] #content{top:112px;bottom:112px}
+#game[data-view=village] #nav{height:112px;justify-content:center}
+#game[data-view=village] #status-line{bottom:8px;height:20px;right:24px}
+.hub-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;pointer-events:none}
+.spot{position:absolute;display:flex;align-items:flex-end;justify-content:center;padding:8px;background:none;border:0;border-radius:12px;text-align:center}
+.spot:hover:not(:disabled){background:#f5d58b18}
+.spot.future,.spot:disabled{opacity:1;cursor:default}
+.plate{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px;border:2px solid var(--gold);border-radius:10px;background:linear-gradient(#3a2f1cee,#201a10ee);box-shadow:0 4px 10px #0008;color:#fff1c8}
+.plate b{font-family:var(--serif);font-size:22px;white-space:nowrap}
+.plate small{color:#e9dcb8}
+.claim-card,.status-card{position:absolute;overflow:auto}
+.plain{list-style:none;margin:12px 0;padding:0;line-height:2;font-size:18px}
+.claim-card button{width:100%}
+.status-card .line{display:block;overflow-wrap:anywhere;margin-top:6px}
+.clock-spot{isolation:isolate}
+.clock-base,.clock-rotor{position:absolute;left:25px;top:0;width:260px;height:320px;object-fit:contain;pointer-events:none;z-index:-1}
+.clock-rotor{animation:clock-spin 22s linear infinite}
+@keyframes clock-spin{to{transform:rotate(360deg)}}
+.village-scene{position:absolute;inset:0;background:url(assets/village.svg) center bottom/cover no-repeat}
+.welcome{position:absolute;left:310px;top:16px;text-shadow:0 2px 8px #000d}
+.welcome small{color:#ffe9b0}
+.welcome h2{font-size:28px;color:#fff3d0}
+.side-panels{position:absolute;left:14px;top:14px;width:276px;display:flex;flex-direction:column;gap:10px}
+.side-panels .panel button,.side-panels select{width:100%}
+.side-panels p{font-size:14px;margin:4px 0 8px}
+.side-panels .actions button{flex:1}
+.clock-plaque{position:absolute;left:52%;top:50px;transform:translateX(-50%);width:230px;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;min-height:0}
+.clock-plaque:hover:not(:disabled){background:none}
+.clock-plaque img{width:136px;height:136px;filter:drop-shadow(0 8px 10px #0008);animation:float 5s ease-in-out infinite}
+.clock-plaque b{padding:6px 18px;font-family:var(--serif);font-size:20px;color:#fff1c8;background:linear-gradient(#3a2f1c,#201a10);border:2px solid var(--gold);border-radius:8px}
+.clock-plaque small{padding:2px 10px;border-radius:8px;background:#000a;color:#ffe9b0;font-size:13px}
+.clock-plaque:hover b,.clock-plaque:focus-visible b{background:linear-gradient(#5b4721,#32281a)}
+@keyframes float{50%{transform:translateY(-6px)}}
+.village-party{position:absolute;left:304px;bottom:14px;display:flex;gap:8px}
+.village-party figure{margin:0;width:68px;text-align:center}
+.village-party img{width:68px;height:90px;object-fit:cover;border:2px solid var(--gold);border-radius:8px;display:block;box-shadow:0 4px 8px #0008}
+.village-party figcaption{margin-top:2px;font-size:13px;font-weight:700;color:#fff3d0;text-shadow:0 1px 4px #000}
+.plaques{position:absolute;right:16px;bottom:14px;display:flex;gap:10px}
+.plaque{width:200px;min-height:78px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;padding:8px 10px;text-align:center;color:#fff1c8;background:linear-gradient(#3a2f1c,#201a10);border:2px solid var(--gold);border-radius:10px;box-shadow:0 4px 10px #0009}
+.plaque b{font-family:var(--serif);font-size:19px}
+.plaque small{color:#e9dcb8;font-size:13px}
+button.plaque:disabled{opacity:.72;border-style:dashed}
+.plaque.future{opacity:.72;border-style:dashed;border-color:var(--gold-dim)}
+
+/* 패널형 화면(모험·동료·가방·도감·파견) */
+#game:not([data-view=village]):not([data-view=battle]) #content{background:linear-gradient(rgba(12,15,20,.86),rgba(12,15,20,.92)),url(assets/battle-forest.svg) center/cover}
+.panel-view{height:100%;overflow:auto;padding:14px 24px;overscroll-behavior:contain}
+.lead{color:var(--muted);font-size:14px;margin:4px 0 12px}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px}
+.section-title p{margin:0;font-weight:700;color:#f7dc9a}
+.stage-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.stage h3{font-size:16px}
+.stage p{font-size:13px;margin:4px 0 8px}
+.stage button{width:100%}
+.stage.cleared{border-color:#6fae7b}
+.stage.locked{opacity:.65}
+.character-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.character{display:flex;gap:12px}
+.card-art{width:104px;height:139px;object-fit:cover;border:2px solid var(--gold);border-radius:8px;flex:none}
+.character-body{flex:1;min-width:0}
+.character-body p{font-size:13px;margin:4px 0 8px}
+.equip-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin:8px 0}
+.equipment-label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+.codex-art{width:80px;height:80px;object-fit:contain;transform:scaleX(-1)}
+
+/* 전투 */
+.battle{position:absolute;inset:0;background:#12161b}
+.battle h4{font-size:13px;color:var(--gold);margin-bottom:4px}
+.order{position:absolute;left:8px;top:8px;width:100px;height:720px;padding:6px 5px;background:#12161bb3;border:1px solid var(--gold-dim);border-radius:8px;overflow:hidden;z-index:500}
+.order ol{list-style:none;margin:0;padding:0}
+.order li{display:flex;align-items:center;gap:4px;height:32px;margin-bottom:2px;padding-left:3px;border-left:3px solid var(--ally);border-radius:3px;background:#1b2028;font-size:12px}
+.order li.enemy{border-left-color:var(--foe)}
+.order li.next{outline:2px solid var(--gold);background:#3a2f1c}
+.order li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini{width:26px;height:26px;object-fit:cover;border-radius:4px;flex:none}
+.mini.enemy-art{object-fit:contain;transform:scaleX(-1)}
+.ground{position:absolute;left:0;top:0;width:1600px;height:944px;overflow:hidden;isolation:isolate;background:url(assets/battle-forest.svg) center/cover no-repeat}
+/* 쿼터뷰 바닥: 위가 좁고 아래가 넓은 사다리꼴. 좌우 진영 색을 같은 면에 깔아 면적을 넓게 쓴다. */
+.floor{position:absolute;inset:0;clip-path:polygon(5% 100%,16% 20%,84% 20%,95% 100%);background:repeating-linear-gradient(180deg,#0000 0 34px,#0003 34px 36px),linear-gradient(90deg,#3b6fa044,#0000 42%,#0000 58%,#a8434344),linear-gradient(#4d6a33,#5f7d3b 55%,#3c552b)}
+.center-line{position:absolute;left:50%;top:76px;bottom:0;width:2px;background:linear-gradient(#0000,#fff4,#0000)}
+.unit{position:absolute;width:124px;margin-left:-62px;display:flex;flex-direction:column;align-items:center;transform:translateY(-100%) scale(var(--s,1));transform-origin:50% 100%}
+.tag{display:flex;flex-direction:column;align-items:center;gap:2px;height:34px;width:100%}
+.tag span{font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 4px #000,0 0 3px #000;white-space:nowrap}
+.bar{display:block;width:76px;height:8px;border-radius:4px;background:#0b0d10;border:1px solid #000;overflow:hidden}
+.bar b{display:block;height:100%;background:linear-gradient(#8be3a1,var(--hp))}
+.enemy .bar b{background:linear-gradient(#f08a8a,#c94a4a)}
+.sprite{position:relative}
+.art{display:block}
+.unit .ally-art{width:104px;height:124px;box-sizing:border-box;object-fit:cover;border:3px solid var(--gold);border-radius:9px;box-shadow:0 6px 10px #0008}
+.enemy .sprite .enemy-art{width:104px;height:124px;box-sizing:border-box;border:3px solid #a44;border-radius:9px;object-fit:contain;transform:scaleX(-1)}
+.shadow{position:absolute;left:50%;bottom:-8px;width:104px;height:20px;margin-left:-52px;border-radius:50%;background:#0006;z-index:-1}
+.ally .shadow{box-shadow:0 0 0 2px #58a4de99}
+.enemy .shadow{box-shadow:0 0 0 2px #e0666699}
+.unit.fallen{opacity:.35}
+.unit.fallen .sprite{filter:grayscale(1)}
+.ally.acting .sprite{animation:lunge-r var(--motion-time) ease-out}
+.enemy.acting .sprite{animation:lunge-l var(--motion-time) ease-out}
+.hit .sprite{animation:impact var(--motion-time)}
+.healing .sprite{animation:glow var(--motion-time) ease-out}
+@keyframes lunge-r{40%{transform:translateX(34px)}}
+@keyframes lunge-l{40%{transform:translateX(-34px)}}
+@keyframes impact{30%{transform:translateX(-8px);opacity:.55}}
+@keyframes glow{30%{filter:drop-shadow(0 0 12px #9bf5ad)}}
+.float{position:absolute;left:50%;top:28px;transform:translateX(-50%);font-size:24px;font-weight:900;color:#ff8f8f;text-shadow:0 2px 4px #000,0 0 6px #000;pointer-events:none;animation:floatup 900ms ease-out forwards;z-index:3}
+.float.heal{color:#8dffa6}
+@keyframes floatup{from{transform:translate(-50%,0);opacity:1}to{transform:translate(-50%,-44px);opacity:0}}
+.ticker{position:absolute;left:330px;right:330px;top:8px;min-height:30px;display:flex;align-items:center;padding:3px 12px;background:#000b;border-radius:6px;font-size:14px;color:#f1e8d4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:400}
+.formation{position:absolute;left:1482px;top:8px;width:110px;height:112px;padding:6px 5px;text-align:center;background:#12161bb3;border:1px solid var(--gold-dim);border-radius:8px;z-index:500}
+.formation .letter{display:block;font-family:var(--serif);font-size:40px;line-height:1.1;color:#f7dc9a}
+.formation span{display:block;font-size:12px;line-height:1.3}
+.formation small{font-size:11px}
+.hud{position:absolute;left:120px;top:752px;width:1360px;height:184px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;z-index:600}
+.hud-card{display:flex;flex-direction:column;gap:3px;min-width:0;padding:6px;background:#1b2028d9;border:1px solid var(--gold-dim);border-radius:8px}
+.hud-top{display:flex;gap:8px;min-width:0}
+.hud-main .lv{font-size:12px;color:var(--muted)}
+.hud-card.selected{border-color:#f0d594;box-shadow:0 0 0 2px #f0d59488}
+.hud-card.fallen{opacity:.55}
+.hud-card.empty{align-items:center;justify-content:center;border-style:dashed;color:var(--muted);font-size:13px;background:#12161bcc}
+.hud-portrait{flex:none;width:52px;height:52px;min-height:0;padding:0;overflow:hidden;border:2px solid var(--gold);border-radius:6px}
+.hud-art{width:100%;height:100%;object-fit:cover}
+.hud-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.hud-main strong{font-size:15px;white-space:nowrap}
+.hud-main strong small{font-size:12px}
+.hp{position:relative;height:17px;border-radius:4px;background:#0b0d10;border:1px solid #000;overflow:hidden}
+.hp i{position:absolute;inset:0 auto 0 0;background:linear-gradient(#8be3a1,var(--hp))}
+.hp span{position:absolute;inset:0;text-align:center;font-size:12px;font-weight:800;line-height:15px;text-shadow:0 1px 2px #000}
+.skills{display:flex;flex-direction:column;gap:2px}
+.skill{display:flex;justify-content:space-between;gap:4px;padding:1px 5px;border-radius:4px;background:#2b3039;border:1px solid var(--gold-dim);font-size:12px}
+.skill em{font-style:normal;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.skill b{flex:none;color:#9fe6ae}
+.skill.cool{border-color:#444b58;color:var(--muted)}
+.skill.cool b{color:#ffcf8a}
+.status{display:flex;flex-wrap:nowrap;gap:3px;overflow:hidden;height:18px}
+.chip{flex:none;padding:0 5px;border-radius:9px;background:#34506a;font-size:11px;line-height:18px;white-space:nowrap}
+.chip b{color:#ffe08a}
+.chip.none{background:none;color:#7f8796;padding:0}
+.pet-slot{position:absolute;left:1482px;top:128px;width:110px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--gold-dim);border-radius:8px;background:#12161b99;text-align:center;z-index:500}
+.pet-slot span{font-size:13px;color:var(--muted)}
+.result{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:540px;padding:20px 28px;text-align:center;z-index:900;background:rgba(18,21,28,.97);border:3px solid var(--gold);border-radius:14px;box-shadow:0 10px 40px #000c}
+.result h2{font-size:48px;letter-spacing:.2em}
+.result.lose h2{color:#e8908f}
+.result .stage-name{font-family:var(--serif);font-size:18px;margin:2px 0 8px;color:var(--muted)}
+.result .actions{justify-content:center;margin-top:14px}
+
+/* 대화상자·알림 */
+dialog{border:2px solid var(--gold-dim);border-radius:14px;background:#1b2028;color:var(--ink);padding:24px;width:640px;max-width:92vw;max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 20px 80px #0008}
+dialog::backdrop{background:#0a0d12cc}
+#story p{font-size:20px;line-height:1.7;min-height:100px}
+#story-next{float:right}
+textarea{width:100%;height:200px;resize:vertical;padding:12px;background:#10141a;color:var(--ink);border:1px solid var(--gold-dim);border-radius:8px;font-family:monospace;font-size:12px}
+#notice{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:20;max-width:90vw;padding:10px 20px;background:#2d4a3a;color:#fff;border:1px solid #6fae7b;border-radius:10px;font-size:14px;pointer-events:none}
+#notice:empty{display:none}
+/* 전투·결과의 하단 HP/스킬을 알림이 덮지 않도록 한다. 클라우드 오류/복구 조작은 상단에 유지된다. */
+body[data-view=battle] #notice{display:none}
+#rotation-hint{display:none}
+@media(orientation:portrait){#rotation-hint{display:block;position:fixed;left:0;right:0;top:0;z-index:30;padding:8px 14px;background:var(--gold);color:#1d1608;font-size:13px;font-weight:700}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important}}
+
+
+/* SHINHEUN TOUCH ACCESSIBILITY 2026-10-10 */
+/* Logical pixels; final screen size is multiplied by the viewport fit scale. */
+#game[data-view=village] #nav button{min-width:106px;min-height:66px;font-size:19px;padding:12px 18px}
+#game[data-view=village] #cloud-controls button,
+#game[data-view=village] #top-tools button{min-height:60px;font-size:17px;padding:8px 16px}
+#game[data-view=village] .plate{min-width:112px;min-height:66px;justify-content:center}
+#game[data-view=village] .plate b{font-size:27px}
+#game[data-view=village] .plate small{font-size:17px}
+#game[data-view=village] .claim-card button{min-height:62px;font-size:19px}
+#game[data-view=village] .claim-card h3,
+#game[data-view=village] .status-card h3{font-size:22px}
+#game[data-view=village] .claim-card li{font-size:21px;line-height:1.8}
+#game[data-view=village] .status-card p{font-size:18px;line-height:1.6}
+#game:not([data-view=battle]) .panel-view button{min-height:60px;font-size:18px}
+html.compact #game[data-view=village] #topbar{height:150px;gap:8px;padding:0 12px}
+html.compact #game[data-view=village] #content{top:150px;bottom:144px}
+html.compact #game[data-view=village] #nav{height:144px;gap:10px;padding:0 10px}
+html.compact #game[data-view=village] #nav button{min-height:124px;min-width:170px;font-size:34px;padding:10px 14px}
+html.compact #game[data-view=village] #top-info{max-width:260px}
+html.compact #game[data-view=village] .brand h1{font-size:30px}
+html.compact #game[data-view=village] .brand small{font-size:22px}
+html.compact #game[data-view=village] #resources{font-size:22px}
+html.compact #game[data-view=village] #cloud-status{font-size:18px;max-width:170px}
+html.compact #game[data-view=village] #cloud-controls button,
+html.compact #game[data-view=village] #top-tools button{min-height:118px;font-size:28px;padding:8px 13px}
+html.compact #game[data-view=village] .plate{min-width:154px;min-height:108px;padding:12px 15px;gap:6px}
+html.compact #game[data-view=village] .plate b{font-size:39px}
+html.compact #game[data-view=village] .plate small{font-size:27px}
+html.compact #game[data-view=village] .claim-card{width:290px!important}
+html.compact #game[data-view=village] .status-card{width:320px!important;left:1264px!important}
+html.compact #game[data-view=village] .claim-card h3,
+html.compact #game[data-view=village] .status-card h3{font-size:28px}
+html.compact #game[data-view=village] .claim-card li{font-size:26px;line-height:1.65}
+html.compact #game[data-view=village] .status-card p{font-size:23px}
+html.compact #game[data-view=village] .claim-card button{min-height:116px;font-size:29px}
+html.compact #game[data-view=village] #status-line{display:none}
+html.compact #game[data-view=village] .spot{padding:0}
+html.compact #game:not([data-view=battle]):not([data-view=village]) #nav{height:126px;gap:10px;justify-content:center}
+html.compact #game:not([data-view=battle]):not([data-view=village]) #nav button{min-height:106px;min-width:170px;font-size:32px}
+html.compact #game:not([data-view=battle]):not([data-view=village]) #content{bottom:126px}
+html.compact #game:not([data-view=battle]) .panel-view button{min-height:104px;font-size:30px}
+html.compact #game:not([data-view=battle]) .panel-view select{min-height:95px;font-size:26px}
+
+/* 20261010 standalone preview: hide nonfunctional cloud auth */
+#login,#logout {display:none !important;}
+
+/* 20261010 battle UI renewal — logical 1600×1000 canvas; geometry of .order/.formation/.pet-slot/.hud stays in sync with UI_RECTS */
+#game[data-view=battle] #topbar{gap:10px;padding:0 12px;background:linear-gradient(#303744,#161a21)}
+#game[data-view=battle] #top-info{overflow:visible}
+#game[data-view=battle] #resources{display:none}
+#game[data-view=battle] #top-tools button[data-action=save]{display:none}
+#game[data-view=battle] #top-tools button{min-height:48px;min-width:96px;padding:4px 16px;font-size:19px}
+.battle-info{gap:10px;width:100%}
+.battle-info .info-chip{display:flex;align-items:center;gap:6px;min-height:48px;padding:2px 14px;border-radius:8px;background:#0d1015;border:1px solid #4a5263;font-size:17px;font-weight:700;white-space:nowrap}
+.battle-info .info-chip b{font-size:20px;color:#ffe08a}
+.battle-info .stage-title{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;line-height:1.1;min-width:0;max-width:480px;overflow:hidden}
+.battle-info .stage-title small{font-size:13px;color:var(--gold)}
+.battle-info .stage-title strong{font-size:20px;font-family:var(--serif);color:#fff1c8;overflow:hidden;text-overflow:ellipsis}
+.speed{gap:6px;margin-left:auto}
+.speed button{min-width:64px;min-height:48px;padding:4px 10px;font-size:21px}
+.battle-info>button{min-height:48px;min-width:96px;font-size:19px}
+/* 바닥: 쿼터뷰 사다리꼴 면적을 크게 */
+.ground::before{content:"";position:absolute;left:0;top:96px;width:1600px;height:660px;z-index:0;clip-path:polygon(2% 100%,13% 0,87% 0,98% 100%);background:repeating-linear-gradient(180deg,#0000 0 54px,#0003 54px 56px),linear-gradient(90deg,#3b6fa04d,#0000 42%,#0000 58%,#a843434d),linear-gradient(#4d6a33,#5f7d3b 50%,#3a5229);pointer-events:none}
+.ground::after{content:"";position:absolute;left:799px;top:96px;width:2px;height:660px;background:linear-gradient(#0000,#fff5,#0000);z-index:0;pointer-events:none}
+.slot-pad{position:absolute;width:132px;height:38px;margin:-19px 0 0 -66px;border-radius:50%;border:2px dashed #fff6;background:#0003;z-index:0;pointer-events:none}
+.slot-pad.ally{border-color:#58a4deaa}
+.slot-pad.enemy{border-color:#e06666aa}
+.slot-pad.front{background:#0005}
+/* 행동 순서 */
+.order{background:#12161bd9;border:2px solid var(--gold-dim);padding:8px 6px}
+.order h4{font-size:16px;text-align:center;padding-bottom:4px;border-bottom:1px solid var(--gold-dim);margin-bottom:6px}
+.order li{height:60px;margin-bottom:4px;gap:5px;padding-left:4px;font-size:14px;font-weight:700}
+.order li .mini{width:44px;height:52px;flex:none;object-fit:cover;border-radius:5px}
+.order li.next{outline:3px solid var(--gold);background:#4a3b1c;font-size:15px}
+.ticker{left:330px;right:330px;min-height:38px;top:8px;font-size:17px;padding:5px 14px;background:#000c}
+.formation{background:#12161bd9;border:2px solid var(--gold-dim)}
+.formation span{font-size:14px}
+.pet-slot{background:#12161bd9}
+.pet-slot span{font-size:15px}
+/* 하단 파티 카드 */
+.hud{gap:12px}
+.hud-card{gap:6px;padding:8px 10px;background:#1b2028f2;border:2px solid var(--gold-dim);border-radius:10px;justify-content:space-between}
+.hud-top{gap:10px}
+.hud-portrait{width:76px;height:76px;min-height:76px;border-width:3px;border-radius:8px}
+.hud-main{gap:4px;justify-content:center}
+.hud-main strong{font-size:21px;line-height:1.1}
+.hud-main .lv{font-size:15px;color:#d8ccb0}
+.hp{height:24px;border-radius:5px}
+.hp span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 3px #000,0 0 2px #000}
+.skills{flex-direction:row;gap:6px}
+.skill{flex:1;min-width:0;min-height:38px;flex-direction:column;justify-content:center;align-items:center;gap:0;padding:2px 6px;border-radius:6px;font-size:15px;line-height:1.15;text-align:center}
+.skill em{max-width:100%;font-weight:700}
+.skill b{font-size:14px}
+.skill.ready{background:#2d4638;border-color:#6fae7b}
+.status{display:flex;gap:4px;min-height:24px;align-items:center;overflow:hidden}
+.chip{font-size:14px;line-height:24px;padding:0 8px;border-radius:12px}
+.chip.none{font-size:14px}
+.hud-card.empty{font-size:18px;font-weight:700;border-width:2px;color:#9aa1ad}
+.hud-card.fallen{opacity:.6}
+/* 결과 */
+.result{width:760px;padding:28px 36px 30px;border-width:4px;top:42%}
+.result.win{border-color:#f0d594}
+.result.lose{border-color:#e8908f}
+.result h2{font-size:64px}
+.result .stage-name{font-size:24px;margin:2px 0 14px}
+.result p{font-size:21px;line-height:1.5;margin:6px 0}
+.result .reward{font-size:25px;font-weight:800;color:#ffe08a}
+.result .paid{color:#9fe6ae}
+.result .actions{gap:12px;margin-top:20px;flex-wrap:nowrap}
+.result .actions button{flex:1;min-height:72px;font-size:24px}
+.result .actions button:first-child{background:linear-gradient(#e4be6c,#a97f33);color:#1d1608;border-color:#f0d594}
+/* 컴팩트(축소 배율 < 0.65: 모바일 가로·PC 1366×768) 전투 화면: 터치 면적 추가 확대 */
+html.compact #game[data-view=battle] #topbar{height:84px;gap:8px;padding:0 10px}
+html.compact #game[data-view=battle] .battle-info{gap:8px}
+html.compact #game[data-view=battle] .battle-info .info-chip{min-height:68px;font-size:22px;padding:2px 14px}
+html.compact #game[data-view=battle] .battle-info .info-chip b{font-size:28px}
+html.compact #game[data-view=battle] .battle-info .stage-title small{font-size:17px}
+html.compact #game[data-view=battle] .battle-info .stage-title strong{font-size:26px}
+html.compact #game[data-view=battle] .speed button{min-width:96px;min-height:68px;font-size:30px}
+html.compact #game[data-view=battle] .battle-info>button,html.compact #game[data-view=battle] #top-tools button{min-height:68px;min-width:130px;font-size:26px}
+html.compact #game[data-view=battle] .order{padding-top:30px}
+html.compact #game[data-view=battle] .ticker{top:30px;font-size:20px}
+html.compact #game[data-view=battle] .formation{margin-top:28px}
+html.compact #game[data-view=battle] .pet-slot{margin-top:28px}
+html.compact #game[data-view=battle] .hud-main strong{font-size:24px}
+html.compact #game[data-view=battle] .skill{font-size:17px}
+html.compact #game[data-view=battle] .result{width:900px}
+html.compact #game[data-view=battle] .result .actions button{min-height:104px;font-size:32px}
+
+
+/* P2 battle UI: dual five-slot roster, living-action forecast, game-style overlay */
+#game[data-view=battle] .ground {
+  background:linear-gradient(180deg,rgba(6,11,19,.18),rgba(6,14,21,.38) 46%,rgba(6,15,23,.79) 100%),url(assets/battle-bg.webp) center/cover no-repeat;
+}
+#game[data-view=battle] .ground::before{
+  left:114px;top:115px;width:1370px;height:508px;
+  clip-path:polygon(4% 100%,19% 0%,81% 0%,96% 100%);
+  background:repeating-linear-gradient(180deg,transparent 0 91px,rgba(252,218,161,.065) 92px,transparent 94px),radial-gradient(ellipse at 49% 63%,rgba(108,83,57,.26),rgba(29,48,39,.3) 59%,rgba(13,24,27,.62));
+  box-shadow:inset 0 0 90px #0009;
+}
+#game[data-view=battle] .ground::after{left:799px;top:130px;height:490px;opacity:.16}
+#game[data-view=battle] .slot-pad{opacity:.72;box-shadow:0 0 18px #0007}
+.enemy-hud{
+  position:absolute;left:120px;top:622px;width:1360px;height:118px;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;
+  z-index:590;
+}
+.enemy-hud-card{
+  display:flex;gap:10px;align-items:center;min-width:0;
+  padding:10px;background:linear-gradient(140deg,rgba(49,25,34,.98),rgba(14,21,31,.97));
+  border:2px solid #99585e;border-radius:10px;
+  box-shadow:0 5px 18px #0009,inset 0 0 15px #5b24242c;
+}
+.enemy-hud-card.dead{filter:grayscale(.8);opacity:.63}
+.enemy-hud-card.vacant{justify-content:center;background:#16171cda;border:2px dashed #836067;color:#d8a2a4;font-size:16px;font-weight:700}
+.enemy-hud-art{flex:none;width:70px;height:84px;overflow:hidden;border:2px solid #b97078;border-radius:7px;background:radial-gradient(#59343a,#15141b)}
+.enemy-hud-art img{width:100%;height:100%;object-fit:contain}
+.enemy-hud-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.enemy-hud-body strong{color:#ffe1df;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.enemy-hud-health{position:relative;height:22px;background:#291921;border:1px solid #8b565c;border-radius:4px;overflow:hidden}
+.enemy-hud-health i{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,#a92f3d,#e87778)}
+.enemy-hud-health span{position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:#fff;font-weight:800;text-shadow:0 1px 3px #000}
+.enemy-hud-status{white-space:nowrap;overflow:hidden;color:#d5c0c1}
+.enemy-hud-status small{font-size:12px;overflow:hidden;text-overflow:ellipsis}
+.enemy-hud-status .dead-label{color:#ffaaaa;font-weight:800}
+#game[data-view=battle] .hud{top:752px;height:184px}
+#game[data-view=battle] .hud-card{background:linear-gradient(150deg,rgba(17,40,58,.97),rgba(17,24,34,.97));border-color:#5986a5;box-shadow:0 5px 16px #0008}
+#game[data-view=battle] .hud-card.empty{background:linear-gradient(#172531e6,#121a23ed);border-color:#4e718a}
+#game[data-view=battle] .hud-card.selected{border-color:#ffe0a2}
+.enemy-hud::before,.hud::before{
+  position:absolute;top:-22px;left:4px;pointer-events:none;
+  font-size:13px;font-weight:900;letter-spacing:2px;text-shadow:0 2px 5px #000;
+}
+.enemy-hud::before{content:'적군  ·  ENEMY TEAM';color:#ffb9ba}
+.hud::before{content:'아군  ·  ALLY TEAM';color:#c5e4ff}
+#game[data-view=battle] .order{
+  background:linear-gradient(150deg,#121e2df5,#10141af2);
+  border-color:#a78a5b;box-shadow:0 8px 22px #0009;
+}
+#game[data-view=battle] .order li{position:relative;height:55px;margin-bottom:4px}
+#game[data-view=battle] .order li.future{border-left-style:dashed;background:#26394aaf;opacity:.82}
+#game[data-view=battle] .order li.next{background:linear-gradient(90deg,#5d4a24,#273e50);opacity:1}
+#game[data-view=battle] .order li>small{position:absolute;top:1px;right:2px;color:#ffe39f;background:#111b;font-size:9px}
+#game[data-view=battle] .result{background:linear-gradient(145deg,#1c2b3dfc,#101720fe);box-shadow:0 20px 65px #000e,inset 0 0 60px #7e643228}
+#game[data-view=battle] .result .actions [data-action=next-stage]{background:linear-gradient(#f8d788,#ad7c35);border-color:#ffe1a1;color:#1e160a;font-weight:900}
+#game[data-view=battle] .result .actions button{white-space:nowrap}
+html.compact #game[data-view=battle] .enemy-hud-body strong{font-size:20px}
+html.compact #game[data-view=battle] .enemy-hud-status small{font-size:15px}
+
+
+/* GP-01: dark RPG HP information hierarchy; no enemy bottom portraits */
+#game[data-view=battle] .team-hp-vs{position:absolute;left:290px;top:52px;width:1020px;height:44px;z-index:420;display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);align-items:center;gap:10px;padding:5px 14px;background:linear-gradient(90deg,#0b1827e9,#19202aea,#27131aeb);border:1px solid #947947aa;border-radius:9px;box-shadow:0 7px 18px #0009}
+.team-hp-vs>strong{text-align:center;color:#f6dba1;font:900 20px Georgia,serif;text-shadow:0 2px 3px #000}
+.team-hp{display:flex;align-items:center;gap:8px;min-width:0}
+.team-hp span,.team-hp b{flex:none;font-size:13px;font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums}
+.team-hp b{color:#fff}.team-hp.ally-side span{color:#a8d4f8}.team-hp.enemy-side span{color:#ffc0c1}
+.team-hp .track{flex:1;min-width:20px;height:14px;border:1px solid #d6d8e35c;background:#090c10;border-radius:7px;overflow:hidden;box-shadow:inset 0 0 4px #000}
+.team-hp .track i{display:block;height:100%;transition:width .28s ease-out}
+.team-hp.ally-side .track i{background:linear-gradient(#98eaff,#317cac)}
+.team-hp.enemy-side .track i{background:linear-gradient(#ff9a99,#b53139)}
+#game[data-view=battle] .enemy-hud-card{padding:12px 15px}
+#game[data-view=battle] .enemy-hud-card:not(.vacant){background:linear-gradient(155deg,#44252e,#1b222e 70%,#1d1b25)}
+#game[data-view=battle] .enemy-hud-body{justify-content:center;gap:8px}
+#game[data-view=battle] .enemy-hud-body strong{font-size:20px;letter-spacing:.3px}
+#game[data-view=battle] .enemy-hud-health{height:29px;border-radius:6px;border:2px solid #9c555a}
+#game[data-view=battle] .enemy-hud-health i{background:linear-gradient(180deg,#fa908f 0%,#c13f4b 65%,#9e2b3a)}
+#game[data-view=battle] .enemy-hud-health span{font-size:17px;text-shadow:0 1px 4px #09080a}
+#game[data-view=battle] .enemy-hud-status small{font-size:14px;color:#d8baba}
+#game[data-view=battle] .enemy-hud-card.dead{background:linear-gradient(#2c2629,#1c1d20);filter:none;opacity:.8;border-color:#69565a}
+#game[data-view=battle] .enemy-hud-card.dead .enemy-hud-health i{background:#615760}
+#game[data-view=battle] .hud .hp{height:22px;border-radius:5px;border:1px solid #7eafbb}
+#game[data-view=battle] .hud .hp span{font-size:13px;line-height:20px;font-variant-numeric:tabular-nums}
+#game[data-view=battle] .hud .hp i{background:linear-gradient(180deg,#adfbce,#2d9c62)}
+#game[data-view=battle] .hud .hp.warn i{background:linear-gradient(180deg,#ffe9a0,#d59b34)}
+#game[data-view=battle] .hud .hp.crit i{background:linear-gradient(180deg,#ffb7a0,#cb464d);animation:hp-alert 1.6s ease-in-out infinite}
+@keyframes hp-alert{50%{filter:brightness(1.55)}}
+#game[data-view=battle] .unit .tag{height:auto;min-height:41px;gap:2px}
+#game[data-view=battle] .unit .tag .bar{width:92px;height:9px;border:1px solid #d6c5a167;background:#0a0b0f}
+#game[data-view=battle] .unit .tag .bar b{background:linear-gradient(180deg,#a8f9cd,#338c6a)}
+#game[data-view=battle] .unit.enemy .tag .bar b{background:linear-gradient(180deg,#ffb3ab,#bb4b53)}
+#game[data-view=battle] .unit .tag.warn .bar b{background:linear-gradient(#ffe7a4,#c99335)}
+#game[data-view=battle] .unit .tag.crit .bar b{background:linear-gradient(#ffb39e,#c63e45);animation:hp-alert 1.6s infinite}
+#game[data-view=battle] .unit .tag-hp{font-style:normal;font-size:11px;font-weight:850;color:#f2f2f1;text-shadow:0 1px 4px #000c;line-height:11px}
+#game[data-view=battle] .unit .tag-hp small{font-size:10px;color:#d9d9d9}
+#game[data-view=battle] .unit .tag-badge{font-size:10px;color:#fcd18b;background:#222e42e8;border:1px solid #e2b65d91;border-radius:5px;padding:1px 4px;text-decoration:none}
+#game[data-view=battle] .unit .tag-badge b{margin-left:3px}
+html.compact #game[data-view=battle] .team-hp-vs{top:84px}
+/* GP-02 pet demo; visual only, not equipped. */
+.pet-preview{position:absolute;left:585px;top:455px;width:86px;height:100px;z-index:540;pointer-events:none;display:flex;flex-direction:column;align-items:center;isolation:isolate}
+.pet-preview-name{position:absolute;top:-24px;left:-17px;right:-17px;text-align:center;color:#bdf8ed;font-size:13px;font-weight:900;white-space:nowrap;text-shadow:0 2px 4px #000}
+.pet-preview-art{position:absolute;top:0;left:0;width:86px;height:84px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 1px #080e13) drop-shadow(0 0 7px #4eafa58c);animation:pet-idle 2.5s ease-in-out infinite;z-index:2}
+.pet-preview-shadow{position:absolute;top:76px;left:10px;width:66px;height:13px;border:1px solid #6be0c37a;border-radius:50%;background:#0a282aa9;box-shadow:0 0 12px #52c8c35c;z-index:1}
+.pet-preview-state{position:absolute;top:84px;left:-13px;right:-13px;height:16px;text-align:center;line-height:16px;font-size:11px;font-weight:900;color:#f7dfae;background:#101a25d9;border:1px solid #c1a6788c;border-radius:6px;white-space:nowrap;z-index:3}
+@keyframes pet-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.pet-preview-art{animation:none}}
+
+/* GP-03 ally HUD: five fixed slots, real inspection, read-only auto skill indicators. */
+#game[data-view=battle] .hud-card{position:relative;padding:8px;gap:5px;background:linear-gradient(135deg,#263d50f5,#101925fa 70%);border:2px solid #72919f;border-radius:12px;box-shadow:inset 0 1px #d3e8ea35,0 5px 16px #0008}
+#game[data-view=battle] .hud-card.selected{border-color:#ffe0a2;box-shadow:0 0 0 2px #d8ae5e75,inset 0 0 24px #d8ae5e20}
+#game[data-view=battle] .hud-top{gap:8px;min-height:90px}
+#game[data-view=battle] .hud-portrait{position:relative;width:90px;height:90px;min-height:90px;border:2px solid #d8ae5e;background:#101722;border-radius:9px;touch-action:manipulation}
+#game[data-view=battle] .hud-art{object-position:center 25%}
+.portrait-note{position:absolute;bottom:0;left:0;right:0;background:#0a101bdd;color:#e0cfad;font-size:10px;line-height:16px}
+#game[data-view=battle] .hud-main strong{font-size:22px;color:#fff1cf}
+#game[data-view=battle] .hud-main .lv{font-size:14px;color:#c1d1df}
+#game[data-view=battle] .hud .hp{height:25px}
+#game[data-view=battle] .hud .hp span{font-size:14px;line-height:23px}
+.hud-mode{font-size:11px;color:#c8d9dd;white-space:nowrap}
+#game[data-view=battle] .skill{position:relative;flex-direction:row;justify-content:flex-start;gap:5px;height:44px;min-height:44px;padding:3px 5px;cursor:default;background:linear-gradient(#273945,#17232d);border-color:#657886}
+.skill-icon{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:#a9e4ce}
+.skill-copy{display:flex;flex-direction:column;min-width:0;text-align:left}
+#game[data-view=battle] .skill em{font-size:12px}
+#game[data-view=battle] .skill b{font-size:12px}
+#game[data-view=battle] .skill.cool .skill-icon{color:#f1c48b}
+#game[data-view=battle] .skill.down{color:#c0b8b8;background:#292b30;border-color:#69636a}
+#game[data-view=battle] .skill.down b{color:#c0b8b8}
+.skill-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:230px;max-width:230px;padding:10px;background:#101a26;border:1px solid #e5c383;border-radius:6px;box-shadow:0 4px 16px #000b;color:#fff0d4;font-size:14px;line-height:1.5;text-align:left;z-index:10;pointer-events:none}
+.skill-tip{bottom:calc(100% + 108px)}
+.skill:last-child .skill-tip{left:auto;right:0}
+.skill:hover .skill-tip,.skill:focus .skill-tip{display:block}
+.skill:focus-visible,.hud-portrait:focus-visible{outline:3px solid #fff0ad;outline-offset:3px}
+#game[data-view=battle] .hud-card:focus-within,#game[data-view=battle] .hud-card:hover{z-index:2}
+#game[data-view=battle] .status{min-height:20px}
+#game[data-view=battle] .chip{font-size:12px;line-height:20px;padding:0 5px}
+html.compact #game[data-view=battle] .hud-portrait{width:96px;height:90px}
+html.compact #game[data-view=battle] .hud-main strong{font-size:22px}
+@media(prefers-reduced-motion:reduce){#game[data-view=battle] .hud .hp.crit i{animation:none}}
+
+/* GP-04 original-art preview: crop within existing frames; no slot/hitbox changes. */
+.portrait-frame{display:block;position:relative;overflow:hidden;isolation:isolate;background:#17212d;border:2px solid #d8ae5e;box-shadow:inset 0 0 0 1px #fff1bc70,0 2px 6px #0009}
+.portrait-frame::after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #fff1bc65;background:linear-gradient(135deg,#fff1bc25,transparent 35%,transparent 70%,#080e2440);z-index:1}
+.portrait-frame .portrait-image{position:absolute;width:180%;height:auto;max-width:none;left:-40%;top:-12%;object-fit:cover;pointer-events:none}
+.portrait-frame[data-portrait=aren] .portrait-image{left:-48%;top:-9%}
+.portrait-frame[data-portrait=riana] .portrait-image{left:-44%;top:-24%}
+.portrait-frame[data-portrait=clea] .portrait-image{left:-40%;top:-14%}
+#game[data-view=battle] .portrait-frame.hud-art{width:100%;height:100%;border:0;border-radius:6px}
+#game[data-view=battle] .hud-portrait{box-shadow:inset 0 0 0 1px #fff1bc80,0 3px 8px #0009}
+#game[data-view=battle] .hud-portrait:hover{border-color:#ffe4ab}
+.portrait-note{z-index:2;letter-spacing:.3px}
+.card-art.portrait-frame{width:144px;height:192px;border-radius:9px}
+.card-art.portrait-frame::before{content:"아트 미리보기";position:absolute;bottom:0;left:0;right:0;z-index:2;background:#0a101be6;color:#eee0c1;font-size:11px;line-height:22px;text-align:center}
+.order li .portrait-frame.mini{box-sizing:border-box}

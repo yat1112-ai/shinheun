@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-labelledby="t">
+  <title id="t">리아나 전투 스프라이트 (기존 임시 SVG에서 배경 카드 제거, SD/도트 아님)</title>
+  <g id="twin-blades">
+    <g transform="rotate(-38 120 230)">
+      <polygon points="114,90 120,70 126,90 126,215 114,215" fill="#e6f1f5" stroke="#4a6a72" stroke-width="2"/>
+      <rect x="106" y="215" width="28" height="6" rx="2" fill="#d9a441"/>
+      <rect x="116" y="221" width="8" height="26" fill="#3a2a22"/>
+    </g>
+    <g transform="rotate(38 120 230)">
+      <polygon points="114,90 120,70 126,90 126,215 114,215" fill="#e6f1f5" stroke="#4a6a72" stroke-width="2"/>
+      <rect x="106" y="215" width="28" height="6" rx="2" fill="#d9a441"/>
+      <rect x="116" y="221" width="8" height="26" fill="#3a2a22"/>
+    </g>
+  </g>
+  <g id="body">
+    <path d="M86 320 L98 214 Q120 200 142 214 L154 320Z" fill="#23363a"/>
+    <path d="M98 214 Q120 232 142 214 L146 236 Q120 252 94 236Z" fill="#2f8a7a"/>
+    <path d="M142 216 Q190 240 214 300 Q170 270 140 250Z" fill="#2f8a7a" opacity="0.85"/>
+    <rect x="106" y="198" width="28" height="18" fill="#e3b08c"/>
+  </g>
+  <g id="portrait">
+    <ellipse cx="120" cy="170" rx="28" ry="32" fill="#eabb98"/>
+    <path d="M88 170 Q76 112 122 108 Q160 110 152 170 Q146 134 122 132 Q98 134 88 170Z" fill="#d86a4a"/>
+    <path d="M150 140 Q190 150 196 214 Q172 184 148 168Z" fill="#d86a4a"/>
+    <path d="M100 166 q6 -6 12 0M128 166 q6 -6 12 0" stroke="#2a1a14" stroke-width="3" fill="none"/>
+    <path d="M110 184 Q120 192 130 184" stroke="#a04a3a" stroke-width="3" fill="none"/>
+  </g>
+</svg>

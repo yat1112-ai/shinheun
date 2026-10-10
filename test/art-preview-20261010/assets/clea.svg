@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-labelledby="t d">
+  <title id="t">클레아 – 방패 중갑 수호자 (임시 오리지널 SVG)</title>
+  <desc id="d">큰 방패와 중갑을 갖춘 수호자. 임시 아트이며 최종 아트가 아닙니다.</desc>
+  <rect width="240" height="320" rx="16" fill="#2f4a78"/>
+  <circle cx="120" cy="130" r="100" fill="#6a93d0" opacity="0.4"/>
+  <g id="body">
+    <path d="M44 320 L50 214 Q60 184 120 176 Q180 184 190 214 L196 320Z" fill="#5d6a80" stroke="#2a3446" stroke-width="3"/>
+    <path d="M96 190 H144 L150 320 H90Z" fill="#8795ad"/>
+    <path d="M120 190 V320" stroke="#2a3446" stroke-width="3"/>
+    <circle cx="120" cy="238" r="9" fill="#e0b84a"/>
+    <ellipse cx="62" cy="210" rx="30" ry="22" fill="#9aa8c0" stroke="#2a3446" stroke-width="3"/>
+    <ellipse cx="178" cy="210" rx="30" ry="22" fill="#9aa8c0" stroke="#2a3446" stroke-width="3"/>
+  </g>
+  <g id="portrait">
+    <path d="M84 138 Q84 84 120 82 Q156 84 156 138 V166 Q120 184 84 166Z" fill="#a9b6cc" stroke="#2a3446" stroke-width="3"/>
+    <rect x="96" y="128" width="48" height="14" fill="#1c2434"/>
+    <path d="M120 82 V128" stroke="#2a3446" stroke-width="4"/>
+    <path d="M120 82 Q100 56 112 36 Q116 58 124 62 Q140 50 136 32 Q154 60 120 82Z" fill="#c8453a"/>
+    <path d="M100 152 H140" stroke="#2a3446" stroke-width="3"/>
+  </g>
+  <g id="shield">
+    <path d="M10 196 H100 V262 Q100 304 55 316 Q10 304 10 262Z" fill="#3f6bb8" stroke="#1c2a44" stroke-width="5"/>
+    <path d="M55 204 V308 M18 248 H92" stroke="#e0b84a" stroke-width="7"/>
+    <circle cx="55" cy="248" r="10" fill="#e0b84a" stroke="#1c2a44" stroke-width="3"/>
+  </g>
+  <g id="mace">
+    <rect x="206" y="150" width="8" height="110" fill="#6a4a2c"/>
+    <circle cx="210" cy="142" r="14" fill="#9aa8c0" stroke="#2a3446" stroke-width="3"/>
+  </g>
+</svg>
