@@ -486,3 +486,18 @@ html.compact #game[data-view=battle] .team-hp-vs{top:84px}
 html.compact #game[data-view=battle] .hud-portrait{width:96px;height:90px}
 html.compact #game[data-view=battle] .hud-main strong{font-size:22px}
 @media(prefers-reduced-motion:reduce){#game[data-view=battle] .hud .hp.crit i{animation:none}}
+
+/* GP-04 original-art preview: crop within existing frames; no slot/hitbox changes. */
+.portrait-frame{display:block;position:relative;overflow:hidden;isolation:isolate;background:#17212d;border:2px solid #d8ae5e;box-shadow:inset 0 0 0 1px #fff1bc70,0 2px 6px #0009}
+.portrait-frame::after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #fff1bc65;background:linear-gradient(135deg,#fff1bc25,transparent 35%,transparent 70%,#080e2440);z-index:1}
+.portrait-frame .portrait-image{position:absolute;width:180%;height:auto;max-width:none;left:-40%;top:-12%;object-fit:cover;pointer-events:none}
+.portrait-frame[data-portrait=aren] .portrait-image{left:-48%;top:-9%}
+.portrait-frame[data-portrait=riana] .portrait-image{left:-44%;top:-24%}
+.portrait-frame[data-portrait=clea] .portrait-image{left:-40%;top:-14%}
+#game[data-view=battle] .portrait-frame.hud-art{width:100%;height:100%;border:0;border-radius:6px}
+#game[data-view=battle] .hud-portrait{box-shadow:inset 0 0 0 1px #fff1bc80,0 3px 8px #0009}
+#game[data-view=battle] .hud-portrait:hover{border-color:#ffe4ab}
+.portrait-note{z-index:2;letter-spacing:.3px}
+.card-art.portrait-frame{width:144px;height:192px;border-radius:9px}
+.card-art.portrait-frame::before{content:"아트 미리보기";position:absolute;bottom:0;left:0;right:0;z-index:2;background:#0a101be6;color:#eee0c1;font-size:11px;line-height:22px;text-align:center}
+.order li .portrait-frame.mini{box-sizing:border-box}

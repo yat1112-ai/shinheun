@@ -10,15 +10,19 @@ const roles = {healer:'회복', striker:'검사', rogue:'쌍검', guardian:'수�
 export const effects = {regen:'지속 회복', defenseDown:'방어 감소', atkUp:'공격 증가', physicalVulnerability:'물리 표식', taunt:'도발', physicalDamageReduction:'물리 피해 감소', shield:'보호막'};
 // HUD 상태 칩은 폭이 좁아 짧은 이름을 쓰고, 전체 이름은 title 로 둔다.
 const shortEffects = {regen:'재생', defenseDown:'방어↓', atkUp:'공격↑', physicalVulnerability:'표식', taunt:'도발', physicalDamageReduction:'피해↓', shield:'보호막'};
-// 초상(카드·행동순서·동료 화면)은 기존 임시 일러스트, 전투 중앙 캐릭터는 같은 원화에서 배경 카드를 뺀 스프라이트다.
+// GP-04: 기존 프로젝트 원본 초상은 미리보기 후보이며 최종 사용자 승인 대기. 필드 임시 SVG는 유지한다.
 // 도트/SD 전투 스프라이트 원본은 아직 없어 같은 슬롯·크기로 교체할 수 있게 경로만 분리해 둔다.
-const PORTRAIT = { eir:'assets/eir.svg', aren:'assets/aren.svg', riana:'assets/riana.svg', clea:'assets/clea.svg' };
+const PORTRAIT = { eir:'assets/art-preview-eir.webp', aren:'assets/art-preview-aren.webp', riana:'assets/art-preview-riana.webp', clea:'assets/art-preview-clea.webp' };
 const SPRITE = { eir:'assets/sprite-eir.svg', aren:'assets/sprite-aren.svg', riana:'assets/sprite-riana.svg', clea:'assets/sprite-clea.svg' };
 const ENEMY_ART = { stray:'assets/stray.svg', wolf:'assets/wolf.svg', boar:'assets/boar.svg', ragingBoar:'assets/boar.svg' };
 export const stage = id => STAGES.find(s => s.id === Number(id));
 export const rewardText = r => Object.keys(names).map(k => `${names[k]} ${r[k] || 0}`).join(' · ');
 export const button = (action, text, attrs = '') => `<button data-action="${action}" ${attrs}>${text}</button>`;
-const art = (id, enemy = false, cls = '', sprite = false) => `<img class="art ${enemy ? 'enemy-art' : 'ally-art'} ${cls}" src="${enemy ? ENEMY_ART[id] || ENEMY_ART.stray : (sprite ? SPRITE : PORTRAIT)[id] || ''}" alt="" draggable="false">`;
+const art = (id, enemy = false, cls = '', sprite = false) => {
+  const src = enemy ? ENEMY_ART[id] || ENEMY_ART.stray : (sprite ? SPRITE : PORTRAIT)[id] || '';
+  if (!enemy && !sprite) return `<span class="portrait-frame ${cls}" data-portrait="${esc(id)}"><img class="art ally-art portrait-image" src="${src}" alt="${esc(CHARACTERS[id]?.name || '')} 임시 초상 · 원본 아트 미리보기" draggable="false"></span>`;
+  return `<img class="art ${enemy ? 'enemy-art' : 'ally-art'} ${cls}" src="${src}" alt="" draggable="false">`;
+};
 const unitName = u => esc(CHARACTERS[u.characterId]?.name || ENEMIES[u.enemyId]?.name || '짐승');
 const rewardLine = r => `금화 ${r.gold || 0} · 경험치 ${r.xp || 0}${(r.materials?.herbs || r.herbs) ? ` · 약초 ${r.materials?.herbs || r.herbs}` : ''}${(r.materials?.ore || r.ore) ? ` · 광석 ${r.materials?.ore || r.ore}` : ''}`;
 const destinationOptions = s => s.clearedStages.map(id => `<option value="${id}">${id}. ${esc(stage(id).name)}</option>`).join('');
@@ -97,7 +101,7 @@ function hudCard(u, c) {
   const selected = c.selected === u.id;
   const skillIcons = { heal: 'M12 4v16M4 12h16', shield: 'M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z', attack: 'M5 19L19 5M13 5h6v6M4 14l6 6' };
   return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${selected ? 'selected' : ''}" data-card="${esc(u.id)}">
-    <div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기 · 임시 초상" aria-pressed="${selected}" title="${esc(def.name)} 상세 보기 · 임시 초상 (승인 아트 없음)">${art(u.characterId, false, 'hud-art')}<small class="portrait-note">임시 초상</small></button>
+    <div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기 · 임시 초상 · 최종 승인 대기" aria-pressed="${selected}" title="${esc(def.name)} 상세 보기 · 원본 아트 미리보기 · 최종 승인 대기">${art(u.characterId, false, 'hud-art')}<small class="portrait-note">아트 미리보기</small></button>
     <div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv} · ${esc(roles[def.role])}</span><div class="hp ${hpTier(u)}" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div><small class="hud-mode">${u.hp <= 0 ? '전투 불가' : selected ? '선택됨 · 상세 표시' : '자동 스킬 · 표시용'}</small></div></div>
     <div class="skills">${def.skills.map(k => { const sk = SKILLS[k], state = allySkillState(u, k), tip = `${skillTip(sk)} · 자동 발동 · 표시용`, tipId = `tip-${u.id}-${k}`; return `<span class="skill ${state.state}" tabindex="0" aria-label="${esc(sk.name)} · ${state.label} · 자동 스킬 표시용" aria-describedby="${esc(tipId)}"><svg class="skill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${skillIcons[sk.type] || skillIcons.attack}"/></svg><span class="skill-copy"><em>${esc(sk.name)}</em><b>${state.label}</b></span><span class="skill-tip" role="tooltip" id="${esc(tipId)}">${esc(tip)}</span></span>`; }).join('')}</div>
     <div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
