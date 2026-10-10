@@ -99,11 +99,11 @@ function hudCard(u, c) {
   const shown = all.slice(0, 2).map((e, i) => `<span class="chip" title="${esc(e.label)} ${e.remaining}턴">${esc(shortEffects[raw[i]?.type] || e.label)} <b>${e.remaining}턴</b></span>`).join('');
   const more = all.length > 2 ? `<span class="chip more" title="${esc(all.slice(2).map(e => `${e.label} ${e.remaining}턴`).join(', '))}">+${all.length - 2}</span>` : '';
   const selected = c.selected === u.id;
-  const skillIcons = { heal: 'M12 4v16M4 12h16', shield: 'M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z', attack: 'M5 19L19 5M13 5h6v6M4 14l6 6' };
+  const skillIcons = { eirHeal:'prayer', eirGroupHeal:'heal', eirRevive:'revive', arenBreak:'heavy', arenBuff:'buff', rianaFlurry:'dual', rianaMark:'mark', cleaTaunt:'ward', cleaShield:'fortress', rianaBasic:'cleave' };
   return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${selected ? 'selected' : ''}" data-card="${esc(u.id)}">
     <div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기 · 임시 초상 · 최종 승인 대기" aria-pressed="${selected}" title="${esc(def.name)} 상세 보기 · 원본 아트 미리보기 · 최종 승인 대기">${art(u.characterId, false, 'hud-art')}<small class="portrait-note">아트 미리보기</small></button>
     <div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv} · ${esc(roles[def.role])}</span><div class="hp ${hpTier(u)}" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div><small class="hud-mode">${u.hp <= 0 ? '전투 불가' : selected ? '선택됨 · 상세 표시' : '자동 스킬 · 표시용'}</small></div></div>
-    <div class="skills">${def.skills.map(k => { const sk = SKILLS[k], state = allySkillState(u, k), tip = `${skillTip(sk)} · 자동 발동 · 표시용`, tipId = `tip-${u.id}-${k}`; return `<span class="skill ${state.state}" tabindex="0" aria-label="${esc(sk.name)} · ${state.label} · 자동 스킬 표시용" aria-describedby="${esc(tipId)}"><svg class="skill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${skillIcons[sk.type] || skillIcons.attack}"/></svg><span class="skill-copy"><em>${esc(sk.name)}</em><b>${state.label}</b></span><span class="skill-tip" role="tooltip" id="${esc(tipId)}">${esc(tip)}</span></span>`; }).join('')}</div>
+    <div class="skills">${def.skills.map(k => { const sk = SKILLS[k], state = allySkillState(u, k), tip = `${skillTip(sk)} · 자동 발동 · 표시용`, tipId = `tip-${u.id}-${k}`; return `<span class="skill ${state.state}" tabindex="0" aria-label="${esc(sk.name)} · ${state.label} · 자동 스킬 표시용" aria-describedby="${esc(tipId)}"><span class="skill-bezel"><img class="skill-icon" src="assets/skill-${skillIcons[k] || 'cleave'}.svg" alt="" draggable="false"></span><span class="skill-copy"><em>${esc(sk.name)}</em><b>${state.label}</b></span><span class="skill-tip" role="tooltip" id="${esc(tipId)}">${esc(tip)}</span></span>`; }).join('')}</div>
     <div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
 }
 function resultPanel(b, c) {
@@ -116,7 +116,7 @@ function resultPanel(b, c) {
   const onward = win && st.id < STAGES.length
     ? button('next-stage','다음 스테이지', `data-id="${st.id + 1}"`)
     : button('view', win ? '챕터 완료' : '스테이지 선택', `data-id="${win ? 'village' : 'adventure'}"`);
-  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><h2>${win ? '승리' : '패배'}</h2>
+  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><img class="result-ornament" src="assets/ornament-divider.svg" alt=""><h2>${win ? '승리' : '패배'}</h2>
     <p class="stage-name">${esc(st.name)}</p>
     ${win ? `<p class="reward">보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p class="paid">보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}
     <div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${onward}</div></div>`;
@@ -136,7 +136,7 @@ function battle(c) {
 <div class="ground" aria-label="전투 지면">
 <div class="team-hp-vs" aria-label="아군 대 적군 총 체력">
   <div class="team-hp ally-side"><span>아군 HP</span><div class="track"><i style="width:${percent(allyHp)}%"></i></div><b>${allyHp.current} / ${allyHp.maximum}</b></div>
-  <strong>VS</strong>
+  <strong class="vs-seal">VS</strong>
   <div class="team-hp enemy-side"><b>${enemyHp.current} / ${enemyHp.maximum}</b><div class="track"><i style="width:${percent(enemyHp)}%"></i></div><span>적군 HP</span></div>
 </div>
 <aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map(({unit:u,roundOffset}, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''} ${roundOffset ? 'future' : ''}" data-order-unit="${esc(u.id)}" data-round-offset="${roundOffset}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)} · ${roundOffset ? '다음 라운드 예상' : '이번 라운드'}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span>${roundOffset && (i===0 || order[i-1].roundOffset !== roundOffset) ? '<small>다음</small>' : ''}</li>`).join('')}</ol></aside>
@@ -149,7 +149,7 @@ ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed
 </div><div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
 </aside></div>
-<div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-hidden="true">빈 자리</div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
+<div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-label="빈 자리"><img class="empty-seal" src="assets/icon-state.svg" alt=""><span>빈 자리</span><small>출전 동료 없음</small></div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
 ${b.status !== 'active' && c.resultOpen ? resultPanel(b, c) : ''}</div>`;
 }
 

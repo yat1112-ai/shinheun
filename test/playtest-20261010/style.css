@@ -504,3 +504,69 @@ html.compact #game[data-view=battle] .hud-main strong{font-size:22px}
 
 /* GP-07: removed entire enemy bottom 5-card strip. Enemy field units and the top VS HP remain. */
 #game[data-view=battle] .enemy-hud{display:none!important}
+
+/* FINAL COMBAT PHASE 1: bespoke engraved brass and midnight glass. */
+#game[data-view=battle] #topbar{background:linear-gradient(#0c1722,#111a22);border-bottom:2px solid #997344}
+#game[data-view=battle] .battle-info .info-chip{background:transparent;border:0;border-radius:0}
+#game[data-view=battle] .stage-title{background:url(assets/ornament-divider.svg) bottom/100% 12px no-repeat}
+#game[data-view=battle] .speed button,#game[data-view=battle] .battle-info>button{background:linear-gradient(#233440,#0a141e);border-color:#9e8051;clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)}
+#game[data-view=battle] .speed button[aria-pressed=true]{background:linear-gradient(#a3834c,#443421);color:#fff0c9}
+#game[data-view=battle] .team-hp-vs{height:66px;top:62px;padding:14px 30px;background:url(assets/frame-boss.svg) center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none}
+.vs-seal{font-family:var(--serif);color:#f3d396;text-shadow:0 0 16px #64c5dc}
+#game[data-view=battle] .ground::before{background:radial-gradient(ellipse at 50% 65%,#4e99b012,transparent 65%);border:0;box-shadow:none}
+#game[data-view=battle] .ground::after{display:none}
+#game[data-view=battle] .slot-pad{border:1px solid #abcbd82a;background:radial-gradient(ellipse,#7dd3d512,transparent 65%);box-shadow:none;opacity:.4}
+#game[data-view=battle] .order{background:linear-gradient(90deg,#07111dd9,#10202b80);border:0;border-radius:0;padding:12px 8px;box-shadow:none}
+#game[data-view=battle] .order h4{border:0;background:url(assets/ornament-divider.svg) bottom/100% 12px no-repeat;padding-bottom:16px;color:#d9c296;letter-spacing:3px}
+#game[data-view=battle] .order li{background:linear-gradient(90deg,#132839bb,#0b16217a);border:0;border-bottom:1px solid #947b4938;border-radius:0;padding-left:10px}
+#game[data-view=battle] .order li.next{outline:0;background:url(assets/frame-boss.svg) center/100% 100% no-repeat;color:#ffe8b0}
+#game[data-view=battle] .order li.future{border:0;background:linear-gradient(90deg,#17273799,transparent)}
+#game[data-view=battle] .ticker{left:420px;right:340px;min-height:26px;font-size:13px;background:linear-gradient(90deg,transparent,#07121dc9,transparent);border:0;color:#c5d3da}
+#game[data-view=battle] .formation{border:0;border-radius:0;background:url(assets/frame-boss.svg) center/100% 100% no-repeat;padding:18px}
+#game[data-view=battle] .hud{gap:8px;height:184px}
+#game[data-view=battle] .hud-card{padding:12px 14px;border:0;border-radius:0;background:url(assets/frame-ally.svg) center/100% 100% no-repeat;isolation:isolate;overflow:visible;box-shadow:none;gap:4px}
+#game[data-view=battle] .hud-top{min-height:94px;gap:5px}
+#game[data-view=battle] .hud-portrait{position:absolute;left:10px;top:12px;width:55%;height:158px;min-height:0;border:0;border-radius:0;padding:0;background:none;z-index:-1;box-shadow:none;overflow:hidden;mask-image:linear-gradient(90deg,#000 60%,transparent)}
+#game[data-view=battle] .portrait-frame.hud-art{border-radius:0;transform:none}
+#game[data-view=battle] .hud-art .portrait-image{height:100%;width:100%;object-fit:cover;object-position:center 22%}
+#game[data-view=battle] .portrait-note{display:none}
+#game[data-view=battle] .hud-main{margin-left:50%;justify-content:center;gap:6px;text-shadow:0 2px 5px #000}
+#game[data-view=battle] .hud-main strong{font-family:var(--serif);font-size:21px;white-space:nowrap}
+#game[data-view=battle] .hud-main .lv{font-size:12px;color:#c7c2b3}
+#game[data-view=battle] .hud-mode{font-size:10px;color:#b3cad5}
+#game[data-view=battle] .hud .hp{height:18px;border:1px solid #998254;border-radius:0;background:#060e16}
+#game[data-view=battle] .hud .hp span{font-size:11px;line-height:16px}
+#game[data-view=battle] .skills{gap:6px;margin-left:36%;position:relative}
+#game[data-view=battle] .skill{height:42px;min-height:42px;padding:0;border:0;border-radius:0;background:none;gap:3px;overflow:visible}
+.skill-bezel{position:relative;display:block;width:38px;height:38px;flex:none;padding:4px;background:url(assets/frame-skill.svg) center/100% 100%}
+#game[data-view=battle] .skill-icon{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 3px #8fdfd84a)}
+#game[data-view=battle] .skill.cool .skill-bezel{filter:saturate(.35)}
+#game[data-view=battle] .skill.down .skill-bezel{filter:grayscale(1);opacity:.5}
+#game[data-view=battle] .skill em{font-size:10px;max-width:45px}
+#game[data-view=battle] .skill b{font-size:10px;color:#b0e6cf}
+#game[data-view=battle] .skill.cool b{color:#e8bd78}
+#game[data-view=battle] .skill-tip{bottom:calc(100% + 16px);background:linear-gradient(#213645,#09131f);border-color:#bd9c60;border-radius:0;padding:14px;font-size:13px}
+#game[data-view=battle] .status{margin-left:50%;min-height:16px}
+#game[data-view=battle] .chip{font-size:10px;line-height:16px;border:1px solid #64808070;background:#0c1c28b8;border-radius:0}
+#game[data-view=battle] .hud-card.empty{display:flex;align-items:center;justify-content:center;gap:3px;background:url(assets/frame-ally.svg) center/100% 100%;color:#978e7c;font-family:var(--serif)}
+.empty-seal{width:56px;height:56px;opacity:.3}.hud-card.empty small{font:11px system-ui;color:#8b959c}
+#game[data-view=battle] .hud-card.selected{border:0;box-shadow:0 0 18px #e5bc634f}
+#game[data-view=battle] .unit .tag{background:linear-gradient(90deg,transparent,#081722dc,transparent);border:0;border-radius:0;color:#f0e3c7}
+#game[data-view=battle] .result{border:0;border-radius:0;background:url(assets/frame-ally.svg) center/100% 100%;padding:30px 40px}
+.result-ornament{width:300px;height:30px;display:block;margin:0 auto 6px}
+html.compact #game[data-view=battle] .hud-portrait{width:55%;height:158px}
+html.compact #game[data-view=battle] .team-hp-vs{top:88px}
+
+body[data-view=battle]{background:#080f18 url(assets/battle-bg.webp) center/cover fixed}
+#game[data-view=battle] .order{width:100px}
+#game[data-view=battle] .order li span{font-size:12px}
+#game[data-view=battle] .order li.enemy::after{content:'';width:18px;height:18px;flex:none;background:url(assets/skill-enemy.svg) center/contain}
+#game[data-view=battle] .formation{padding:12px 8px}
+#game[data-view=battle] .formation span{font-size:12px}
+
+#game[data-view=battle] .order h4{font-size:12px;letter-spacing:0;white-space:nowrap}
+#game[data-view=battle] .order li{padding-left:4px;gap:3px}
+#game[data-view=battle] .order li .mini{width:30px;height:42px}
+#game[data-view=battle] .order li span{font-size:10px;white-space:normal;line-height:1.2}
+#game[data-view=battle] .order li.enemy::after{display:none}
+#game[data-view=battle] .order li.enemy{background-image:url(assets/skill-enemy.svg);background-size:18px;background-position:right bottom;background-repeat:no-repeat}
