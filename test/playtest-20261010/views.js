@@ -144,9 +144,14 @@ function battle(c) {
 </div>
 <aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map(({unit:u,roundOffset}, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''} ${roundOffset ? 'future' : ''}" data-order-unit="${esc(u.id)}" data-round-offset="${roundOffset}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)} · ${roundOffset ? '다음 라운드 예상' : '이번 라운드'}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span>${roundOffset && (i===0 || order[i-1].roundOffset !== roundOffset) ? '<small>다음</small>' : ''}</li>`).join('')}</ol></aside>
 ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed.map(unitMarkup).join('')}${foes.placed.map(unitMarkup).join('')}
-<div class="ticker" role="status">${detail}</div>
+<div class="pet-preview" data-pet-state="demo" role="img" aria-label="펫 슬롯 (준비 중), 펫 시연용 도트 캐릭터, 현재 미장착">
+  <span class="pet-preview-name">펫 · 시연</span>
+  <img class="pet-preview-art" src="./assets/pet-fox-demo.png" alt="" draggable="false">
+  <i class="pet-preview-shadow" aria-hidden="true"></i>
+  <span class="pet-preview-state">미장착 · DEMO</span>
+</div><div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
-<div class="pet-slot" aria-label="펫 슬롯 (준비 중)"><h4>펫</h4><span>준비 중</span></div></aside></div>
+</aside></div>
 <section class="enemy-hud" aria-label="적군 5인 상태">${b.enemies.map(enemyHudCard).join('')}${Array.from({length:Math.max(0,MAX_SIDE-b.enemies.length)},()=>enemyHudCard(null)).join('')}</section>
 <div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-hidden="true">빈 자리</div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
 ${b.status !== 'active' && c.resultOpen ? resultPanel(b, c) : ''}</div>`;

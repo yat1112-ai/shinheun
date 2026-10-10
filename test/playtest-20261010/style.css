@@ -446,3 +446,11 @@ html.compact #game[data-view=battle] .enemy-hud-status small{font-size:15px}
 #game[data-view=battle] .unit .tag-badge{font-size:10px;color:#fcd18b;background:#222e42e8;border:1px solid #e2b65d91;border-radius:5px;padding:1px 4px;text-decoration:none}
 #game[data-view=battle] .unit .tag-badge b{margin-left:3px}
 html.compact #game[data-view=battle] .team-hp-vs{top:84px}
+/* GP-02 pet demo; visual only, not equipped. */
+.pet-preview{position:absolute;left:585px;top:455px;width:86px;height:100px;z-index:540;pointer-events:none;display:flex;flex-direction:column;align-items:center;isolation:isolate}
+.pet-preview-name{position:absolute;top:-24px;left:-17px;right:-17px;text-align:center;color:#bdf8ed;font-size:13px;font-weight:900;white-space:nowrap;text-shadow:0 2px 4px #000}
+.pet-preview-art{position:absolute;top:0;left:0;width:86px;height:84px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 4px 1px #080e13) drop-shadow(0 0 7px #4eafa58c);animation:pet-idle 2.5s ease-in-out infinite;z-index:2}
+.pet-preview-shadow{position:absolute;top:76px;left:10px;width:66px;height:13px;border:1px solid #6be0c37a;border-radius:50%;background:#0a282aa9;box-shadow:0 0 12px #52c8c35c;z-index:1}
+.pet-preview-state{position:absolute;top:84px;left:-13px;right:-13px;height:16px;text-align:center;line-height:16px;font-size:11px;font-weight:900;color:#f7dfae;background:#101a25d9;border:1px solid #c1a6788c;border-radius:6px;white-space:nowrap;z-index:3}
+@keyframes pet-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.pet-preview-art{animation:none}}

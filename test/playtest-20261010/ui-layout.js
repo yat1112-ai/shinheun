@@ -44,7 +44,7 @@ export const UNIT_BOX = { width: 124, above: 158, below: 8 };
 export const UI_RECTS = {
   order: { x: 8, y: 8, width: 100, height: 720 },        // .order 행동 순서
   formation: { x: 1482, y: 8, width: 110, height: 112 },  // .formation 진형
-  pet: { x: 1482, y: 128, width: 110, height: 112 },      // .pet-slot 펫
+  pet: { x: 585, y: 455, width: 86, height: 100 },      // .pet-slot 펫
   ticker: { x: 330, y: 8, width: 940, height: 40 },       // .ticker 전투 로그(left/right 330)
   hud: { x: 120, y: 752, width: 1360, height: 184 },      // .hud 파티 카드 띠
 };
