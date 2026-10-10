@@ -46,7 +46,7 @@ export const UI_RECTS = {
   formation: { x: 1482, y: 8, width: 110, height: 112 },  // .formation 진형
   pet: { x: 1482, y: 128, width: 110, height: 112 },      // .pet-slot 펫
   ticker: { x: 330, y: 8, width: 940, height: 40 },       // .ticker 전투 로그(left/right 330)
-  hud: { x: 120, y: 800, width: 1360, height: 136 },      // .hud 파티 카드 띠
+  hud: { x: 120, y: 752, width: 1360, height: 184 },      // .hud 파티 카드 띠
 };
 // 진형 격자(사용자 확정 2026-10-09). 전장 = 콘텐츠 전체 1600×944, UI 는 전장 위에 얹는다(style.css).
 // - 모든 유닛 같은 크기(UNIT_SCALE), 아군·적 그림 틀도 같은 크기(104×124).

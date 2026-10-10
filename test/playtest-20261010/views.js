@@ -23,6 +23,7 @@ const unitName = u => esc(CHARACTERS[u.characterId]?.name || ENEMIES[u.enemyId]?
 const rewardLine = r => `금화 ${r.gold || 0} · 경험치 ${r.xp || 0}${(r.materials?.herbs || r.herbs) ? ` · 약초 ${r.materials?.herbs || r.herbs}` : ''}${(r.materials?.ore || r.ore) ? ` · 광석 ${r.materials?.ore || r.ore}` : ''}`;
 const destinationOptions = s => s.clearedStages.map(id => `<option value="${id}">${id}. ${esc(stage(id).name)}</option>`).join('');
 const totalXp = s => Object.values(s.accrual.pendingXp).reduce((a, b) => a + b, 0);
+const slotPads = (side, slots) => ['back', 'front'].flatMap(row => slots[row].map(p => `<i class="slot-pad ${side} ${row}" aria-hidden="true" style="left:${p.x}px;top:${p.y}px"></i>`)).join('');
 const box = r => `left:${r.x}px;top:${r.y}px;width:${r.width}px;height:${r.height}px`;
 // 회중시계 회전은 매초 다시 그려도 끊기지 않게 현재 시각 기준 위상을 준다.
 const spinPhase = () => `-${((Date.now() / 1000) % 22).toFixed(1)}s`;
@@ -93,7 +94,7 @@ function resultPanel(b, c) {
   const first = win && (receipt ? receipt.firstClear : !c.clearedBefore) ? `<p>첫 클리어 보상: ${esc(rewardLine(receipt?.firstClearRewards || st.firstClearRewards || {}))}</p>` : '';
   const paid = receipt ? { ...receipt.rewards, xp: receipt.xp } : st.rewards;
   const members = receipt?.members.map(id => esc(CHARACTERS[id]?.name || id)).join(', ');
-  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><h2>${win ? '승리' : '패배'}</h2><p class="stage-name">${esc(st.name)}</p>${win ? `<p>보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p>보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}<div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${button('view','스테이지 선택','data-id="adventure"')}</div></div>`;
+  return `<div class="result ${win ? 'win' : 'lose'}" role="group" aria-label="전투 결과" data-battle-id="${b.id}"><h2>${win ? '승리' : '패배'}</h2><p class="stage-name">${esc(st.name)}</p>${win ? `<p class="reward">보상: ${esc(rewardLine(paid))}</p>${first}${members ? `<p>경험치 지급: ${members} · 각 ${receipt.xp}</p>` : ''}<p class="paid">보상 지급 완료</p>` : '<p>획득 보상 없음 · 경험치 0</p><p>동료와 장비를 정비해 다시 도전하세요.</p>'}<div class="actions">${button('stage','재도전', `data-id="${st.id}"`)}${button('view','마을로','data-id="village"')}${button('view','스테이지 선택','data-id="adventure"')}</div></div>`;
 }
 function battle(c) {
   const b = c.s.battle || c.lastBattle;
@@ -105,7 +106,7 @@ function battle(c) {
   return `<div class="battle">
 <div class="ground" aria-label="전투 지면">
 <aside class="order" aria-label="행동 순서"><h4>행동 순서</h4><ol>${order.map((u, i) => `<li class="${u.side} ${i === 0 ? 'next' : ''}" data-order-unit="${esc(u.id)}" aria-current="${i === 0 ? 'step' : 'false'}" title="${unitName(u)}">${art(u.characterId || u.enemyId, u.side === 'enemy', 'mini')}<span>${unitName(u)}</span></li>`).join('')}</ol></aside>
-${allies.placed.map(unitMarkup).join('')}${foes.placed.map(unitMarkup).join('')}
+${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed.map(unitMarkup).join('')}${foes.placed.map(unitMarkup).join('')}
 <div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
 <div class="pet-slot" aria-label="펫 슬롯 (준비 중)"><h4>펫</h4><span>준비 중</span></div></aside></div>
@@ -118,7 +119,7 @@ export function topInfo(view, c) {
   const b = c.s.battle || c.lastBattle;
   if (!b) return `<div class="brand"><h1>전투</h1></div>`;
   const st = stage(b.stageId), mode = c.s.repeat ? '반복' : '모험';
-  return `<div class="battle-info"><span class="info-chip stage-title">${mode} · STAGE ${String(st.id).padStart(2, '0')} ${esc(st.name)}</span><span class="info-chip turn">현재 턴 <b>라운드 ${b.round}</b></span><span class="info-chip wave">웨이브 ${b.waveIndex + 1}/${b.waves.length}</span><div class="speed" role="group" aria-label="전투 배속">${[1, 2, 4].map(n => button('speed', `${n}×`, `data-id="${n}" aria-pressed="${c.speed === n}"`)).join('')}</div>${button('view','마을','data-id="village"')}${c.s.repeat ? button('stop-repeat','반복 종료') : ''}</div>`;
+  return `<div class="battle-info"><span class="info-chip stage-title"><small>${mode} · STAGE ${String(st.id).padStart(2, '0')}</small><strong>${esc(st.name)}</strong></span><span class="info-chip turn">현재 턴 <b>라운드 ${b.round}</b></span><span class="info-chip wave">웨이브 <b>${b.waveIndex + 1}/${b.waves.length}</b></span><div class="speed" role="group" aria-label="전투 배속">${[1, 2, 4].map(n => button('speed', `${n}×`, `data-id="${n}" aria-pressed="${c.speed === n}"`)).join('')}</div>${button('view','마을','data-id="village"')}${c.s.repeat ? button('stop-repeat','반복 종료') : ''}</div>`;
 }
 const VIEWS = { village, adventure, characters, inventory, codex, dispatch: dispatchView, battle };
 export const hasView = name => Object.hasOwn(VIEWS, name);
