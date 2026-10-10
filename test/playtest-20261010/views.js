@@ -1,7 +1,7 @@
 // 화면 HTML 생성. 엔진 상태는 읽기만 하고, 상호작용은 data-action 으로 app.js 의 핸들러에 맡긴다.
 import { CHARACTERS, STAGES, SKILLS, ENEMIES, EQUIPMENT, GAME_CONFIG, PRODUCTION } from './data.js';
 import { calculateStats } from './engine.js';
-import { MAX_SIDE, VILLAGE, FORMATIONS, placeSide, formationLabel, actionTimeline, skillTip, cooldownLeft, hpPercent, statusChips } from './ui-layout.js';
+import { MAX_SIDE, VILLAGE, FORMATIONS, placeSide, formationLabel, actionTimeline, skillTip, cooldownLeft, hpPercent, statusChips, allySkillState } from './ui-layout.js';
 
 export const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const names = { gold:'금화', herbs:'약초', ore:'광석' };
@@ -94,7 +94,13 @@ function hudCard(u, c) {
   const all = statusChips(u, effects), raw = u.effects || [];
   const shown = all.slice(0, 2).map((e, i) => `<span class="chip" title="${esc(e.label)} ${e.remaining}턴">${esc(shortEffects[raw[i]?.type] || e.label)} <b>${e.remaining}턴</b></span>`).join('');
   const more = all.length > 2 ? `<span class="chip more" title="${esc(all.slice(2).map(e => `${e.label} ${e.remaining}턴`).join(', '))}">+${all.length - 2}</span>` : '';
-  return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${c.selected === u.id ? 'selected' : ''}" data-card="${esc(u.id)}"><div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기" aria-pressed="${c.selected === u.id}">${art(u.characterId, false, 'hud-art')}</button><div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv}</span><div class="hp ${hpTier(u)}" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div></div></div><div class="skills">${def.skills.map(k => { const cd = cooldownLeft(u, k); return `<span class="skill ${cd > 0 ? 'cool' : 'ready'}" title="${esc(skillTip(SKILLS[k]))}"><em>${esc(SKILLS[k].name)}</em><b>${cd > 0 ? `${cd}턴` : '준비'}</b></span>`; }).join('')}</div><div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
+  const selected = c.selected === u.id;
+  const skillIcons = { heal: 'M12 4v16M4 12h16', shield: 'M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z', attack: 'M5 19L19 5M13 5h6v6M4 14l6 6' };
+  return `<article class="hud-card ${u.hp <= 0 ? 'fallen' : ''} ${selected ? 'selected' : ''}" data-card="${esc(u.id)}">
+    <div class="hud-top"><button class="hud-portrait" data-action="inspect" data-id="${esc(u.id)}" aria-label="${esc(def.name)} 스킬 보기 · 임시 초상" aria-pressed="${selected}" title="${esc(def.name)} 상세 보기 · 임시 초상 (승인 아트 없음)">${art(u.characterId, false, 'hud-art')}<small class="portrait-note">임시 초상</small></button>
+    <div class="hud-main"><strong>${esc(def.name)}</strong><span class="lv">Lv.${lv} · ${esc(roles[def.role])}</span><div class="hp ${hpTier(u)}" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div><small class="hud-mode">${u.hp <= 0 ? '전투 불가' : selected ? '선택됨 · 상세 표시' : '자동 스킬 · 표시용'}</small></div></div>
+    <div class="skills">${def.skills.map(k => { const sk = SKILLS[k], state = allySkillState(u, k), tip = `${skillTip(sk)} · 자동 발동 · 표시용`, tipId = `tip-${u.id}-${k}`; return `<span class="skill ${state.state}" tabindex="0" aria-label="${esc(sk.name)} · ${state.label} · 자동 스킬 표시용" aria-describedby="${esc(tipId)}"><svg class="skill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${skillIcons[sk.type] || skillIcons.attack}"/></svg><span class="skill-copy"><em>${esc(sk.name)}</em><b>${state.label}</b></span><span class="skill-tip" role="tooltip" id="${esc(tipId)}">${esc(tip)}</span></span>`; }).join('')}</div>
+    <div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
 }
 function enemyHudCard(u) {
   if (!u) return '<div class="enemy-hud-card vacant" aria-hidden="true">대기 슬롯</div>';

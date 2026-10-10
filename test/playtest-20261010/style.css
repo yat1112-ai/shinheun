@@ -454,3 +454,35 @@ html.compact #game[data-view=battle] .team-hp-vs{top:84px}
 .pet-preview-state{position:absolute;top:84px;left:-13px;right:-13px;height:16px;text-align:center;line-height:16px;font-size:11px;font-weight:900;color:#f7dfae;background:#101a25d9;border:1px solid #c1a6788c;border-radius:6px;white-space:nowrap;z-index:3}
 @keyframes pet-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media (prefers-reduced-motion:reduce){.pet-preview-art{animation:none}}
+
+/* GP-03 ally HUD: five fixed slots, real inspection, read-only auto skill indicators. */
+#game[data-view=battle] .hud-card{position:relative;padding:8px;gap:5px;background:linear-gradient(135deg,#263d50f5,#101925fa 70%);border:2px solid #72919f;border-radius:12px;box-shadow:inset 0 1px #d3e8ea35,0 5px 16px #0008}
+#game[data-view=battle] .hud-card.selected{border-color:#ffe0a2;box-shadow:0 0 0 2px #d8ae5e75,inset 0 0 24px #d8ae5e20}
+#game[data-view=battle] .hud-top{gap:8px;min-height:90px}
+#game[data-view=battle] .hud-portrait{position:relative;width:90px;height:90px;min-height:90px;border:2px solid #d8ae5e;background:#101722;border-radius:9px;touch-action:manipulation}
+#game[data-view=battle] .hud-art{object-position:center 25%}
+.portrait-note{position:absolute;bottom:0;left:0;right:0;background:#0a101bdd;color:#e0cfad;font-size:10px;line-height:16px}
+#game[data-view=battle] .hud-main strong{font-size:22px;color:#fff1cf}
+#game[data-view=battle] .hud-main .lv{font-size:14px;color:#c1d1df}
+#game[data-view=battle] .hud .hp{height:25px}
+#game[data-view=battle] .hud .hp span{font-size:14px;line-height:23px}
+.hud-mode{font-size:11px;color:#c8d9dd;white-space:nowrap}
+#game[data-view=battle] .skill{position:relative;flex-direction:row;justify-content:flex-start;gap:5px;height:44px;min-height:44px;padding:3px 5px;cursor:default;background:linear-gradient(#273945,#17232d);border-color:#657886}
+.skill-icon{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:#a9e4ce}
+.skill-copy{display:flex;flex-direction:column;min-width:0;text-align:left}
+#game[data-view=battle] .skill em{font-size:12px}
+#game[data-view=battle] .skill b{font-size:12px}
+#game[data-view=battle] .skill.cool .skill-icon{color:#f1c48b}
+#game[data-view=battle] .skill.down{color:#c0b8b8;background:#292b30;border-color:#69636a}
+#game[data-view=battle] .skill.down b{color:#c0b8b8}
+.skill-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:0;width:230px;max-width:230px;padding:10px;background:#101a26;border:1px solid #e5c383;border-radius:6px;box-shadow:0 4px 16px #000b;color:#fff0d4;font-size:14px;line-height:1.5;text-align:left;z-index:10;pointer-events:none}
+.skill-tip{bottom:calc(100% + 108px)}
+.skill:last-child .skill-tip{left:auto;right:0}
+.skill:hover .skill-tip,.skill:focus .skill-tip{display:block}
+.skill:focus-visible,.hud-portrait:focus-visible{outline:3px solid #fff0ad;outline-offset:3px}
+#game[data-view=battle] .hud-card:focus-within,#game[data-view=battle] .hud-card:hover{z-index:2}
+#game[data-view=battle] .status{min-height:20px}
+#game[data-view=battle] .chip{font-size:12px;line-height:20px;padding:0 5px}
+html.compact #game[data-view=battle] .hud-portrait{width:96px;height:90px}
+html.compact #game[data-view=battle] .hud-main strong{font-size:22px}
+@media(prefers-reduced-motion:reduce){#game[data-view=battle] .hud .hp.crit i{animation:none}}

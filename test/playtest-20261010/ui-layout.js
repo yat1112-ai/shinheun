@@ -170,3 +170,10 @@ export const hpPercent = unit => unit && unit.maxHp > 0 ? Math.max(0, Math.min(1
 export function statusChips(unit, labels = {}) {
   return (unit?.effects || []).map(e => ({ label: labels[e.type] || e.type, remaining: Math.max(0, Number(e.remaining) || 0) }));
 }
+
+// Automatic skills are read-only indicators; incapacitation takes priority over cooldown.
+export function allySkillState(unit, skillId) {
+  const cooldown = cooldownLeft(unit, skillId);
+  return { cooldown, state: unit.hp <= 0 ? 'down' : cooldown > 0 ? 'cool' : 'ready',
+    label: unit.hp <= 0 ? '전투 불가' : cooldown > 0 ? `${cooldown}턴` : '준비' };
+}
