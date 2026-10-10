@@ -106,19 +106,6 @@ function hudCard(u, c) {
     <div class="skills">${def.skills.map(k => { const sk = SKILLS[k], state = allySkillState(u, k), tip = `${skillTip(sk)} · 자동 발동 · 표시용`, tipId = `tip-${u.id}-${k}`; return `<span class="skill ${state.state}" tabindex="0" aria-label="${esc(sk.name)} · ${state.label} · 자동 스킬 표시용" aria-describedby="${esc(tipId)}"><svg class="skill-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${skillIcons[sk.type] || skillIcons.attack}"/></svg><span class="skill-copy"><em>${esc(sk.name)}</em><b>${state.label}</b></span><span class="skill-tip" role="tooltip" id="${esc(tipId)}">${esc(tip)}</span></span>`; }).join('')}</div>
     <div class="status">${shown || '<span class="chip none">상태 없음</span>'}${more}</div></article>`;
 }
-function enemyHudCard(u) {
-  if (!u) return '<div class="enemy-hud-card vacant" aria-hidden="true">대기 슬롯</div>';
-  const dead = u.hp <= 0;
-  const active = statusChips(u, effects).slice(0,2)
-    .map(e => `<small>${esc(e.label)} ${e.remaining}턴</small>`).join('');
-  return `<article class="enemy-hud-card ${dead ? 'dead' : ''}" data-enemy-card="${esc(u.id)}" aria-label="${unitName(u)} 체력 ${Math.max(0,u.hp)} / ${u.maxHp}">
-    
-    <div class="enemy-hud-body"><strong>${unitName(u)}</strong>
-      <div class="enemy-hud-health"><i style="width:${hpPercent(u)}%"></i><span>${Math.max(0,u.hp)} / ${u.maxHp}</span></div>
-      <div class="enemy-hud-status">${dead ? '<small class="dead-label">처치</small>' : (active || '<small>상태 없음</small>')}</div>
-    </div>
-  </article>`;
-}
 function resultPanel(b, c) {
   const st = stage(b.stageId), win = b.status === 'victory';
   const receipt = b.result;
@@ -162,7 +149,6 @@ ${slotPads('ally', allies.slots)}${slotPads('enemy', foes.slots)}${allies.placed
 </div><div class="ticker" role="status">${detail}</div>
 <aside class="rail"><div class="formation" aria-label="진형"><h4>진형</h4><b class="letter">${form.letter || '-'}</b><span>${form.text}</span><small>${form.letter ? '' : '5인 편성 시 A~D'}</small></div>
 </aside></div>
-<section class="enemy-hud" aria-label="적군 5인 상태">${b.enemies.map(enemyHudCard).join('')}${Array.from({length:Math.max(0,MAX_SIDE-b.enemies.length)},()=>enemyHudCard(null)).join('')}</section>
 <div class="hud" aria-label="아군 5인 상태">${b.allies.map(u => hudCard(u, c)).join('')}${'<div class="hud-card empty" aria-hidden="true">빈 자리</div>'.repeat(Math.max(0, MAX_SIDE - b.allies.length))}</div>
 ${b.status !== 'active' && c.resultOpen ? resultPanel(b, c) : ''}</div>`;
 }
