@@ -5,6 +5,8 @@ import { createCloud } from './cloud.js';
 import { localKey, decideLogin, syncSignature, hasUnsyncedChange } from './cloud-core.js';
 import { esc, stage, rewardText, button, renderView, topInfo, hasView } from './views.js';
 import { fitScale } from './ui-layout.js';
+import { createVisualEffects } from './visual-effects.js';
+const visualEffects = createVisualEffects({ skillName: id => SKILLS[id]?.name || (id === 'basicAttack' ? '기본 공격' : id) });
 
 let engine = createGameEngine();
 const $ = selector => document.querySelector(selector);
@@ -96,6 +98,7 @@ function openChoice(kind) {
   if (!$('#sync-dialog').open) $('#sync-dialog').showModal();
 }
 function resetView() {
+  visualEffects.reset();
   lastBattle = null; log = []; lastSeenAction = ''; firstClearBattle = null; resultOpen = false; selectedUnit = null;
   finishedStoryBattles.clear(); afterStory = null; storyLines = [];
   $('#story').close(); $('#backup').close(); $('#backup-text').value = '';
@@ -265,6 +268,7 @@ function render() {
   const tabs = state().battle || state().repeat || lastBattle ? { ...NAV, battle:'전투' } : NAV;
   $('#nav').innerHTML = Object.entries(tabs).map(([id,label]) => button('view',label,`data-id="${id}" aria-current="${view === id ? 'page' : 'false'}"`)).join('') + button('backup','저장·백업');
   $('#content').innerHTML = renderView(view, c);
+  visualEffects.render($('#content'), view === 'battle' ? c.s.battle || c.lastBattle : null);
   document.documentElement.style.setProperty('--motion-time', `${700 / engine.displaySpeed}ms`);
 }
 // 논리 캔버스(1280×600)를 뷰포트에 맞춰 통째로 축소·확대한다. 레이아웃은 캔버스 안에서만 계산한다.
@@ -315,13 +319,7 @@ function pulse() {
   // Keep forms stable while players choose equipment or dispatch members.
   if (view === 'battle' || view === 'village' && !$('#content').contains(document.activeElement)) render();
   else renderChrome(ctx());
-  if (view === 'battle' && observed && changed) for (const e of observed.events) {
-    const id = e.actor || e.target, el = [...document.querySelectorAll('[data-unit]')].find(el => el.dataset.unit === id);
-    if (!el) continue;
-    el.classList.add(e.type === 'heal' || e.type === 'revive' ? 'healing' : e.type === 'damage' ? 'hit' : 'acting');
-    // 엔진 이벤트의 실제 수치만 띄운다(0 이하나 알 수 없는 이벤트는 표시하지 않음).
-    if ((e.type === 'damage' || e.type === 'heal') && e.amount > 0) el.insertAdjacentHTML('beforeend', `<b class="float ${e.type}">${e.type === 'damage' ? '-' : '+'}${e.amount}</b>`);
-  }
+  if (view === 'battle' && observed && changed) visualEffects.render($('#content'), observed, { fresh: true, speed: engine.displaySpeed });
 }
 document.addEventListener('click', event => {
   const target = event.target.closest('[data-action]'); if (!target || target.disabled) return;
