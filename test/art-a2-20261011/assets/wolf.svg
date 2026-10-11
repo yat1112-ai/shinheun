@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="t">
+  <title id="t">숲 늑대 (임시 오리지널 SVG)</title>
+  <ellipse cx="120" cy="216" rx="86" ry="10" fill="#000" opacity="0.28"/>
+  <path d="M28 150 Q60 100 130 112 Q190 120 206 164 Q210 200 190 210 L50 212 Q24 190 28 150Z" fill="#5d6678" stroke="#232a36" stroke-width="4"/>
+  <path d="M150 112 Q170 70 200 66 Q226 76 220 104 Q214 128 190 134Z" fill="#6c7689" stroke="#232a36" stroke-width="4"/>
+  <polygon points="176,76 170,40 196,64" fill="#6c7689" stroke="#232a36" stroke-width="3"/>
+  <polygon points="200,64 220,40 222,76" fill="#6c7689" stroke="#232a36" stroke-width="3"/>
+  <path d="M214 98 L236 108 L214 120Z" fill="#8a94a8" stroke="#232a36" stroke-width="3"/>
+  <circle cx="196" cy="90" r="5" fill="#ff9a4a"/><circle cx="196" cy="90" r="2" fill="#2a1a14"/>
+  <path d="M28 150 Q8 130 6 100 Q34 118 44 140Z" fill="#4c5466" stroke="#232a36" stroke-width="3"/>
+  <path d="M120 120 L110 140 M146 124 L138 146" stroke="#8a94a8" stroke-width="4" stroke-linecap="round"/>
+  <rect x="58" y="192" width="20" height="22" rx="6" fill="#444c5c"/><rect x="164" y="192" width="20" height="22" rx="6" fill="#444c5c"/>
+  <path d="M206 120 l6 12 l6 -10" fill="#fff" stroke="#232a36" stroke-width="1.5"/>
+</svg>

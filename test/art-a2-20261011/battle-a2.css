@@ -1,0 +1,258 @@
+/* UI-A2 전투 화면 (2026-10-11 시안)
+   같은 장식 프레임을 화면 전역에 반복하지 않는다. 위치별로 6개 계열을 따로 둔다.
+   1 상단 HUD(얇은 정보 띠)  2 좌측 행동순서(세로 레일·토큰)  3 중앙 오버레이(최소: 이름·얇은 HP)
+   4 팀 HP/VS(각진 하우징·문장)  5 하단 아군 카드(정보 밀도 최대)  6 우측 기능 버튼(돌출 키)
+   전체 화면 오버레이·backdrop-filter·mix-blend-mode·밝기 filter 는 쓰지 않는다(모바일 밝기 기준). */
+#game[data-view=battle]{
+  --a2-ink:#ece4d2; --a2-mute:#9aa6b2; --a2-line:#33414f; --a2-gold:#e3c27a;
+  --a2-ally:#5aa6e0; --a2-foe:#d0545b; --a2-ready:#5fe0c0; --a2-cool:#d7a556;
+}
+body[data-view=battle]{background:#070b10 url(assets/battle-bg.webp) center/cover no-repeat}
+
+/* ---------- 전장 ---------- */
+#game[data-view=battle] .battle{background:#0a0e13}
+#game[data-view=battle] .ground{background-image:linear-gradient(180deg,#05080c66 0,#05080c00 18%,#05080c00 62%,#05080ccc 100%),var(--battle-scene);background-size:cover;background-position:center;background-repeat:no-repeat}
+#game[data-view=battle] .ground::before,#game[data-view=battle] .ground::after{display:none}
+#game[data-view=battle] .slot-pad{display:none}
+#game[data-view=battle] .battle h4{font-family:inherit}
+
+/* ===== 1) 상단 HUD: 얇고 평평한 정보 띠 ===== */
+#game[data-view=battle] #topbar{height:56px;padding:0 14px 0 16px;gap:10px;background:url(assets/ui-a2/hud-top-band.svg) center/100% 100% no-repeat;border:0}
+#game[data-view=battle] #top-info{flex:1;min-width:0;overflow:visible}
+#game[data-view=battle] #resources,#game[data-view=battle] #top-tools button[data-action=save]{display:none}
+#game[data-view=battle] .battle-info{display:flex;align-items:center;gap:0;width:100%;height:56px}
+#game[data-view=battle] .hud-stage{display:flex;align-items:center;gap:10px;min-width:0;max-width:420px;background:none;padding:0}
+#game[data-view=battle] .hud-mark{width:22px;height:22px;flex:none}
+#game[data-view=battle] .hud-stage span{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+#game[data-view=battle] .hud-stage small{font-size:11px;letter-spacing:.12em;color:var(--a2-gold);white-space:nowrap}
+#game[data-view=battle] .hud-stage strong{font-family:var(--serif);font-size:20px;color:#f6ecd6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#game[data-view=battle] .hud-meta{display:flex;align-items:center;gap:18px;margin:0 auto;padding:0 12px}
+#game[data-view=battle] .hud-meta .meta{display:flex;flex-direction:row;align-items:baseline;gap:8px;white-space:nowrap;padding:0;border:0;background:none;min-width:0;line-height:1}
+#game[data-view=battle] .hud-meta small{font-size:12px;color:var(--a2-mute);letter-spacing:.06em}
+#game[data-view=battle] .hud-meta b{font-size:20px;color:#fff;font-variant-numeric:tabular-nums}
+#game[data-view=battle] .hud-meta .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#game[data-view=battle] .hud-div{display:block;width:2px;height:30px;background:url(assets/ui-a2/hud-divider.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .pips{display:inline-flex;gap:4px;align-self:center}
+#game[data-view=battle] .pips i{width:8px;height:8px;border-radius:50%;border:1px solid #6d7b89}
+#game[data-view=battle] .pips i.done{background:#6d7b89}
+#game[data-view=battle] .pips i.now{background:var(--a2-gold);border-color:var(--a2-gold)}
+
+/* ===== 6) 우측 기능 버튼: 돌출 키(정보판과 다른 모양) ===== */
+#game[data-view=battle] .fn-keys{display:flex;align-items:center;gap:8px;margin-left:auto}
+#game[data-view=battle] .speed{display:flex;gap:4px;margin:0 6px 0 0}
+#game[data-view=battle] .fn-keys button,#game[data-view=battle] #top-tools button{
+  min-height:44px;height:44px;min-width:58px;padding:0 12px 4px;border:0;border-radius:10px;
+  background:url(assets/ui-a2/btn-key.svg) center/100% 100% no-repeat;color:#f2ead8;
+  font:800 16px/40px system-ui,'Noto Sans KR',sans-serif;letter-spacing:.02em;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  clip-path:none;box-shadow:none;text-shadow:0 1px 0 #0008}
+#game[data-view=battle] .fn-keys button:hover:not(:disabled),#game[data-view=battle] #top-tools button:hover{background:url(assets/ui-a2/btn-key-hover.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .fn-keys button[aria-pressed=true],#game[data-view=battle] .fn-keys button:active,#game[data-view=battle] #top-tools button:active{
+  background:url(assets/ui-a2/btn-key-on.svg) center/100% 100% no-repeat;color:#fff3cf;padding-top:4px;padding-bottom:0}
+#game[data-view=battle] .key-icon,#game[data-view=battle] #top-tools #fullscreen::before{display:inline-block;width:20px;height:20px;flex:none;background:center/contain no-repeat}
+#game[data-view=battle] .key-icon.village{background-image:url(assets/ui-a2/icon-village.svg)}
+#game[data-view=battle] .key-icon.stop{background-image:url(assets/ui-a2/icon-stop.svg)}
+#game[data-view=battle] #top-tools #fullscreen::before{content:"";background-image:url(assets/ui-a2/icon-fullscreen.svg)}
+#game[data-view=battle] .key-village{min-width:96px}
+#game[data-view=battle] #top-tools{gap:0}
+#game[data-view=battle] #top-tools #fullscreen{min-width:0;padding:0 14px 4px}
+
+/* ===== 4) 팀 HP / VS ===== */
+#game[data-view=battle] .team-hp-vs{position:absolute;left:330px;top:10px;width:940px;height:44px;z-index:420;display:grid;grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr);align-items:center;gap:6px;padding:0 26px;
+  background:url(assets/ui-a2/vs-frame.svg) center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none}
+#game[data-view=battle] .team-hp-vs::after{display:none}
+#game[data-view=battle] .vs-seal{position:relative;width:64px;height:64px;justify-self:center;font-size:0;color:transparent;background:url(assets/ui-a2/vs-emblem.svg) center/100% 100% no-repeat;text-shadow:none}
+#game[data-view=battle] .team-hp{display:flex;align-items:center;gap:8px;min-width:0}
+#game[data-view=battle] .team-hp span{font-size:12px;font-weight:800;letter-spacing:.08em;white-space:nowrap}
+#game[data-view=battle] .team-hp b{font-size:13px;font-weight:800;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+#game[data-view=battle] .team-hp.ally-side span{color:#9fcdf2}
+#game[data-view=battle] .team-hp.enemy-side span{color:#f2a5a9}
+#game[data-view=battle] .team-hp .track{flex:1;min-width:20px;height:12px;background:#05080c;border:1px solid #2c3845;border-radius:0;overflow:hidden;box-shadow:none}
+#game[data-view=battle] .team-hp.ally-side .track{clip-path:polygon(6px 0,100% 0,100% 100%,0 100%)}
+#game[data-view=battle] .team-hp.enemy-side .track{clip-path:polygon(0 0,calc(100% - 6px) 0,100% 100%,0 100%);display:flex;justify-content:flex-end}
+#game[data-view=battle] .team-hp .track i{display:block;height:100%;transition:width .28s ease-out}
+#game[data-view=battle] .team-hp.ally-side .track i{background:linear-gradient(180deg,#a8dcff,#3c8ccc 60%,#2a6aa0)}
+#game[data-view=battle] .team-hp.enemy-side .track i{background:linear-gradient(180deg,#ffb0b2,#cf4a52 60%,#9c2f37)}
+
+/* 전투 로그: VS 바 아래 한 줄 캡션(상자 없음) */
+#game[data-view=battle] .ticker{left:400px;right:400px;top:62px;min-height:22px;padding:0;justify-content:center;background:none;border:0;border-radius:0;font-size:13px;color:#c7cdd3;text-shadow:0 1px 3px #000,0 0 2px #000;z-index:410}
+
+/* ===== 2) 좌측 행동순서: 세로 레일 + 토큰(아군 원형 / 적 육각 / 현재 금색 링) ===== */
+#game[data-view=battle] .order{padding:8px 0 0;border:0;border-radius:0;box-shadow:none;overflow:hidden;background:url(assets/ui-a2/turn-rail.svg) center top/100% 100% no-repeat}
+#game[data-view=battle] .order h4{height:20px;margin:0 0 4px;padding:0;border:0;background:none;text-align:center;font-size:11px;font-weight:800;letter-spacing:.3em;color:var(--a2-gold)}
+#game[data-view=battle] .order ol{display:flex;flex-direction:column;align-items:center;gap:6px;list-style:none;margin:0;padding:0}
+#game[data-view=battle] .order ol::before{display:none}
+#game[data-view=battle] .order li{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100px;height:auto;margin:0;padding:0;border:0;border-radius:0;outline:0;background:none;opacity:1;gap:1px}
+#game[data-view=battle] .order li .tok{position:relative;display:block;width:52px;height:52px;flex:none;background:url(assets/ui-a2/turn-token-ally.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .order li.enemy .tok{background-image:url(assets/ui-a2/turn-token-enemy.svg)}
+#game[data-view=battle] .order li .tok .portrait-frame.mini{position:absolute;inset:5px;width:auto;height:auto;border:0;border-radius:50%;box-shadow:none;background:#0c141d}
+#game[data-view=battle] .order li .tok .portrait-frame::after{display:none}
+#game[data-view=battle] .order li .tok .portrait-image{width:190%;left:-45%;top:-8%}
+#game[data-view=battle] .order li .tok .tok-art{position:absolute;inset:6px;width:40px;height:40px;object-fit:cover;object-position:12% 30%;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transform:none}
+#game[data-view=battle] .order li .nm{position:static;font-size:11px;line-height:13px;color:#d6dbe0;background:none;text-shadow:0 1px 2px #000;white-space:nowrap;max-width:96px;overflow:hidden;text-overflow:ellipsis}
+#game[data-view=battle] .order li.next .tok{width:68px;height:62px;background:url(assets/ui-a2/turn-token-current.svg) left center/auto 100% no-repeat}
+#game[data-view=battle] .order li.next .tok .portrait-frame.mini{inset:8px 14px 8px 8px;width:46px;height:46px}
+#game[data-view=battle] .order li.next .tok .tok-art{inset:9px auto auto 9px;width:44px;height:44px;clip-path:circle(50%)}
+#game[data-view=battle] .order li.next .nm{font-size:12px;font-weight:800;color:#ffe7b0}
+#game[data-view=battle] .order li.next::before{content:"지금";position:absolute;top:22px;left:2px;font-size:10px;font-weight:900;color:#1a1206;background:var(--a2-gold);padding:0 4px;border-radius:3px;z-index:2}
+#game[data-view=battle] .order li.future{opacity:.5}
+#game[data-view=battle] .order li.future .tok{width:40px;height:40px}
+#game[data-view=battle] .order li.future .tok .portrait-frame.mini{inset:4px}
+#game[data-view=battle] .order li.future .tok .tok-art{inset:4px;width:32px;height:32px}
+#game[data-view=battle] .order .round-break{display:block;width:76px;margin:2px 0 3px;padding-top:3px;border-top:1px solid #4b5968;text-align:center;font-size:9px;letter-spacing:.1em;color:var(--a2-mute);background:none;position:static}
+
+/* 진형: 우측 상단 작은 정보(버튼 아님) */
+#game[data-view=battle] .rail .formation{padding:6px 4px;border:0;border-radius:0;background:none;text-align:center;color:#cfd6dd;opacity:1}
+#game[data-view=battle] .formation::after{display:none}
+#game[data-view=battle] .formation h4{font-size:10px;letter-spacing:.3em;color:var(--a2-mute);margin:0}
+#game[data-view=battle] .formation .letter{display:inline-grid;place-items:center;width:44px;height:44px;margin:4px auto 2px;border:1px solid #6d7b89;border-radius:50%;font-family:var(--serif);font-size:24px;line-height:1;color:#f1e6cc;background:#0a0f15b3}
+#game[data-view=battle] .formation span{display:block;font-size:11px;line-height:14px;text-shadow:0 1px 2px #000}
+#game[data-view=battle] .formation small{font-size:10px;color:var(--a2-mute)}
+
+/* ===== 3) 중앙 전투 오버레이: 최소형(판 없음) ===== */
+#game[data-view=battle] .unit .tag{height:auto;min-height:34px;gap:2px;background:none;border:0;border-radius:0;color:#fff}
+#game[data-view=battle] .unit .tag>span{padding:0;background:none;font-size:14px;font-weight:800;letter-spacing:.02em;color:#f4f0e6;text-shadow:0 1px 3px #000,0 0 6px #000c}
+#game[data-view=battle] .unit.enemy .tag>span{color:#ffe2e0}
+#game[data-view=battle] .unit .tag .bar{position:relative;width:96px;height:8px;padding:1px;border:0;border-radius:4px;background:#05080ccc;overflow:hidden}
+#game[data-view=battle] .unit .tag .bar::after{content:"";position:absolute;inset:0;background:url(assets/ui-a2/ov-hp-ally.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .unit.enemy .tag .bar{border-radius:1px}
+#game[data-view=battle] .unit.enemy .tag .bar::after{background-image:url(assets/ui-a2/ov-hp-enemy.svg)}
+#game[data-view=battle] .unit .tag .bar b{height:100%;border-radius:3px;background:linear-gradient(180deg,#b6f2cf,#3aa070)}
+#game[data-view=battle] .unit.enemy .tag .bar b{border-radius:0;background:linear-gradient(180deg,#ffb6b0,#c8434c)}
+#game[data-view=battle] .unit .tag.warn .bar b{background:linear-gradient(180deg,#ffe7a4,#c99335)}
+#game[data-view=battle] .unit .tag.crit .bar b{background:linear-gradient(180deg,#ffb39e,#c63e45)}
+#game[data-view=battle] .unit .tag-hp{display:none}
+#game[data-view=battle] .unit .tag-badge{font-size:10px;line-height:14px;padding:0 4px;color:#f3d79a;background:#0a0f15cc;border:0;border-radius:3px;text-decoration:none}
+#game[data-view=battle] .unit .down-label{font-size:11px;line-height:15px;padding:0 6px;border-radius:3px;text-decoration:none;color:#ffd2d2;background:#3a1418d9}
+#game[data-view=battle] .unit.ally .down-label{color:#d9dee4;background:#1b2229d9}
+#game[data-view=battle] .unit .shadow{left:50%;bottom:-14px;width:140px;height:36px;margin-left:-70px;border:0;border-radius:0;opacity:1;filter:none;box-shadow:none;z-index:-1;background:url(assets/ui-a2/ov-marker-ally.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .unit.enemy .shadow{background-image:url(assets/ui-a2/ov-marker-enemy.svg)}
+
+/* 유닛 그림: 적은 원본 그대로(왼쪽 = 아군 쪽을 향함). 좌우 반전 금지. */
+#game[data-view=battle] .unit .sprite{width:148px;height:158px;display:flex;align-items:flex-end;justify-content:center;position:relative;margin-left:-12px;isolation:isolate}
+#game[data-view=battle] .unit .sprite img.ally-art,#game[data-view=battle] .unit .sprite img.enemy-art{
+  width:148px;height:158px;max-width:none;max-height:none;object-fit:contain;object-position:center bottom;
+  border:0;outline:0;border-radius:0;background:transparent;box-shadow:none;transform:none;transform-origin:50% 90%;
+  filter:drop-shadow(0 8px 5px #010407b0)}
+#game[data-view=battle] .unit.enemy .sprite img.enemy-art{filter:drop-shadow(0 8px 5px #010407b0) drop-shadow(0 0 6px #d0565733)}
+
+/* 사망 처리: 적은 쓰러짐 포즈로 0.9초 사라진 뒤 그림·이름표·HP를 모두 뺀다. 아군은 쓰러짐 포즈 + '전투 불능'. */
+#game[data-view=battle] .unit.fallen .tag .bar,#game[data-view=battle] .unit.fallen .tag-badge{display:none}
+#game[data-view=battle] .unit.ally.fallen{opacity:.8}
+#game[data-view=battle] .unit.ally.fallen .sprite img{filter:grayscale(.7) brightness(.8)!important}
+#game[data-view=battle] .unit.enemy.dying{animation:a2-fall-out 900ms ease-in var(--fall-delay,0ms) forwards}
+#game[data-view=battle] .unit.enemy.gone{display:none}
+@keyframes a2-fall-out{0%{opacity:1}35%{opacity:1}100%{opacity:0}}
+
+/* 펫(시연): 판 없이 작은 표시만 */
+#game[data-view=battle] .pet-preview{background:none;border:0;padding:0}
+#game[data-view=battle] .pet-preview-name{font-size:11px;color:#bfeee4}
+#game[data-view=battle] .pet-preview-state{background:#0a0f15cc;border:0;font-size:10px;color:#d8cba9}
+
+/* ===== 5) 하단 아군 카드: 정보 밀도 최대, 카드 전용 판 ===== */
+#game[data-view=battle] .hud{gap:12px}
+#game[data-view=battle] .hud::before{display:none}
+#game[data-view=battle] .hud-card{--role:#8a99a8;position:relative;display:flex;flex-direction:column;gap:6px;min-width:0;padding:12px 14px 9px 12px;border:0;border-radius:0;overflow:visible;isolation:isolate;
+  background:url(assets/ui-a2/card-frame.svg) center/100% 100% no-repeat;box-shadow:none;justify-content:flex-start}
+#game[data-view=battle] .hud-card[data-role=healer]{--role:#6fd1a8}
+#game[data-view=battle] .hud-card[data-role=guardian]{--role:#7fa6ec}
+#game[data-view=battle] .hud-card[data-role=striker]{--role:#ec8a62}
+#game[data-view=battle] .hud-card[data-role=rogue]{--role:#e37fb0}
+#game[data-view=battle] .hud-card::before{content:"";position:absolute;left:1px;top:1px;width:120px;height:3px;background:var(--role);z-index:1}
+#game[data-view=battle] .hud-card::after{display:none}
+#game[data-view=battle] .hud-top{display:grid;grid-template-columns:80px minmax(0,1fr);gap:10px;min-height:0;height:88px;position:relative;pointer-events:auto}
+#game[data-view=battle] .hud-portrait{position:relative;left:auto;top:auto;width:80px;height:88px;min-height:0;padding:0;border:1px solid var(--role);border-radius:6px;background:#0b1118;overflow:hidden;z-index:0;mask-image:none;clip-path:none;box-shadow:none}
+#game[data-view=battle] .hud-portrait:hover{background:#0b1118;border-color:#fff}
+#game[data-view=battle] .portrait-frame.hud-art{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;box-shadow:none;background:none}
+#game[data-view=battle] .portrait-frame::after{display:none;background:none!important}
+#game[data-view=battle] .hud-art .portrait-image{width:175%;height:auto;left:-38%;top:-6%}
+#game[data-view=battle] .hud-art[data-portrait=aren] .portrait-image{left:-44%;top:-3%}
+#game[data-view=battle] .hud-art[data-portrait=riana] .portrait-image{left:-40%;top:-16%}
+#game[data-view=battle] .hud-art[data-portrait=clea] .portrait-image{left:-38%;top:-7%}
+#game[data-view=battle] .portrait-note{display:block;position:absolute;left:0;right:0;bottom:0;z-index:2;font-size:9px;line-height:13px;text-align:center;color:#e6dcc4;background:#05080ccc;letter-spacing:0}
+#game[data-view=battle] .hud-main{display:flex;flex-direction:column;justify-content:flex-start;gap:3px;min-width:0;margin:0;position:relative;z-index:1;pointer-events:none;text-shadow:none}
+#game[data-view=battle] .hud-name{display:flex;align-items:center;gap:6px;min-width:0}
+#game[data-view=battle] .role-glyph{width:18px;height:18px;flex:none}
+#game[data-view=battle] .hud-main strong{font-family:var(--serif);font-size:21px;line-height:1.1;color:#f7efdc;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#game[data-view=battle] .hud-main .lv{font-size:12px;color:var(--a2-mute)}
+#game[data-view=battle] .hud .hp{position:relative;height:20px;margin-top:2px;padding:0;border:1px solid #2c3845;border-radius:3px;background:#05080c;overflow:hidden;box-shadow:none}
+#game[data-view=battle] .hud .hp::after{display:none}
+#game[data-view=battle] .hud .hp i{background:linear-gradient(180deg,#b6f2cf,#3aa070 60%,#2a7a55)}
+#game[data-view=battle] .hud .hp.warn i{background:linear-gradient(180deg,#ffe7a4,#c99335)}
+#game[data-view=battle] .hud .hp.crit i{background:linear-gradient(180deg,#ffb39e,#c63e45);animation:a2-hp-alert 1.6s ease-in-out infinite}
+@keyframes a2-hp-alert{50%{opacity:.7}}
+#game[data-view=battle] .hud .hp span{font-size:13px;font-weight:800;line-height:18px;color:#fff;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
+#game[data-view=battle] .hud-mode{font-size:11px;color:#8fa0ae;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#game[data-view=battle] .skills{display:flex;flex-direction:row;gap:8px;margin:0;height:44px;position:relative;z-index:2}
+#game[data-view=battle] .skill{position:relative;flex:1;min-width:0;height:44px;min-height:44px;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:6px;padding:0 4px 0 0;border:0;border-radius:0;background:none;color:var(--a2-ink);overflow:visible;cursor:default}
+#game[data-view=battle] .skill-bezel{position:relative;display:block;width:42px;height:42px;padding:0;flex:none;background:url(assets/ui-a2/card-socket.svg) center/100% 100% no-repeat;filter:none;opacity:1}
+#game[data-view=battle] .skill.ready .skill-bezel{background-image:url(assets/ui-a2/card-socket-ready.svg)}
+#game[data-view=battle] .skill.cool .skill-bezel{background-image:url(assets/ui-a2/card-socket-cool.svg)}
+#game[data-view=battle] .skill.down .skill-bezel{background-image:url(assets/ui-a2/card-socket-down.svg)}
+#game[data-view=battle] .skill:hover .skill-bezel,#game[data-view=battle] .skill:focus .skill-bezel{outline:2px solid var(--role);outline-offset:1px;border-radius:9px}
+#game[data-view=battle] .skill-icon{position:absolute;left:8px;top:8px;width:26px;height:26px;object-fit:contain;filter:none}
+#game[data-view=battle] .skill.cool .skill-icon{opacity:.55}
+#game[data-view=battle] .skill.down .skill-icon{opacity:.3}
+#game[data-view=battle] .skill-copy{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.15}
+#game[data-view=battle] .skill em{font-style:normal;font-size:12px;font-weight:700;color:#e6e0d2;max-width:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#game[data-view=battle] .skill b{font-size:12px;font-weight:800;color:var(--a2-ready)}
+#game[data-view=battle] .skill.cool b{color:var(--a2-cool)}
+#game[data-view=battle] .skill.down b{color:#8a8a8a}
+#game[data-view=battle] .skill-tip{display:none;position:absolute;left:0;bottom:calc(100% + 120px);width:250px;max-width:250px;padding:10px 12px;z-index:30;font-size:13px;line-height:1.5;text-align:left;color:#efe7d4;
+  background:#0b1016f2;border:1px solid #3c4a59;border-top:3px solid var(--role);border-radius:4px;box-shadow:0 8px 20px #000c}
+#game[data-view=battle] .skill:last-child .skill-tip{left:auto;right:0}
+#game[data-view=battle] .skill:hover .skill-tip,#game[data-view=battle] .skill:focus .skill-tip{display:block}
+#game[data-view=battle] .status{display:flex;gap:4px;min-height:18px;height:18px;margin:0;align-items:center;overflow:hidden;position:relative;z-index:2}
+#game[data-view=battle] .chip{flex:none;padding:0 6px;border:0;border-radius:3px;background:#1a2330;color:#d8dfe6;font-size:11px;line-height:18px}
+#game[data-view=battle] .chip b{color:#f3d79a}
+#game[data-view=battle] .chip.none{background:none;color:#6f7d8a;padding:0}
+#game[data-view=battle] .hud-card.selected{box-shadow:0 0 0 2px var(--role),0 0 18px #000a}
+#game[data-view=battle] .hud-card.fallen{opacity:1}
+#game[data-view=battle] .hud-card.fallen .hud-portrait{filter:grayscale(1) brightness(.6)}
+#game[data-view=battle] .hud-card.fallen .hud-main,#game[data-view=battle] .hud-card.fallen .skills{opacity:.55}
+#game[data-view=battle] .hud-card.fallen .hud-mode{color:#ff9d9d;opacity:1}
+#game[data-view=battle] .hud-card.empty{display:flex;align-items:center;justify-content:center;gap:2px;padding:0;background:url(assets/ui-a2/card-frame-empty.svg) center/100% 100% no-repeat;color:#7d8b98;opacity:1}
+#game[data-view=battle] .hud-card.empty::before{display:none}
+#game[data-view=battle] .hud-card.empty span{margin-top:84px;font-size:14px;letter-spacing:.2em}
+#game[data-view=battle] .hud-card.empty small{font-size:11px;color:#62707d}
+#game[data-view=battle] .hud-card:focus-within,#game[data-view=battle] .hud-card:hover{z-index:2}
+
+/* ---------- 결과창: 전용 판, 버튼은 기능 버튼 계열 ---------- */
+#game[data-view=battle] .result{width:760px;padding:40px 48px 34px;border:0;border-radius:0;box-shadow:0 24px 60px #000d;background:url(assets/ui-a2/result-frame.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .result::after{display:none}
+#game[data-view=battle] .result-ornament{display:none}
+#game[data-view=battle] .result h2{font-family:var(--serif);font-size:56px;letter-spacing:.3em;color:#f3dca6;text-shadow:none}
+#game[data-view=battle] .result.lose h2{color:#e9a2a2}
+#game[data-view=battle] .result .stage-name{font-size:20px;color:var(--a2-mute)}
+#game[data-view=battle] .result p{font-size:19px}
+#game[data-view=battle] .result .reward{display:inline-block;padding:6px 18px;font-size:22px;font-weight:800;color:#f3d79a;background:#0a0f15;border:1px solid #3c4a59;border-radius:4px}
+#game[data-view=battle] .result .paid{color:#9fe6c1}
+#game[data-view=battle] .result .actions{gap:12px;margin-top:20px;flex-wrap:nowrap}
+#game[data-view=battle] .result .actions button{flex:1;min-height:64px;padding:0 10px 6px;border:0;border-radius:10px;font-size:21px;font-weight:800;color:#f2ead8;white-space:nowrap;background:url(assets/ui-a2/btn-key.svg) center/100% 100% no-repeat;clip-path:none}
+#game[data-view=battle] .result .actions button:hover{background-image:url(assets/ui-a2/btn-key-hover.svg)}
+#game[data-view=battle] .result .actions [data-action=next-stage],#game[data-view=battle] .result .actions button:first-child{background-image:url(assets/ui-a2/btn-key-on.svg);color:#fff3cf}
+
+/* ---------- 컴팩트(축소 배율 < 0.65: 모바일 가로): 글자·터치 면적 확대 ---------- */
+html.compact #game[data-view=battle] #topbar{height:100px;padding:0 10px 0 14px}
+html.compact #game[data-view=battle] .battle-info{height:100px}
+html.compact #game[data-view=battle] .hud-mark{width:30px;height:30px}
+html.compact #game[data-view=battle] .hud-stage small{font-size:17px}
+html.compact #game[data-view=battle] .hud-stage strong{font-size:30px}
+html.compact #game[data-view=battle] .hud-meta small{font-size:18px}
+html.compact #game[data-view=battle] .hud-meta b{font-size:30px}
+html.compact #game[data-view=battle] .fn-keys button,html.compact #game[data-view=battle] #top-tools button{height:84px;min-height:84px;min-width:96px;font-size:28px;line-height:80px}
+html.compact #game[data-view=battle] .key-village{min-width:150px}
+html.compact #game[data-view=battle] #top-tools #fullscreen{min-width:180px}
+html.compact #game[data-view=battle] .key-icon,html.compact #game[data-view=battle] #top-tools #fullscreen::before{width:30px;height:30px}
+html.compact #game[data-view=battle] .team-hp-vs{top:54px}
+html.compact #game[data-view=battle] .team-hp span,html.compact #game[data-view=battle] .team-hp b{font-size:18px}
+html.compact #game[data-view=battle] .ticker{top:104px;font-size:18px}
+html.compact #game[data-view=battle] .order{padding-top:48px}
+html.compact #game[data-view=battle] .order li .nm{font-size:14px}
+html.compact #game[data-view=battle] .rail .formation{margin-top:46px}
+html.compact #game[data-view=battle] .unit .tag>span{font-size:18px}
+html.compact #game[data-view=battle] .hud-main strong{font-size:24px}
+html.compact #game[data-view=battle] .hud .hp span{font-size:15px}
+html.compact #game[data-view=battle] .skill em,html.compact #game[data-view=battle] .skill b{font-size:14px}
+html.compact #game[data-view=battle] .result{width:900px}
+html.compact #game[data-view=battle] .result .actions button{min-height:100px;font-size:30px}
+@media(prefers-reduced-motion:reduce){#game[data-view=battle] .hud .hp.crit i{animation:none}#game[data-view=battle] .unit.enemy.dying{animation:none;opacity:0}}
