@@ -153,7 +153,7 @@ button.plaque:disabled{opacity:.72;border-style:dashed}
 .shadow{position:absolute;left:50%;bottom:-8px;width:104px;height:20px;margin-left:-52px;border-radius:50%;background:#0006;z-index:-1}
 .ally .shadow{box-shadow:0 0 0 2px #58a4de99}
 .enemy .shadow{box-shadow:0 0 0 2px #e0666699}
-.unit.fallen{opacity:.35}
+.unit.fallen{opacity:.7}
 .unit.fallen .sprite{filter:grayscale(1)}
 .ally.acting .sprite{animation:lunge-r var(--motion-time) ease-out}
 .enemy.acting .sprite{animation:lunge-l var(--motion-time) ease-out}

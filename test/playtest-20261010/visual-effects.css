@@ -38,3 +38,9 @@
  #game[data-view=battle] .unit.gp05-damage:not(.fallen) .sprite{filter:brightness(1.3)}
 }
 
+/* Pose art carries articulation; these rules keep it legible during all events. */
+#game[data-view=battle] .unit .sprite img[data-pose]{animation:none!important}
+#game[data-view=battle] .unit.fallen .sprite img[data-pose]{opacity:1;filter:grayscale(.5) brightness(.85)!important}
+@media(prefers-reduced-motion:reduce){
+  #game[data-view=battle] .unit .sprite:has(img[data-pose]){animation:none!important;transform:none}
+}

@@ -1,6 +1,7 @@
 // 화면 HTML 생성. 엔진 상태는 읽기만 하고, 상호작용은 data-action 으로 app.js 의 핸들러에 맡긴다.
 import { CHARACTERS, STAGES, SKILLS, ENEMIES, EQUIPMENT, GAME_CONFIG, PRODUCTION } from './data.js';
 import { calculateStats } from './engine.js';
+import { poseSource } from './visual-effects.js';
 import { MAX_SIDE, VILLAGE, FORMATIONS, placeSide, formationLabel, actionTimeline, skillTip, cooldownLeft, hpPercent, statusChips, allySkillState } from './ui-layout.js';
 
 export const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,7 +12,7 @@ export const effects = {regen:'지속 회복', defenseDown:'방어 감소', atkU
 // HUD 상태 칩은 폭이 좁아 짧은 이름을 쓰고, 전체 이름은 title 로 둔다.
 const shortEffects = {regen:'재생', defenseDown:'방어↓', atkUp:'공격↑', physicalVulnerability:'표식', taunt:'도발', physicalDamageReduction:'피해↓', shield:'보호막'};
 // GP-04: 기존 프로젝트 원본 초상은 미리보기 후보이며 최종 사용자 승인 대기. 필드 임시 SVG는 유지한다.
-// 도트/SD 전투 스프라이트 원본은 아직 없어 같은 슬롯·크기로 교체할 수 있게 경로만 분리해 둔다.
+// Phase 5 field poses are experimental animation studies, awaiting art approval.
 const PORTRAIT = { eir:'assets/art-preview-eir.webp', aren:'assets/art-preview-aren.webp', riana:'assets/art-preview-riana.webp', clea:'assets/art-preview-clea.webp' };
 const SPRITE = { eir:'assets/sd-final-eir.svg', aren:'assets/sd-final-aren.svg', riana:'assets/sd-final-riana.svg', clea:'assets/sd-final-clea.svg' };
 const ENEMY_ART = { stray:'assets/sd-final-wolf.svg', wolf:'assets/sd-final-wolf.svg', boar:'assets/sd-final-boar.svg', ragingBoar:'assets/sd-final-boar.svg' };
@@ -91,7 +92,9 @@ function tagBadge(u) {
 }
 function unitMarkup(p) {
   const u = p.unit, enemy = u.side === 'enemy', id = u.characterId || u.enemyId;
-  return `<div class="unit ${u.side} ${p.row} ${u.hp <= 0 ? 'fallen' : ''}" data-unit="${esc(u.id)}" style="left:${p.x}px;top:${p.y}px;z-index:${p.z};--s:${p.scale ?? 1}"><div class="tag ${hpTier(u)}"><span>${unitName(u)}</span><i class="bar" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><b style="width:${hpPercent(u)}%"></b></i><em class="tag-hp">${Math.max(0,u.hp)}<small>/${u.maxHp}</small></em>${u.hp <= 0 ? '' : tagBadge(u)}</div><div class="sprite">${art(id, enemy, '', true)}</div><i class="shadow"></i></div>`;
+  const pose = u.hp <= 0 ? 'down' : 'idle';
+  const poseArt = `<img class="art ${enemy ? 'enemy-art' : 'ally-art'}" data-pose="${pose}" src="${poseSource(u, pose)}" alt="${unitName(u)} · 시험용 전투 포즈" draggable="false">`;
+  return `<div class="unit ${u.side} ${p.row} ${u.hp <= 0 ? 'fallen' : ''}" data-unit="${esc(u.id)}" style="left:${p.x}px;top:${p.y}px;z-index:${p.z};--s:${p.scale ?? 1}"><div class="tag ${hpTier(u)}"><span>${unitName(u)}</span><i class="bar" role="img" aria-label="체력 ${Math.max(0,u.hp)} / ${u.maxHp}"><b style="width:${hpPercent(u)}%"></b></i><em class="tag-hp">${Math.max(0,u.hp)}<small>/${u.maxHp}</small></em>${u.hp <= 0 ? '' : tagBadge(u)}</div><div class="sprite">${poseArt}</div><i class="shadow"></i></div>`;
 }
 function hudCard(u, c) {
   const def = CHARACTERS[u.characterId], lv = c.s.characters[u.characterId]?.level ?? 1;

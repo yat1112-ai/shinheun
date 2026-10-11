@@ -1,5 +1,16 @@
 ﻿// Display-only projection of real engine events; never advances combat.
 export const FX_LIMIT = 24;
+export function poseSource(unit, pose = 'idle') {
+  const raw = unit.characterId || unit.enemyId;
+  const id = ({stray:'wolf', ragingBoar:'boar'})[raw] || raw;
+  return ['eir','aren','riana','clea','wolf','boar'].includes(id) ? `assets/pose-${id}-${pose}.svg` : null;
+}
+export function poseFor(unit, events = []) {
+  if (unit.hp <= 0) return 'down';
+  if (events.some(e => e.target === unit.id && e.type === 'damage' && (e.amount > 0 || e.absorbed > 0))) return 'damage';
+  if (events.some(e => e.actor === unit.id && e.type === 'action')) return 'attack';
+  return 'idle';
+}
 export const fxDuration = speed => Math.round(760 / Math.min(4, Math.max(1, Number(speed) || 1)));
 export function feedbackFor(battle, skillName = id => id) {
   const feedback = new Map();
@@ -45,16 +56,17 @@ export function feedbackFor(battle, skillName = id => id) {
 export function createVisualEffects({ skillName, schedule = setTimeout, cancel = clearTimeout } = {}) {
   let seen = null;
   const pending = new Map();
+  const activePoses = new Map();
   const cleanup = () => {
     for (const [timer, remove] of pending) { cancel(timer); remove(); }
     pending.clear();
   };
   return {
-    reset() { cleanup(); seen = null; },
-    dispose() { cleanup(); seen = null; },
+    reset() { cleanup(); activePoses.clear(); seen = null; },
+    dispose() { cleanup(); activePoses.clear(); seen = null; },
     render(root, battle, { fresh = false, speed = 1 } = {}) {
       for (const [timer, remove] of pending) if (!remove.host.isConnected) { cancel(timer); remove(); pending.delete(timer); }
-      if (!battle || !root) { cleanup(); seen = null; return; }
+      if (!battle || !root) { cleanup(); activePoses.clear(); seen = null; return; }
       const units = new Map([...root.querySelectorAll('[data-unit]')].map(el => [el.dataset.unit, el]));
       for (const unit of [...battle.allies, ...battle.enemies]) {
         const el = units.get(unit.id);
@@ -63,11 +75,49 @@ export function createVisualEffects({ skillName, schedule = setTimeout, cancel =
         el.classList.toggle('gp05-taunted', unit.hp > 0 && unit.effects.some(e => e.type === 'taunt'));
       }
       const key = `${battle.id}:${battle.actionCount}:${battle.waveIndex}:${battle.status}`;
+      const setPose = (unit, pose) => {
+        const img = units.get(unit.id)?.querySelector('img[data-pose]');
+        const src = poseSource(unit, pose);
+        if (img && src) { if (img.dataset.pose !== pose) img.src = src; img.dataset.pose = pose; }
+      };
+      for (const unit of [...battle.allies, ...battle.enemies]) {
+        if (unit.hp <= 0) setPose(unit, 'down');
+        else if (units.get(unit.id)?.querySelector('img[data-pose]')?.dataset.pose === 'down') setPose(unit, 'idle');
+        const active = activePoses.get(unit.id);
+        if (!fresh && active) {
+          const remaining = active.until - Date.now();
+          if (remaining <= 0 || active.battle !== battle.id || unit.hp <= 0) activePoses.delete(unit.id);
+          else {
+            setPose(unit, active.pose);
+            const host = units.get(unit.id);
+            if (host && active.host !== host) {
+              active.host = host;
+              const remove = () => setPose(unit, unit.hp <= 0 ? 'down' : 'idle'); remove.host = host;
+              const timer = schedule(() => { remove(); activePoses.delete(unit.id); pending.delete(timer); }, remaining);
+              pending.set(timer, remove);
+            }
+          }
+        }
+      }
       if (!fresh || seen === key) return;
-      cleanup(); seen = key;
+      cleanup(); activePoses.clear(); seen = key;
       const duration = fxDuration(speed);
       let count = 0;
       const feedback = feedbackFor(battle, skillName);
+      for (const unit of [...battle.allies, ...battle.enemies]) {
+        const pose = poseFor(unit, battle.events);
+        if (!poseSource(unit, pose)) continue;
+        setPose(unit, pose);
+        if (pose === 'attack' || pose === 'damage') {
+          const host = units.get(unit.id);
+          if (!host) continue;
+          activePoses.set(unit.id, {pose, until:Date.now()+duration, battle:battle.id, host});
+          const remove = () => setPose(unit, unit.hp <= 0 ? 'down' : 'idle');
+          remove.host = host;
+          const timer = schedule(() => { remove(); activePoses.delete(unit.id); pending.delete(timer); }, duration);
+          pending.set(timer, remove);
+        }
+      }
       for (const [id, item] of feedback) {
         const el = units.get(id), sprite = el?.querySelector('.sprite');
         if (!sprite) continue;
