@@ -124,7 +124,7 @@ body[data-view=battle]{background:#070b10 url(assets/battle-bg.webp) center/cove
 #game[data-view=battle] .unit .tag-badge{font-size:10px;line-height:14px;padding:0 4px;color:#f3d79a;background:#0a0f15cc;border:0;border-radius:3px;text-decoration:none}
 #game[data-view=battle] .unit .down-label{font-size:11px;line-height:15px;padding:0 6px;border-radius:3px;text-decoration:none;color:#ffd2d2;background:#3a1418d9}
 #game[data-view=battle] .unit.ally .down-label{color:#d9dee4;background:#1b2229d9}
-#game[data-view=battle] .unit .shadow{left:50%;bottom:-14px;width:140px;height:36px;margin-left:-70px;border:0;border-radius:0;opacity:1;filter:none;box-shadow:none;z-index:-1;background:url(assets/ui-a2/ov-marker-ally.svg) center/100% 100% no-repeat}
+#game[data-view=battle] .unit .shadow{left:50%;bottom:-14px;width:140px;height:36px;margin-left:-70px;border:0;border-radius:50%;opacity:1;filter:none;box-shadow:none;z-index:-1;background:url(assets/ui-a2/ov-marker-ally.svg) center/100% 100% no-repeat}
 #game[data-view=battle] .unit.enemy .shadow{background-image:url(assets/ui-a2/ov-marker-enemy.svg)}
 
 /* 유닛 그림: 적은 원본 그대로(왼쪽 = 아군 쪽을 향함). 좌우 반전 금지. */
